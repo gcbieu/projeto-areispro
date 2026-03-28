@@ -7,25 +7,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --ios-bg: #ffffff; --ios-accent: #000000; }
         body { 
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
             background-color: var(--ios-bg);
             color: #1d1d1f;
             margin: 0;
         }
 
-        /* Animação da Bola */
         .dot {
-            width: 32px; 
-            height: 32px;
-            background: black;
-            border-radius: 50%;
-            display: inline-block;
-            margin-left: 15px;
-            vertical-align: middle;
+            width: 32px; height: 32px; background: black; border-radius: 50%;
+            display: inline-block; margin-left: 15px; vertical-align: middle;
             animation: moveRight 3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
         }
         @keyframes moveRight {
@@ -37,15 +31,8 @@
 
         .hidden-view { display: none !important; }
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); }
-        .ios-shadow { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04); }
-        .input-ios { background: rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.2s; }
+        .input-ios { background: rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.2s; border-radius: 12px; }
         .input-ios:focus { background: #fff; border-color: #007aff; outline: none; }
-        
-        /* Ajuste para o botão fixo no mobile */
-        @media (max-width: 640px) {
-            .nav-buttons-container { gap: 8px; }
-            .btn-nav-text { display: none; } /* Esconde texto se for muito pequeno */
-        }
     </style>
 </head>
 <body>
@@ -53,14 +40,13 @@
 <!-- TELA DE BEM VINDO -->
 <section id="welcomeView" class="flex flex-col items-center justify-center min-h-screen p-6">
     <div class="flex flex-col items-center justify-center h-[60vh]">
-        <h1 class="text-lg font-bold uppercase tracking-[0.3em] text-gray-400 mb-8">AREISPRO</h1>
-        <div class="text-[2.5rem] font-normal flex items-center h-20">
+        <h1 class="text-lg font-bold uppercase tracking-[0.3em] text-gray-400 mb-8 text-center">AREISPRO</h1>
+        <div class="text-[2rem] sm:text-[2.5rem] font-normal flex items-center h-20 text-center">
             <span id="changingText">GESTÃO DE NEGÓCIOS</span>
             <div class="dot"></div>
         </div>
     </div>
     <div class="bg-white/70 backdrop-blur-xl rounded-[40px] p-10 shadow-xl border border-black/5 w-full max-w-[400px] text-center">
-        <p class="text-gray-500 mb-8 font-medium">Pronto para otimizar seus relatórios?</p>
         <button onclick="entrarNoSistema()" class="bg-black text-white w-full py-5 rounded-2xl font-semibold text-lg active:scale-95 transition-transform">Entrar</button>
     </div>
 </section>
@@ -69,430 +55,312 @@
 <div id="appContainer" class="hidden-view">
     <nav class="fixed top-0 w-full z-50 glass border-b border-gray-200">
         <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-tighter cursor-pointer" onclick="navigate('main')">
-                AREIS<span class="font-light text-gray-400">PRO</span>
-            </h1>
+            <h1 class="text-xl font-bold tracking-tighter cursor-pointer" onclick="navigate('main')">AREIS<span class="font-light text-gray-400">PRO</span></h1>
             
-            <div class="flex items-center gap-2 sm:gap-3">
-                <!-- Botão GERAR PDF - AGORA VISÍVEL SEMPRE -->
-                <button onclick="gerarRelatorio()" class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-black text-white rounded-full text-[10px] font-bold hover:scale-105 transition">
+            <div class="flex items-center gap-2">
+                <button onclick="gerarRelatorio()" class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full text-[10px] font-bold hover:scale-105 transition">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                    <span class="sm:inline">GERAR PDF</span>
+                    <span>GERAR PDF</span>
                 </button>
-
-                <!-- Botão PDF PARA WORD -->
-                <button onclick="navigate('wordConverter')" class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold hover:bg-blue-100 transition">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>
-                    <span class="hidden md:inline">PDF PARA WORD</span>
-                    <span class="md:hidden">WORD</span>
+                <button onclick="navigate('wordConverter')" class="p-2 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>
                 </button>
-
-                <div class="relative">
-                    <button onclick="toggleMenu()" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center border border-gray-300 overflow-hidden">
-                        <img id="avatarPreview" src="https://ui-avatars.com/api/?name=User&background=random" class="w-full h-full object-cover">
-                    </button>
-                    <div id="userMenu" class="hidden absolute right-0 mt-3 w-56 glass ios-shadow rounded-2xl py-2 border border-gray-200 overflow-hidden shadow-2xl">
-                        <div class="px-4 py-2 mb-1"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Usuário</p><p class="text-sm font-semibold">Técnico Operacional</p></div>
-                        <div class="h-[1px] bg-gray-100 my-1"></div>
-                        <button onclick="navigate('config')" class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Configurações</button>
-                        <button onclick="navigate('help')" class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Help Desk</button>
-                        <div class="h-[1px] bg-gray-100 my-1"></div>
-                        <button onclick="location.reload()" class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50">Sair</button>
-                    </div>
+                <button onclick="toggleMenu()" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center border border-gray-300 overflow-hidden">
+                    <img id="avatarPreview" src="https://ui-avatars.com/api/?name=Jair+Ramos&background=000&color=fff" class="w-full h-full object-cover">
+                </button>
+                <div id="userMenu" class="hidden absolute right-4 top-16 w-56 glass rounded-2xl py-2 border border-gray-200 shadow-2xl">
+                    <button onclick="navigate('config')" class="w-full text-left px-4 py-3 text-sm hover:bg-gray-100">Configurações</button>
+                    <button onclick="location.reload()" class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50">Sair</button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- DASHBOARD PRINCIPAL -->
     <main id="mainView" class="max-w-6xl mx-auto px-6 mt-24 pb-20">
-        <div class="mb-8">
-            <h2 class="text-4xl font-bold tracking-tight">Relatório Fotográfico</h2>
-            <p class="text-gray-500 font-medium">Capture e organize evidências técnicas.</p>
-        </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Sidebar -->
             <div class="lg:col-span-4 space-y-6">
-                <section class="glass ios-shadow rounded-3xl p-6">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Identificação</h3>
+                <section class="glass rounded-3xl p-6">
+                    <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Informações do Relatório</h3>
                     <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 ml-1 text-gray-700">Prestador</label>
-                            <select id="prestador" class="w-full p-4 rounded-2xl input-ios text-sm font-medium">
-                                <option value="THERMO">Thermo Engenharia</option>
-                                <option value="EMC">EMC Serviços</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 ml-1 text-gray-700">Unidade / Loja</label>
-                            <select id="lojaSelect" class="w-full p-4 rounded-2xl input-ios text-sm font-medium"></select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 ml-1 text-gray-700">Chamado</label>
-                            <input id="chamado" type="text" placeholder="Ex: 88291" class="w-full p-4 rounded-2xl input-ios text-sm">
-                        </div>
+                        <select id="prestador" class="w-full p-4 input-ios text-sm font-medium">
+                            <option value="THERMO ENGENHARIA">THERMO ENGENHARIA</option>
+                            <option value="EMC SERVIÇOS">EMC SERVIÇOS</option>
+                        </select>
+                        <select id="lojaSelect" class="w-full p-4 input-ios text-sm font-medium"></select>
+                        <input id="chamado" type="text" placeholder="Nº Chamado" class="w-full p-4 input-ios text-sm">
+                        <input id="dataServico" type="date" class="w-full p-4 input-ios text-sm">
                     </div>
                 </section>
-                
-                <section class="glass ios-shadow rounded-3xl p-6">
-                    <button onclick="document.getElementById('modalLogos').classList.remove('hidden')" class="w-full py-4 bg-gray-100 hover:bg-gray-200 rounded-2xl text-xs font-bold transition flex items-center justify-center gap-2">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                        CONFIGURAR LOGOTIPOS
-                    </button>
-                </section>
+                <button onclick="document.getElementById('modalLogos').classList.remove('hidden')" class="w-full py-4 bg-gray-100 rounded-2xl text-[10px] font-bold">CONFIGURAR LOGOTIPOS (CAPA)</button>
             </div>
 
-            <!-- Area de Fotos -->
             <div class="lg:col-span-8 space-y-8">
-                <div class="glass ios-shadow rounded-3xl p-8">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Fotos Iniciais</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div id="preview-fachada" class="bg-gray-50 border-2 border-dashed border-gray-200 rounded-3xl p-4 flex flex-col items-center justify-center min-h-[160px] relative">
-                            <span class="text-[10px] font-bold text-gray-400 mb-2 uppercase">Figura 1 – Fachada</span>
+                <div class="glass rounded-3xl p-6">
+                    <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Fotos Obrigatórias</h3>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div id="preview-fachada" class="bg-gray-50 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
                             <input type="file" onchange="handleSingleUpload(this, 'fachada')" class="absolute inset-0 opacity-0 cursor-pointer">
-                            <p class="text-[10px] text-gray-300">Toque para selecionar</p>
+                            <span class="text-[10px] text-gray-400 font-bold uppercase">Figura 1 – Fachada</span>
                         </div>
-                        <div id="preview-marquise" class="bg-gray-50 border-2 border-dashed border-gray-200 rounded-3xl p-4 flex flex-col items-center justify-center min-h-[160px] relative">
-                            <span class="text-[10px] font-bold text-gray-400 mb-2 uppercase">Figura 2 – Marquise</span>
+                        <div id="preview-marquise" class="bg-gray-50 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
                             <input type="file" onchange="handleSingleUpload(this, 'marquise')" class="absolute inset-0 opacity-0 cursor-pointer">
-                            <p class="text-[10px] text-gray-300">Toque para selecionar</p>
+                            <span class="text-[10px] text-gray-400 font-bold uppercase">Figura 2 – Marquise, Letreiro</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="glass ios-shadow rounded-3xl p-8 border-l-[6px] border-red-400">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Situação: ANTES</h3>
-                        <span id="count-antes" class="bg-red-50 text-red-500 px-3 py-1 rounded-full text-[10px] font-bold uppercase">0 Fotos</span>
-                    </div>
-                    <input type="file" multiple onchange="handleBulkUpload(this, 'container-antes', 'antes')" class="w-full p-4 border-2 border-dashed border-gray-100 rounded-2xl text-sm">
-                    <div id="container-antes" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                <div class="glass rounded-3xl p-6 border-l-4 border-red-500">
+                    <h3 class="text-[10px] font-bold text-gray-400 mb-4 uppercase">Fotos Antes</h3>
+                    <input type="file" multiple onchange="handleBulkUpload(this, 'container-antes', 'antes')" class="text-xs mb-4">
+                    <div id="container-antes" class="grid grid-cols-2 gap-4"></div>
                 </div>
 
-                <div class="glass ios-shadow rounded-3xl p-8 border-l-[6px] border-green-400">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Situação: DEPOIS</h3>
-                        <span id="count-depois" class="bg-green-50 text-green-500 px-3 py-1 rounded-full text-[10px] font-bold uppercase">0 Fotos</span>
-                    </div>
-                    <input type="file" multiple onchange="handleBulkUpload(this, 'container-depois', 'depois')" class="w-full p-4 border-2 border-dashed border-gray-100 rounded-2xl text-sm">
-                    <div id="container-depois" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                <div class="glass rounded-3xl p-6 border-l-4 border-green-500">
+                    <h3 class="text-[10px] font-bold text-gray-400 mb-4 uppercase">Fotos Depois</h3>
+                    <input type="file" multiple onchange="handleBulkUpload(this, 'container-depois', 'depois')" class="text-xs mb-4">
+                    <div id="container-depois" class="grid grid-cols-2 gap-4"></div>
                 </div>
             </div>
         </div>
     </main>
 
     <!-- CONVERSOR PDF PARA WORD -->
-    <section id="wordConverterView" class="hidden-view max-w-4xl mx-auto px-6 mt-24">
-        <button onclick="navigate('main')" class="mb-6 text-gray-400 hover:text-black transition flex items-center gap-2">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
-            Voltar ao Dashboard
-        </button>
-        <div class="glass ios-shadow rounded-[40px] p-12 text-center">
-            <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-8">
-                <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-            </div>
-            <h2 class="text-3xl font-bold mb-4">Conversor PDF para WORD</h2>
-            <p class="text-gray-500 mb-10 max-w-md mx-auto">Extraia o conteúdo de documentos PDF para um formato editável compatível com Microsoft Word.</p>
-            
-            <div id="dropZone" class="border-4 border-dashed border-gray-100 rounded-[32px] p-12 hover:border-blue-200 transition-colors cursor-pointer bg-gray-50/50" onclick="document.getElementById('wordFileInput').click()">
+    <section id="wordConverterView" class="hidden-view max-w-2xl mx-auto px-6 mt-24">
+        <div class="glass rounded-[40px] p-10 text-center">
+            <h2 class="text-2xl font-bold mb-4">PDF para WORD</h2>
+            <div class="border-4 border-dashed rounded-3xl p-10 bg-gray-50 cursor-pointer" onclick="document.getElementById('wordFileInput').click()">
                 <input id="wordFileInput" type="file" accept=".pdf" class="hidden" onchange="handleWordFile(this)">
-                <div id="wordStatusContent">
-                    <p class="text-lg font-semibold text-gray-700">Selecione o arquivo PDF</p>
-                    <p class="text-sm text-gray-400 mt-2">Clique ou arraste para carregar</p>
-                </div>
+                <p class="text-sm text-gray-400">Clique para converter PDF em .doc editável</p>
             </div>
-
-            <div id="processingUI" class="hidden mt-8 space-y-4">
-                <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                    <div id="convertBar" class="bg-blue-600 h-full transition-all duration-300" style="width: 0%"></div>
-                </div>
-                <p id="convertStatusText" class="text-sm font-bold text-blue-600 uppercase">Processando documento...</p>
+            <div id="processingUI" class="hidden mt-6">
+                <div class="w-full bg-gray-200 h-1 rounded-full overflow-hidden"><div id="convertBar" class="bg-blue-600 h-full w-0"></div></div>
+                <p class="text-[10px] font-bold mt-2 text-blue-600">PROCESSANDO...</p>
             </div>
         </div>
     </section>
 
     <!-- CONFIGURAÇÕES -->
-    <section id="configView" class="hidden-view max-w-4xl mx-auto px-6 mt-24">
-        <button onclick="navigate('main')" class="mb-4 text-blue-500 flex items-center gap-2">Voltar</button>
-        <div class="glass ios-shadow rounded-3xl p-8">
-            <h3 class="text-xl font-bold mb-6">Gerenciar Unidades</h3>
-            <div class="flex gap-3 mb-6">
-                <input id="newStoreName" type="text" placeholder="Nome da Loja" class="flex-1 p-4 rounded-2xl input-ios text-sm uppercase">
-                <button onclick="addNewStore()" class="bg-black text-white px-6 rounded-2xl font-bold">Adicionar</button>
-            </div>
+    <section id="configView" class="hidden-view max-w-2xl mx-auto px-6 mt-24">
+        <div class="glass rounded-3xl p-8">
+            <h3 class="text-xl font-bold mb-6">Lojas</h3>
+            <div class="flex gap-2 mb-6"><input id="newStore" type="text" class="flex-1 p-3 input-ios text-sm uppercase"><button onclick="addNewStore()" class="bg-black text-white px-4 rounded-xl text-sm font-bold">Add</button></div>
             <div id="storeList" class="space-y-2"></div>
-        </div>
-    </section>
-
-    <!-- HELP DESK -->
-    <section id="helpView" class="hidden-view max-w-3xl mx-auto px-6 mt-24">
-        <button onclick="navigate('main')" class="mb-4 text-blue-500 flex items-center gap-2">Voltar</button>
-        <div class="glass ios-shadow rounded-3xl p-8">
-            <h3 class="text-xl font-bold mb-6">Suporte Técnico</h3>
-            <form onsubmit="event.preventDefault(); alert('Chamado enviado com sucesso!'); navigate('main');">
-                <div class="space-y-4">
-                    <input required type="text" placeholder="Assunto do Problema" class="w-full p-4 rounded-2xl input-ios text-sm">
-                    <textarea required rows="5" placeholder="Descreva detalhadamente o erro ou dúvida..." class="w-full p-4 rounded-2xl input-ios text-sm"></textarea>
-                    <button class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg active:scale-95 transition-transform">Abrir Ticket</button>
-                </div>
-            </form>
         </div>
     </section>
 </div>
 
 <!-- Modal Logotipos -->
 <div id="modalLogos" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100]">
-    <div class="glass p-10 rounded-[40px] max-w-md w-full mx-4 shadow-2xl">
-        <h2 class="text-2xl font-bold mb-6">Configuração de Logos</h2>
-        <div class="space-y-6">
-            <div><label class="text-[10px] font-bold text-gray-400 block mb-2 uppercase">Logo Thermo</label><input type="file" onchange="salvarLogoConfig(this, 'thermo')" class="block w-full text-xs"></div>
-            <div><label class="text-[10px] font-bold text-gray-400 block mb-2 uppercase">Logo EMC</label><input type="file" onchange="salvarLogoConfig(this, 'emc')" class="block w-full text-xs"></div>
-            <div><label class="text-[10px] font-bold text-gray-400 block mb-2 uppercase">Logo Cliente (Ex: Americanas)</label><input type="file" onchange="salvarLogoConfig(this, 'americanas')" class="block w-full text-xs"></div>
+    <div class="glass p-8 rounded-[30px] max-w-sm w-full mx-4">
+        <h2 class="text-lg font-bold mb-6">Configuração de Logos</h2>
+        <div class="space-y-4">
+            <div><label class="text-[10px] font-bold text-gray-400 block mb-1">LOGO PRESTADOR (10x9cm)</label><input type="file" onchange="salvarLogo(this, 'prestador')" class="text-xs"></div>
+            <div><label class="text-[10px] font-bold text-gray-400 block mb-1">LOGO AMERICANAS (11.28x2.83cm)</label><input type="file" onchange="salvarLogo(this, 'americanas')" class="text-xs"></div>
         </div>
-        <button onclick="document.getElementById('modalLogos').classList.add('hidden')" class="mt-10 w-full bg-black text-white py-4 rounded-2xl font-bold">Concluir</button>
+        <button onclick="document.getElementById('modalLogos').classList.add('hidden')" class="mt-8 w-full bg-black text-white py-4 rounded-2xl font-bold text-sm">Concluir</button>
     </div>
 </div>
 
 <script>
-// --- Configuração PDF.js ---
+// --- Configurações Iniciais ---
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let lojasDB = JSON.parse(localStorage.getItem('areispro_lojas')) || ["1068 – MARITUBA", "1553 – PORTEL", "368 – CASTANHEIRA"];
+let fotos = { fachada: null, marquise: null, antes: [], depois: [] };
+let logos = { prestador: null, americanas: null };
 
-// --- Animação de Texto ---
-const texts = ["GESTÃO DE NEGÓCIOS", "PDF PARA WORD", "RELATÓRIO FOTOGRÁFICO"];
-let textIndex = 0;
-setInterval(() => {
-    textIndex = (textIndex + 1) % texts.length;
-    const el = document.getElementById('changingText');
-    el.style.opacity = '0';
-    setTimeout(() => {
-        el.innerText = texts[textIndex];
-        el.style.opacity = '1';
-    }, 400);
-}, 3000);
-
-// --- Navegação ---
 function entrarNoSistema() {
     document.getElementById('welcomeView').classList.add('hidden-view');
     document.getElementById('appContainer').classList.remove('hidden-view');
-    updateLojasUI();
+    renderLojas();
 }
 
 function navigate(view) {
-    ['mainView', 'configView', 'helpView', 'wordConverterView'].forEach(v => {
-        document.getElementById(v)?.classList.add('hidden-view');
-    });
+    ['mainView', 'configView', 'wordConverterView'].forEach(v => document.getElementById(v)?.classList.add('hidden-view'));
     document.getElementById(`${view}View`)?.classList.remove('hidden-view');
     document.getElementById('userMenu').classList.add('hidden');
-    window.scrollTo(0,0);
 }
 
 function toggleMenu() { document.getElementById('userMenu').classList.toggle('hidden'); }
 
-// --- Gerenciamento de Dados ---
-let lojasDB = JSON.parse(localStorage.getItem('areispro_lojas')) || ["1068 – MARITUBA - PA", "1553 – PORTEL - PA", "368 – CASTANHEIRA - PA"];
-let fotosRelatorio = { fachada: null, marquise: null, antes: [], depois: [] };
-let logosConfig = { thermo: null, emc: null, americanas: null };
-
-function updateLojasUI() {
+function renderLojas() {
     const s = document.getElementById('lojaSelect');
     const l = document.getElementById('storeList');
     if(s) s.innerHTML = lojasDB.map(loja => `<option value="${loja}">${loja}</option>`).join('');
-    if(l) l.innerHTML = lojasDB.map((loja, i) => `<div class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl"><span>${loja}</span><button onclick="deleteStore(${i})" class="text-red-500 font-bold px-3 py-1">Excluir</button></div>`).join('');
+    if(l) l.innerHTML = lojasDB.map((loja, i) => `<div class="flex justify-between p-3 bg-gray-50 rounded-xl text-sm"><span>${loja}</span><button onclick="lojasDB.splice(${i},1);renderLojas()" class="text-red-500">×</button></div>`).join('');
 }
 
 function addNewStore() {
-    const n = document.getElementById('newStoreName').value.trim().toUpperCase();
-    if(n) { lojasDB.push(n); localStorage.setItem('areispro_lojas', JSON.stringify(lojasDB)); updateLojasUI(); document.getElementById('newStoreName').value = ""; }
+    const v = document.getElementById('newStore').value.toUpperCase();
+    if(v) { lojasDB.push(v); renderLojas(); document.getElementById('newStore').value = ""; }
 }
 
-function deleteStore(i) { lojasDB.splice(i, 1); localStorage.setItem('areispro_lojas', JSON.stringify(lojasDB)); updateLojasUI(); }
-
-// --- Upload de Fotos ---
 async function handleSingleUpload(input, type) {
     if (input.files[0]) {
-        const src = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(input.files[0]); });
-        fotosRelatorio[type] = src;
-        document.getElementById(`preview-${type}`).innerHTML = `<img src="${src}" class="w-full h-40 object-cover rounded-2xl shadow-lg">`;
+        fotos[type] = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(input.files[0]); });
+        document.getElementById(`preview-${type}`).innerHTML = `<img src="${fotos[type]}" class="w-full h-full object-cover rounded-xl">`;
     }
 }
 
-async function handleBulkUpload(input, containerId, key) {
+async function handleBulkUpload(input, container, key) {
     for (const file of Array.from(input.files)) {
         const src = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(file); });
-        fotosRelatorio[key].push({ src, desc: "Averiguação técnica conforme chamado, identificado necessidade de reparo preventivo/corretivo." });
+        fotos[key].push({ src, desc: "Averiguação técnica conforme chamado, identificado necessidade de reparo preventivo/corretivo." });
     }
-    document.getElementById(`count-${key}`).innerText = `${fotosRelatorio[key].length} FOTOS`;
-    renderList(containerId, key);
+    renderGrid(container, key);
 }
 
-function renderList(containerId, key) {
-    const c = document.getElementById(containerId); c.innerHTML = "";
-    fotosRelatorio[key].forEach((f, i) => {
-        c.innerHTML += `
-            <div class="bg-white p-4 rounded-2xl ios-shadow border border-gray-100">
-                <div class="relative group mb-3">
-                    <img src="${f.src}" class="w-full h-32 object-cover rounded-xl">
-                    <button onclick="removeItem('${key}', ${i}, '${containerId}')" class="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center">×</button>
-                </div>
-                <textarea onchange="fotosRelatorio['${key}'][${i}].desc = this.value" class="w-full p-3 text-[11px] bg-gray-50 rounded-xl border-none h-20 resize-none font-medium">${f.desc}</textarea>
-            </div>`;
+function renderGrid(container, key) {
+    const c = document.getElementById(container); c.innerHTML = "";
+    fotos[key].forEach((f, i) => {
+        c.innerHTML += `<div class="bg-white p-2 rounded-xl shadow-sm border"><img src="${f.src}" class="w-full h-24 object-cover rounded-lg mb-2"><textarea onchange="fotos.${key}[${i}].desc=this.value" class="w-full text-[10px] p-1 h-12 border-none bg-gray-50">${f.desc}</textarea></div>`;
     });
 }
 
-function removeItem(key, i, containerId) {
-    fotosRelatorio[key].splice(i, 1);
-    document.getElementById(`count-${key}`).innerText = `${fotosRelatorio[key].length} FOTOS`;
-    renderList(containerId, key);
+async function salvarLogo(input, key) {
+    if(input.files[0]) logos[key] = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(input.files[0]); });
 }
 
-async function salvarLogoConfig(input, key) { 
-    if(input.files[0]) logosConfig[key] = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(input.files[0]); }); 
-}
-
-// --- Lógica do Conversor PDF para Word ---
 async function handleWordFile(input) {
-    const file = input.files[0];
-    if (!file) return;
-
-    const processingUI = document.getElementById('processingUI');
-    const progressBar = document.getElementById('convertBar');
-    const statusText = document.getElementById('convertStatusText');
-    const dropZone = document.getElementById('dropZone');
-
-    processingUI.classList.remove('hidden');
-    dropZone.classList.add('opacity-50', 'pointer-events-none');
-    
-    try {
-        statusText.innerText = "Lendo PDF...";
-        progressBar.style.width = "20%";
-
-        const arrayBuffer = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-        let fullText = "";
-
-        for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const content = await page.getTextContent();
-            const strings = content.items.map(item => item.str);
-            fullText += strings.join(' ') + "\n\n";
-            progressBar.style.width = `${20 + (i / pdf.numPages * 60)}%`;
-        }
-
-        statusText.innerText = "Gerando arquivo Word...";
-        progressBar.style.width = "90%";
-
-        // Cria o arquivo .doc (RTF/HTML) que o Word abre perfeitamente
-        const blob = new Blob([`
-            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-            <head><meta charset="utf-8"><title>Exported from AREISPRO</title></head>
-            <body>${fullText.replace(/\n/g, '<br>')}</body>
-            </html>
-        `], { type: 'application/msword' });
-
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = file.name.replace('.pdf', '') + "_AREISPRO_EDITAVEL.doc";
-        link.click();
-
-        statusText.innerText = "Concluído!";
-        progressBar.style.width = "100%";
-        setTimeout(() => {
-            processingUI.classList.add('hidden');
-            dropZone.classList.remove('opacity-50', 'pointer-events-none');
-            progressBar.style.width = "0%";
-        }, 3000);
-
-    } catch (err) {
-        console.error(err);
-        alert("Erro ao converter PDF. Certifique-se que o arquivo não está protegido por senha.");
-        processingUI.classList.add('hidden');
-        dropZone.classList.remove('opacity-50', 'pointer-events-none');
+    const file = input.files[0]; if (!file) return;
+    document.getElementById('processingUI').classList.remove('hidden');
+    const pdf = await pdfjsLib.getDocument(await file.arrayBuffer()).promise;
+    let text = "";
+    for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        text += content.items.map(it => it.str).join(' ') + "<br><br>";
     }
+    const blob = new Blob([`<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset="utf-8"></head><body>${text}</body></html>`], { type: 'application/msword' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "Editavel.doc"; a.click();
+    document.getElementById('processingUI').classList.add('hidden');
 }
 
-// --- Lógica de Geração do Relatório PDF ---
+// --- GERAÇÃO DO PDF REFINADA ---
 async function gerarRelatorio() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const prestador = document.getElementById('prestador').value;
-    const unidade = document.getElementById('lojaSelect').value;
-    const numChamado = document.getElementById('chamado').value || "N/A";
-    let figuraCount = 1;
-
-    // Header Preto
-    doc.setFillColor(0, 0, 0);
-    doc.rect(0, 0, 210, 35, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
-    doc.setFont(undefined, 'bold');
-    doc.text("AREISPRO", 20, 20);
-    doc.setFontSize(10);
-    doc.setFont(undefined, 'normal');
-    doc.text("RELATÓRIO TÉCNICO FOTOGRÁFICO", 20, 27);
+    const doc = new jsPDF({ unit: 'cm', format: 'a4' });
     
-    // Logos
-    if(logosConfig.americanas) doc.addImage(logosConfig.americanas, 'PNG', 160, 5, 30, 12);
-    const logoP = prestador === 'THERMO' ? logosConfig.thermo : logosConfig.emc;
-    if(logoP) doc.addImage(logoP, 'PNG', 160, 20, 30, 10);
+    const prestadorNome = document.getElementById('prestador').value;
+    const unidadeLoja = document.getElementById('lojaSelect').value;
+    const chamadoNum = document.getElementById('chamado').value || "N/A";
+    const dataServicoInput = document.getElementById('dataServico').value;
+    const dataServico = dataServicoInput ? dataServicoInput.split('-').reverse().join('/') : new Date().toLocaleDateString('pt-BR');
 
-    // Info Atendimento
-    doc.setTextColor(0,0,0);
-    doc.setFontSize(14);
-    doc.text("DADOS DO ATENDIMENTO", 20, 50);
-    doc.setDrawColor(230, 230, 230);
-    doc.line(20, 52, 190, 52);
-
-    doc.setFontSize(10);
-    doc.text(`PRESTADOR: ${prestador}`, 20, 62);
-    doc.text(`UNIDADE: ${unidade}`, 20, 68);
-    doc.text(`CHAMADO: ${numChamado}`, 20, 74);
-    doc.text(`DATA: ${new Date().toLocaleDateString()}`, 150, 62);
-
-    let y = 85;
-
-    // Fotos Iniciais
-    if(fotosRelatorio.fachada || fotosRelatorio.marquise) {
-        doc.setFontSize(12);
-        doc.text("IMAGENS INICIAIS", 20, y);
-        y += 10;
-        if(fotosRelatorio.fachada) {
-            doc.addImage(fotosRelatorio.fachada, 'JPEG', 20, y, 80, 50);
-            doc.setFontSize(8);
-            doc.text(`Figura ${figuraCount++} – Fachada da Unidade`, 20, y + 55);
-        }
-        if(fotosRelatorio.marquise) {
-            doc.addImage(fotosRelatorio.marquise, 'JPEG', 110, y, 80, 50);
-            doc.setFontSize(8);
-            doc.text(`Figura ${figuraCount++} – Marquise / Acesso`, 110, y + 55);
-        }
-        y += 70;
-    }
-
-    const renderGrid = (title, photos) => {
-        if(photos.length === 0) return;
-        if(y > 220) { doc.addPage(); y = 20; }
-        doc.setFontSize(12);
-        doc.text(title, 20, y);
-        y += 10;
-        let x = 20;
-        photos.forEach(f => {
-            if(y > 230) { doc.addPage(); y = 20; x = 20; }
-            doc.addImage(f.src, 'JPEG', x, y, 82, 48);
-            doc.setFontSize(7);
-            const split = doc.splitTextToSize(`Figura ${figuraCount++} – ${f.desc}`, 78);
-            doc.text(split, x, y + 53);
-            x += 88;
-            if(x > 150) { x = 20; y += 75; }
-        });
-        y += 85;
+    // Função para borda externa global (0.5pt)
+    const addGlobalBorder = () => {
+        doc.setLineWidth(0.017); // ~0.5pt
+        doc.setDrawColor(0);
+        doc.rect(0.5, 0.5, 20, 28.7); 
     };
 
-    renderGrid("SITUAÇÃO: ANTES", fotosRelatorio.antes);
-    renderGrid("SITUAÇÃO: DEPOIS", fotosRelatorio.depois);
+    // 1. CAPA
+    addGlobalBorder();
+    if (logos.prestador) doc.addImage(logos.prestador, 'JPEG', 1, 1, 9, 10);
+    if (logos.americanas) doc.addImage(logos.americanas, 'JPEG', 8.5, 1, 11.28, 2.83);
 
-    doc.save(`Relatorio_AREISPRO_${unidade.split(' – ')[0]}.pdf`);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    
+    let currentY = 15;
+    doc.text("RELATÓRIO FOTOGRÁFICO", 1.5, currentY); currentY += 1.2;
+    doc.text(`${prestadorNome}`, 1.5, currentY); currentY += 1.2;
+    doc.text(`LOJA: ${unidadeLoja}`, 1.5, currentY); currentY += 1.2;
+    doc.text(`N° CHAMADO: ${chamadoNum}`, 1.5, currentY); currentY += 1.2;
+    doc.text(`DATA DO SERVIÇO: ${dataServico}`, 1.5, currentY);
+
+    // 2. CABEÇALHO (A partir da 2ª página)
+    const addHeader = () => {
+        addGlobalBorder();
+        if (logos.prestador) doc.addImage(logos.prestador, 'JPEG', 1, 0.8, 1.55, 1.41);
+        
+        doc.setLineWidth(0.017);
+        doc.line(1, 2.4, 20, 2.4); // Linha após o logo
+        
+        doc.rect(1, 2.6, 19, 1.0); // Retângulo do cabeçalho
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`TIPO: Relatório Fotográfico`, 1.3, 3.2);
+        doc.text(`DATA: ${dataServico}`, 10.5, 3.2, { align: 'center' });
+        doc.text(`PREPARADO POR: JAIR RAMOS`, 14.8, 3.2);
+    };
+
+    // 3. ESTRUTURA FOTOGRÁFICA (FACHADA / MARQUISE)
+    doc.addPage();
+    addHeader();
+    
+    let y = 4.5;
+    let figCount = 1;
+
+    // Tabela para Fachada e Marquise (Mesma estrutura de bordas 0.5pt)
+    const renderBigPhoto = (img, label) => {
+        if (!img) return;
+        if (y > 18) { doc.addPage(); addHeader(); y = 4.5; }
+        
+        doc.setLineWidth(0.017);
+        doc.rect(1.5, y, 18.08, 9.5); // Célula da tabela
+        doc.addImage(img, 'JPEG', 1.5, y, 18.08, 8.51);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`Figura ${figCount++} – ${label}`, 1.7, y + 9.1);
+        y += 10.5;
+    };
+
+    renderBigPhoto(fotos.fachada, "Fachada");
+    renderBigPhoto(fotos.marquise, "Marquise, Letreiro");
+
+    // 4. TABELAS ANTES E DEPOIS
+    const renderTable = (title, data) => {
+        if (data.length === 0) return;
+        if (y > 22) { doc.addPage(); addHeader(); y = 4.5; }
+        
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text(`RELATÓRIO FOTOGRÁFICO - ${title}`, 10.5, y, { align: 'center' });
+        y += 1.2;
+
+        let col = 0;
+        data.forEach((item) => {
+            const x = col === 0 ? 1.5 : 10.6;
+            
+            doc.setLineWidth(0.017);
+            doc.rect(x, y, 8.9, 6.8); // Célula da tabela 0.5pt
+            
+            doc.addImage(item.src, 'JPEG', x, y, 8.9, 5); // Imagem 5x8.9cm
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8);
+            const splitText = doc.splitTextToSize(`Figura ${figCount++} - ${item.desc}`, 8.5);
+            doc.text(splitText, x + 0.2, y + 5.5);
+
+            if (col === 1) {
+                col = 0; y += 7.5;
+                if (y > 23) { doc.addPage(); addHeader(); y = 4.5; }
+            } else {
+                col = 1;
+            }
+        });
+        if (col === 1) y += 7.5;
+    };
+
+    renderTable("ANTES", fotos.antes);
+    renderTable("DEPOIS", fotos.depois);
+
+    doc.save(`RELATORIO_AREISPRO_${unidadeLoja.split(' ')[0]}.pdf`);
 }
+
+const texts = ["GESTÃO DE NEGÓCIOS", "RELATÓRIOS TÉCNICOS", "PADRÃO AREISPRO"];
+let idx = 0;
+setInterval(() => {
+    const el = document.getElementById('changingText');
+    if(el) {
+        el.style.opacity = 0;
+        setTimeout(() => {
+            idx = (idx + 1) % texts.length;
+            el.innerText = texts[idx];
+            el.style.opacity = 1;
+        }, 400);
+    }
+}, 3000);
 </script>
 </body>
 </html>
