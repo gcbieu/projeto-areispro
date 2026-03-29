@@ -216,7 +216,9 @@ let db = {
     ],
     fornecedores: [
         "THERMO ENGENHARIA SOLUÇÕES LTDA", 
-        "EMC SERVIÇOS REFORMA PREDIAL E METALURGIA"
+        "EMC SERVIÇOS REFORMA PREDIAL E METALURGIA",
+        "JSERVICE INSTAÇÃO E MANUTENÇÃO PREDIAL ",
+        " "
     ]
 };
 
@@ -320,6 +322,45 @@ function navigate(v) { ['mainView', 'configView'].forEach(id => document.getElem
 function toggleMenu() { document.getElementById('userMenu').classList.toggle('hidden'); }
 function toggleConverter() { document.getElementById('converterExpand').classList.toggle('hidden'); }
 function triggerConverter(id) { document.getElementById(id).click(); }
+async function handleConversion(input, type) {
+    const file = input.files[0];
+    if (!file) return;
+
+    // Feedback visual para o usuário não achar que travou
+    const btn = input.parentElement;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "<p class='text-[9px] font-black animate-pulse'>CONVERTENDO...</p>";
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await fetch("https://api.pdf.co/v1/pdf/convert/to/doc", {
+            method: "POST",
+            headers: {
+                "x-api-key": "SUA_CHAVE_AQUI" // <--- Troque pela sua chave real
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.url) {
+            // Em vez de window.open, vamos forçar o download
+            const link = document.createElement('a');
+            link.href = result.url;
+            link.download = file.name.replace(".pdf", ".doc");
+            link.click();
+        } else {
+            alert("Erro: " + (result.message || "Falha na conversão"));
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Erro de conexão com o servidor de conversão.");
+    } finally {
+        btn.innerHTML = originalText; // Restaura o botão
+    }
+}
 function addNovoAnexo() { anexos.push({ id: Date.now(), titulo: `ANEXO ${anexos.length + 1}`, obs: "", fotosAntes: [], fotosDepois: [] }); renderAnexos(); }
 function removeAnexo(id) { if(anexos.length > 1) { anexos = anexos.filter(a => a.id !== id); renderAnexos(); } }
 function updateAnexoObs(id, val) { const a = anexos.find(x => x.id === id); if(a) a.obs = val; }
@@ -355,7 +396,6 @@ async function gerarRelatorio() {
         doc.addImage(logos.prestador, 'JPEG', 1, 0.8, 1.55, 1.41, undefined, 'FAST');
     }
 
-    // Número da página
     const pageNumber = doc.getCurrentPageInfo().pageNumber;
     const totalPages = doc.internal.getNumberOfPages();
 
@@ -505,7 +545,6 @@ if (anexos && anexos.length > 0 && anexos.some(a => a.obs && a.obs.trim() !== ""
             const margemExtra = 0.5;
             doc.setDrawColor(0);
             doc.setLineWidth(0.017); 
-// Removendo a margem extra para colar na imagem
             doc.rect(x, y, larguraImg, alturaImg + 1.8);
             doc.addImage(f.src, 'JPEG', x, y, larguraImg, alturaImg, undefined, 'FAST');
                 
