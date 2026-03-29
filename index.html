@@ -9,68 +9,79 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --ios-bg: #ffffff; --ios-accent: #000000; }
+        :root { --ios-bg: #f5f5f7; --ios-accent: #007aff; }
         body { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
             background-color: var(--ios-bg);
             color: #1d1d1f;
             margin: 0;
+            overflow-x: hidden;
         }
 
-        .dot {
-            width: 32px; height: 32px; background: black; border-radius: 50%;
-            display: inline-block; margin-left: 15px; vertical-align: middle;
-            animation: moveRight 3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        .welcome-dot {
+            width: 28px; height: 28px; background: black; border-radius: 50%;
+            position: absolute; left: 50%; transform: translateX(-50%);
+            top: 45px;
+            animation: slideUnder 3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
         }
-        @keyframes moveRight {
-            0% { transform: translateX(-150px); opacity: 0; }
-            20% { transform: translateX(0); opacity: 1; }
-            80% { transform: translateX(200px); opacity: 1; }
-            100% { transform: translateX(350px); opacity: 0; }
+        @keyframes slideUnder {
+            0% { transform: translateX(-120px); opacity: 0; }
+            20% { transform: translateX(-60px); opacity: 1; }
+            80% { transform: translateX(60px); opacity: 1; }
+            100% { transform: translateX(120px); opacity: 0; }
         }
 
         .hidden-view { display: none !important; }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); }
-        .input-ios { background: rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.2s; border-radius: 12px; }
-        .input-ios:focus { background: #fff; border-color: #007aff; outline: none; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.4); }
+        .input-ios { background: rgba(0, 0, 0, 0.04); border: 1.5px solid transparent; transition: all 0.2s; border-radius: 12px; }
+        .input-ios:focus { background: #fff; border-color: var(--ios-accent); outline: none; box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1); }
+        
+        .shadow-ios { box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        .btn-ios-main { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-ios-main:active { transform: scale(0.96); }
+
+        .delete-btn {
+            position: absolute; top: -8px; right: -8px;
+            background: #ff3b30; color: white; width: 22px; height: 22px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: bold; cursor: pointer; border: 2px solid white;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
 
-<!-- TELA DE BEM VINDO -->
-<section id="welcomeView" class="flex flex-col items-center justify-center min-h-screen p-6">
-    <div class="flex flex-col items-center justify-center h-[60vh]">
-        <h1 class="text-lg font-bold uppercase tracking-[0.3em] text-gray-400 mb-8 text-center">AREISPRO</h1>
-        <div class="text-[2rem] sm:text-[2.5rem] font-normal flex items-center h-20 text-center">
-            <span id="changingText">GESTÃO DE NEGÓCIOS</span>
-            <div class="dot"></div>
+<section id="welcomeView" class="flex flex-col items-center justify-center min-h-screen bg-[#f2f2f7]">
+    <div class="relative mb-32 flex flex-col items-center">
+        <h1 class="text-xs font-bold uppercase tracking-[0.5em] text-gray-400">AREISPRO</h1>
+        <div class="welcome-dot"></div>
+        <div class="mt-20 text-2xl font-light text-center transition-opacity duration-500" id="changingText">
+            CARREGANDO...
         </div>
     </div>
-    <div class="bg-white/70 backdrop-blur-xl rounded-[40px] p-10 shadow-xl border border-black/5 w-full max-w-[400px] text-center">
-        <button onclick="entrarNoSistema()" class="bg-black text-white w-full py-5 rounded-2xl font-semibold text-lg active:scale-95 transition-transform">Entrar</button>
+    <div class="glass rounded-[32px] p-8 shadow-ios w-[320px] flex flex-col items-center">
+        <button onclick="entrarNoSistema()" class="btn-ios-main bg-black text-white w-full py-4 rounded-[20px] font-semibold text-base shadow-lg shadow-black/20">
+            Começar
+        </button>
     </div>
 </section>
 
-<!-- APP PRINCIPAL -->
 <div id="appContainer" class="hidden-view">
-    <nav class="fixed top-0 w-full z-50 glass border-b border-gray-200">
+    <nav class="fixed top-0 w-full z-50 glass border-b border-gray-200/50">
         <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
             <h1 class="text-xl font-bold tracking-tighter cursor-pointer" onclick="navigate('main')">AREIS<span class="font-light text-gray-400">PRO</span></h1>
-            
-            <div class="flex items-center gap-2">
-                <button onclick="gerarRelatorio()" class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full text-[10px] font-bold hover:scale-105 transition">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            <div class="flex items-center gap-3">
+                <button onclick="gerarRelatorio()" class="flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-full text-[10px] font-bold hover:opacity-80 transition">
                     <span>GERAR PDF</span>
                 </button>
-                <button onclick="navigate('converter')" class="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold hover:bg-blue-100 transition">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>
+                <button onclick="toggleConverter()" class="flex items-center gap-2 px-5 py-2.5 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold">
                     <span>CONVERSOR</span>
                 </button>
-                <button onclick="toggleMenu()" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center border border-gray-300 overflow-hidden">
-                    <img id="avatarPreview" src="https://ui-avatars.com/api/?name=Jair+Ramos&background=000&color=fff" class="w-full h-full object-cover">
+                <button onclick="toggleMenu()" class="w-9 h-9 rounded-full bg-gray-200 border border-gray-300 overflow-hidden shadow-sm">
+                    <img id="avatarPreview" src="https://ui-avatars.com/api/?name=Jair+Ramos&background=000&color=fff" class="w-full h-full">
                 </button>
-                <div id="userMenu" class="hidden absolute right-4 top-16 w-56 glass rounded-2xl py-2 border border-gray-200 shadow-2xl">
-                    <button onclick="navigate('config')" class="w-full text-left px-4 py-3 text-sm hover:bg-gray-100">Configurações</button>
+                <div id="userMenu" class="hidden absolute right-4 top-16 w-52 glass rounded-2xl py-2 shadow-2xl border border-gray-100">
+                    <button onclick="navigate('config')" class="w-full text-left px-4 py-3 text-sm hover:bg-white/50">Configurações</button>
                     <button onclick="location.reload()" class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50">Sair</button>
                 </div>
             </div>
@@ -78,351 +89,330 @@
     </nav>
 
     <main id="mainView" class="max-w-6xl mx-auto px-6 mt-24 pb-20">
+        <div id="converterExpand" class="hidden mb-8 overflow-hidden transition-all duration-500">
+            <div class="glass rounded-[32px] p-8 grid grid-cols-1 md:grid-cols-4 gap-4 border border-blue-100">
+                <div class="bg-blue-600/5 p-4 rounded-2xl text-center cursor-pointer border border-blue-200" onclick="triggerConverter('pdfToWordInput')">
+                    <p class="text-[9px] font-black text-blue-700 mb-2 uppercase">PDF para Word</p>
+                    <input id="pdfToWordInput" type="file" accept=".pdf" class="hidden" onchange="handleConversion(this, 'pdfToWord')">
+                    <span class="text-xs text-blue-400">Selecionar</span>
+                </div>
+            </div>
+            <div id="procUI" class="hidden mt-4 glass p-4 rounded-2xl text-center max-w-xs mx-auto">
+                <div class="w-full bg-gray-200 h-1 rounded-full overflow-hidden"><div id="cBar" class="bg-blue-600 h-full w-0 transition-all duration-300"></div></div>
+                <p id="sMsg" class="text-[9px] font-bold mt-2 text-blue-600 uppercase">Processando...</p>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-4 space-y-6">
-                <section class="glass rounded-3xl p-6">
-                    <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Informações do Relatório</h3>
+                <section class="glass rounded-3xl p-6 shadow-sm">
+                    <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Informações</h3>
                     <div class="space-y-4">
-                        <select id="prestador" class="w-full p-4 input-ios text-sm font-medium">
-                            <option value="THERMO ENGENHARIA">THERMO ENGENHARIA</option>
-                            <option value="EMC SERVIÇOS">EMC SERVIÇOS</option>
-                        </select>
+                        <select id="prestador" class="w-full p-4 input-ios text-sm font-medium"></select>
                         <select id="lojaSelect" class="w-full p-4 input-ios text-sm font-medium"></select>
                         <input id="chamado" type="text" placeholder="Nº Chamado" class="w-full p-4 input-ios text-sm">
                         <input id="dataServico" type="date" class="w-full p-4 input-ios text-sm">
                     </div>
                 </section>
-                <button onclick="document.getElementById('modalLogos').classList.remove('hidden')" class="w-full py-4 bg-gray-100 rounded-2xl text-[10px] font-bold">CONFIGURAR LOGOTIPOS (CAPA)</button>
+                <button onclick="document.getElementById('modalLogos').classList.remove('hidden')" class="w-full py-4 bg-gray-100 rounded-2xl text-[10px] font-bold active:bg-gray-200 transition">CONFIGURAR LOGOS CAPA</button>
             </div>
 
             <div class="lg:col-span-8 space-y-8">
                 <div class="glass rounded-3xl p-6">
-                    <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Fotos Obrigatórias</h3>
-                    <div class="grid grid-cols-1 gap-4">
-                        <div id="preview-fachada" class="bg-gray-50 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
+                    <h3 class="text-[10px] font-bold text-gray-400 uppercase mb-4">Fotos Obrigatórias</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div id="prev-fachada" class="bg-gray-50 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
                             <input type="file" onchange="handleSingleUpload(this, 'fachada')" class="absolute inset-0 opacity-0 cursor-pointer">
                             <span class="text-[10px] text-gray-400 font-bold uppercase">Figura 1 – Fachada</span>
                         </div>
-                        <div id="preview-marquise" class="bg-gray-50 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
+                        <div id="prev-marquise" class="bg-gray-50 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
                             <input type="file" onchange="handleSingleUpload(this, 'marquise')" class="absolute inset-0 opacity-0 cursor-pointer">
-                            <span class="text-[10px] text-gray-400 font-bold uppercase">Figura 2 – Marquise, Letreiro</span>
+                            <span class="text-[10px] text-gray-400 font-bold uppercase">Figura 2 – Marquise</span>
                         </div>
                     </div>
                 </div>
-
-                <div class="glass rounded-3xl p-6 border-l-4 border-red-500">
-                    <h3 class="text-[10px] font-bold text-gray-400 mb-4 uppercase">Fotos Antes</h3>
-                    <input type="file" multiple onchange="handleBulkUpload(this, 'container-antes', 'antes')" class="text-xs mb-4">
-                    <div id="container-antes" class="grid grid-cols-2 gap-4"></div>
-                </div>
-
-                <div class="glass rounded-3xl p-6 border-l-4 border-green-500">
-                    <h3 class="text-[10px] font-bold text-gray-400 mb-4 uppercase">Fotos Depois</h3>
-                    <input type="file" multiple onchange="handleBulkUpload(this, 'container-depois', 'depois')" class="text-xs mb-4">
-                    <div id="container-depois" class="grid grid-cols-2 gap-4"></div>
-                </div>
+                <div id="anexosContainer"></div>
+                <button onclick="addNovoAnexo()" class="w-full py-5 border-2 border-dashed border-gray-300 rounded-3xl text-[11px] font-bold text-gray-400 hover:bg-white transition flex items-center justify-center gap-2">
+                    <span class="text-lg">+</span> ADICIONAR NOVO ANEXO (FOTOS)
+                </button>
             </div>
         </div>
     </main>
 
-    <!-- ABA CONVERSOR CONSOLIDADA -->
-    <section id="converterView" class="hidden-view max-w-4xl mx-auto px-6 mt-24">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- PDF PARA WORD (Original) -->
-            <div class="glass rounded-[30px] p-8 text-center border-t-4 border-blue-500">
-                <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">PDF para WORD</h3>
-                <div class="border-2 border-dashed rounded-2xl p-6 bg-gray-50 cursor-pointer hover:bg-gray-100 transition" onclick="triggerConverter('pdfToWordInput')">
-                    <input id="pdfToWordInput" type="file" accept=".pdf" class="hidden" onchange="handleConversion(this, 'pdfToWord')">
-                    <p class="text-[10px] text-gray-400 font-bold">SELECIONAR PDF</p>
-                </div>
-            </div>
-
-            <!-- WORD PARA PDF -->
-            <div class="glass rounded-[30px] p-8 text-center border-t-4 border-red-500">
-                <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">WORD para PDF</h3>
-                <div class="border-2 border-dashed rounded-2xl p-6 bg-gray-50 cursor-pointer hover:bg-gray-100 transition" onclick="triggerConverter('wordToPdfInput')">
-                    <input id="wordToPdfInput" type="file" accept=".doc,.docx" class="hidden" onchange="handleConversion(this, 'wordToPdf')">
-                    <p class="text-[10px] text-gray-400 font-bold">SELECIONAR WORD</p>
-                </div>
-            </div>
-
-            <!-- EXCEL PARA PDF -->
-            <div class="glass rounded-[30px] p-8 text-center border-t-4 border-green-600">
-                <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">EXCEL para PDF</h3>
-                <div class="border-2 border-dashed rounded-2xl p-6 bg-gray-50 cursor-pointer hover:bg-gray-100 transition" onclick="triggerConverter('excelToPdfInput')">
-                    <input id="excelToPdfInput" type="file" accept=".xls,.xlsx" class="hidden" onchange="handleConversion(this, 'excelToPdf')">
-                    <p class="text-[10px] text-gray-400 font-bold">SELECIONAR EXCEL</p>
-                </div>
-            </div>
-
-            <!-- PDF PARA EXCEL -->
-            <div class="glass rounded-[30px] p-8 text-center border-t-4 border-yellow-500">
-                <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">PDF para EXCEL</h3>
-                <div class="border-2 border-dashed rounded-2xl p-6 bg-gray-50 cursor-pointer hover:bg-gray-100 transition" onclick="triggerConverter('pdfToExcelInput')">
-                    <input id="pdfToExcelInput" type="file" accept=".pdf" class="hidden" onchange="handleConversion(this, 'pdfToExcel')">
-                    <p class="text-[10px] text-gray-400 font-bold">SELECIONAR PDF</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="processingUI" class="hidden mt-10 glass p-6 rounded-2xl text-center max-w-sm mx-auto">
-            <div class="w-full bg-gray-200 h-1 rounded-full overflow-hidden"><div id="convertBar" class="bg-blue-600 h-full w-0 transition-all duration-500"></div></div>
-            <p id="statusMsg" class="text-[10px] font-bold mt-2 text-blue-600 uppercase">PROCESSANDO...</p>
-        </div>
-    </section>
-
-    <!-- CONFIGURAÇÕES -->
     <section id="configView" class="hidden-view max-w-2xl mx-auto px-6 mt-24">
-        <div class="glass rounded-3xl p-8">
+        <div class="glass rounded-3xl p-8 mb-6">
             <h3 class="text-xl font-bold mb-6">Lojas</h3>
-            <div class="flex gap-2 mb-6"><input id="newStore" type="text" class="flex-1 p-3 input-ios text-sm uppercase"><button onclick="addNewStore()" class="bg-black text-white px-4 rounded-xl text-sm font-bold">Add</button></div>
+            <div class="flex gap-2 mb-6"><input id="newStore" type="text" class="flex-1 p-3 input-ios text-sm uppercase"><button onclick="addStore()" class="bg-black text-white px-4 rounded-xl text-sm font-bold">Add</button></div>
             <div id="storeList" class="space-y-2"></div>
+        </div>
+        <div class="glass rounded-3xl p-8">
+            <h3 class="text-xl font-bold mb-6">Fornecedores</h3>
+            <div class="flex gap-2 mb-6"><input id="newProv" type="text" class="flex-1 p-3 input-ios text-sm uppercase"><button onclick="addProv()" class="bg-black text-white px-4 rounded-xl text-sm font-bold">Add</button></div>
+            <div id="provList" class="space-y-2"></div>
         </div>
     </section>
 </div>
 
-<!-- Modal Logotipos -->
-<div id="modalLogos" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100]">
-    <div class="glass p-8 rounded-[30px] max-w-sm w-full mx-4">
+<div id="modalLogos" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100]">
+    <div class="glass p-8 rounded-[32px] max-w-sm w-full mx-4 shadow-2xl">
         <h2 class="text-lg font-bold mb-6">Configuração de Logos</h2>
-        <div class="space-y-4">
-            <div><label class="text-[10px] font-bold text-gray-400 block mb-1">LOGO PRESTADOR (10x9cm)</label><input type="file" onchange="salvarLogo(this, 'prestador')" class="text-xs"></div>
-            <div><label class="text-[10px] font-bold text-gray-400 block mb-1">LOGO AMERICANAS (11.28x2.83cm)</label><input type="file" onchange="salvarLogo(this, 'americanas')" class="text-xs"></div>
+        <div class="space-y-6">
+            <div><label class="text-[9px] font-black text-gray-400 block mb-2 uppercase">Logo Prestador</label><input type="file" onchange="saveLogo(this, 'prestador')" class="text-xs"></div>
+            <div><label class="text-[9px] font-black text-gray-400 block mb-2 uppercase">Logo Cliente</label><input type="file" onchange="saveLogo(this, 'americanas')" class="text-xs"></div>
         </div>
-        <button onclick="document.getElementById('modalLogos').classList.add('hidden')" class="mt-8 w-full bg-black text-white py-4 rounded-2xl font-bold text-sm">Concluir</button>
+        <button onclick="document.getElementById('modalLogos').classList.add('hidden')" class="mt-10 w-full bg-black text-white py-4 rounded-2xl font-bold text-sm">Salvar Alterações</button>
     </div>
 </div>
 
 <script>
-// --- Configurações Iniciais ---
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-let lojasDB = JSON.parse(localStorage.getItem('areispro_lojas')) || ["1068 – MARITUBA", "1553 – PORTEL", "368 – CASTANHEIRA"];
-let fotos = { fachada: null, marquise: null, antes: [], depois: [] };
+let db = {
+    lojas: JSON.parse(localStorage.getItem('are_lojas')) || ["1068 – MARITUBA", "368 – CASTANHEIRA"],
+    fornecedores: JSON.parse(localStorage.getItem('are_provs')) || ["THERMO ENGENHARIA", "EMC SERVIÇOS"]
+};
+let anexos = [{ id: Date.now(), titulo: "ANEXO 1", obs: "", fotosAntes: [], fotosDepois: [] }];
 let logos = { prestador: null, americanas: null };
+let fotosObrigatorias = { fachada: null, marquise: null };
 
 function entrarNoSistema() {
     document.getElementById('welcomeView').classList.add('hidden-view');
     document.getElementById('appContainer').classList.remove('hidden-view');
-    renderLojas();
+    renderDB();
+    renderAnexos();
 }
 
-function navigate(view) {
-    ['mainView', 'configView', 'converterView'].forEach(v => {
-        const el = document.getElementById(v);
-        if(el) el.classList.add('hidden-view');
+function renderDB() {
+    localStorage.setItem('are_lojas', JSON.stringify(db.lojas));
+    localStorage.setItem('are_provs', JSON.stringify(db.fornecedores));
+    document.getElementById('lojaSelect').innerHTML = db.lojas.map(l => `<option value="${l}">${l}</option>`).join('');
+    document.getElementById('prestador').innerHTML = db.fornecedores.map(f => `<option value="${f}">${f}</option>`).join('');
+    document.getElementById('storeList').innerHTML = db.lojas.map((l, i) => `<div class="flex justify-between p-3 bg-black/5 rounded-xl text-xs font-medium"><span>${l}</span><button onclick="db.lojas.splice(${i},1);renderDB()" class="text-red-500">×</button></div>`).join('');
+    document.getElementById('provList').innerHTML = db.fornecedores.map((f, i) => `<div class="flex justify-between p-3 bg-black/5 rounded-xl text-xs font-medium"><span>${f}</span><button onclick="db.fornecedores.splice(${i},1);renderDB()" class="text-red-500">×</button></div>`).join('');
+}
+
+function addStore() { const v = document.getElementById('newStore').value.toUpperCase(); if(v){ db.lojas.push(v); document.getElementById('newStore').value=""; renderDB(); } }
+function addProv() { const v = document.getElementById('newProv').value.toUpperCase(); if(v){ db.fornecedores.push(v); document.getElementById('newProv').value=""; renderDB(); } }
+
+function addNovoAnexo() {
+    anexos.push({ id: Date.now(), titulo: `ANEXO ${anexos.length + 1}`, obs: "", fotosAntes: [], fotosDepois: [] });
+    renderAnexos();
+}
+
+function removeAnexo(id) {
+    if(anexos.length === 1) return;
+    anexos = anexos.filter(a => a.id !== id);
+    anexos.forEach((a, i) => a.titulo = `ANEXO ${i + 1}`);
+    renderAnexos();
+}
+
+function renderAnexos() {
+    const cont = document.getElementById('anexosContainer');
+    cont.innerHTML = "";
+    anexos.forEach((anexo, idx) => {
+        const div = document.createElement('div');
+        div.className = "glass rounded-3xl p-6 mb-6 relative border-l-4 " + (idx % 2 === 0 ? "border-red-500" : "border-green-500");
+        div.innerHTML = `
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">${anexo.titulo}</h3>
+                ${idx > 0 ? `<button onclick="removeAnexo(${anexo.id})" class="text-red-500 text-xs font-bold">EXCLUIR ANEXO</button>` : ''}
+            </div>
+            <textarea placeholder="Observação geral deste anexo..." onchange="updateAnexoObs(${anexo.id}, this.value)" class="w-full p-3 input-ios text-xs mb-4 h-16 resize-none">${anexo.obs}</textarea>
+            <div class="mb-6">
+                <p class="text-[9px] font-black text-red-500 uppercase mb-2">Antes</p>
+                <input type="file" multiple onchange="handleFotosAnexo(this, ${anexo.id}, 'Antes')" class="text-[10px] mb-3">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    ${anexo.fotosAntes.map((f, fIdx) => `
+                        <div class="relative">
+                            <div class="delete-btn" onclick="removeFotoAnexo(${anexo.id}, ${fIdx}, 'Antes')">×</div>
+                            <img src="${f.src}" class="w-full h-24 object-cover rounded-xl shadow-sm">
+                            <textarea placeholder="Descrição..." onchange="updateFotoDesc(${anexo.id}, ${fIdx}, 'Antes', this.value)" class="w-full mt-1 p-1 text-[9px] bg-white/50 rounded-lg h-10 border-none resize-none">${f.desc}</textarea>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <div>
+                <p class="text-[9px] font-black text-green-500 uppercase mb-2">Depois</p>
+                <input type="file" multiple onchange="handleFotosAnexo(this, ${anexo.id}, 'Depois')" class="text-[10px] mb-3">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    ${anexo.fotosDepois.map((f, fIdx) => `
+                        <div class="relative">
+                            <div class="delete-btn" onclick="removeFotoAnexo(${anexo.id}, ${fIdx}, 'Depois')">×</div>
+                            <img src="${f.src}" class="w-full h-24 object-cover rounded-xl shadow-sm">
+                            <textarea placeholder="Descrição..." onchange="updateFotoDesc(${anexo.id}, ${fIdx}, 'Depois', this.value)" class="w-full mt-1 p-1 text-[9px] bg-white/50 rounded-lg h-10 border-none resize-none">${f.desc}</textarea>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        cont.appendChild(div);
     });
-    document.getElementById(`${view}View`)?.classList.remove('hidden-view');
-    document.getElementById('userMenu').classList.add('hidden');
 }
 
-function toggleMenu() { document.getElementById('userMenu').classList.toggle('hidden'); }
-
-function renderLojas() {
-    const s = document.getElementById('lojaSelect');
-    const l = document.getElementById('storeList');
-    if(s) s.innerHTML = lojasDB.map(loja => `<option value="${loja}">${loja}</option>`).join('');
-    if(l) l.innerHTML = lojasDB.map((loja, i) => `<div class="flex justify-between p-3 bg-gray-50 rounded-xl text-sm"><span>${loja}</span><button onclick="lojasDB.splice(${i},1);renderLojas()" class="text-red-500">×</button></div>`).join('');
-}
-
-function addNewStore() {
-    const v = document.getElementById('newStore').value.toUpperCase();
-    if(v) { lojasDB.push(v); renderLojas(); document.getElementById('newStore').value = ""; }
-}
-
-async function handleSingleUpload(input, type) {
-    if (input.files[0]) {
-        fotos[type] = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(input.files[0]); });
-        document.getElementById(`preview-${type}`).innerHTML = `<img src="${fotos[type]}" class="w-full h-full object-cover rounded-xl">`;
-    }
-}
-
-async function handleBulkUpload(input, container, key) {
+function updateAnexoObs(id, val) { const a = anexos.find(x => x.id === id); if(a) a.obs = val; }
+function updateFotoDesc(id, fIdx, tipo, val) { const a = anexos.find(x => x.id === id); if(a) a[`fotos${tipo}`][fIdx].desc = val; }
+async function handleFotosAnexo(input, anexoId, tipo) {
+    const anexo = anexos.find(a => a.id === anexoId);
     for (const file of Array.from(input.files)) {
         const src = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(file); });
-        fotos[key].push({ src, desc: "Averiguação técnica conforme chamado, identificado necessidade de reparo preventivo/corretivo." });
+        anexo[`fotos${tipo}`].push({ src, desc: "" });
     }
-    renderGrid(container, key);
+    renderAnexos();
 }
-
-function renderGrid(container, key) {
-    const c = document.getElementById(container); c.innerHTML = "";
-    fotos[key].forEach((f, i) => {
-        c.innerHTML += `<div class="bg-white p-2 rounded-xl shadow-sm border"><img src="${f.src}" class="w-full h-24 object-cover rounded-lg mb-2"><textarea onchange="fotos.${key}[${i}].desc=this.value" class="w-full text-[10px] p-1 h-12 border-none bg-gray-50">${f.desc}</textarea></div>`;
-    });
+function removeFotoAnexo(id, fIdx, tipo) { const a = anexos.find(x => x.id === id); if(a) { a[`fotos${tipo}`].splice(fIdx, 1); renderAnexos(); } }
+async function handleSingleUpload(input, key) {
+    if(input.files[0]) {
+        fotosObrigatorias[key] = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(input.files[0]); });
+        document.getElementById(`prev-${key}`).innerHTML = `<div class="delete-btn" onclick="removeObrigatoria('${key}')">×</div><img src="${fotosObrigatorias[key]}" class="w-full h-full object-cover rounded-xl">`;
+    }
 }
-
-async function salvarLogo(input, key) {
-    if(input.files[0]) logos[key] = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(input.files[0]); });
+function removeObrigatoria(key) {
+    fotosObrigatorias[key] = null;
+    document.getElementById(`prev-${key}`).innerHTML = `<input type="file" onchange="handleSingleUpload(this, '${key}')" class="absolute inset-0 opacity-0 cursor-pointer"><span class="text-[10px] text-gray-400 font-bold uppercase">Figura ${key === 'fachada' ? '1' : '2'} – ${key}</span>`;
 }
-
-// --- LOGICA DOS CONVERSORES ---
+async function saveLogo(input, key) { if(input.files[0]) logos[key] = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(input.files[0]); }); }
+function navigate(v) {
+    ['mainView', 'configView'].forEach(id => document.getElementById(id).classList.add('hidden-view'));
+    document.getElementById(`${v}View`).classList.remove('hidden-view');
+    document.getElementById('userMenu').classList.add('hidden');
+}
+function toggleMenu() { document.getElementById('userMenu').classList.toggle('hidden'); }
+function toggleConverter() { document.getElementById('converterExpand').classList.toggle('hidden'); }
 function triggerConverter(id) { document.getElementById(id).click(); }
 
 async function handleConversion(input, mode) {
-    const file = input.files[0]; if (!file) return;
-    const ui = document.getElementById('processingUI');
-    const bar = document.getElementById('convertBar');
-    const msg = document.getElementById('statusMsg');
-
-    ui.classList.remove('hidden');
-    bar.style.width = "30%";
-    msg.innerText = "LENDO ARQUIVO...";
-
+    const file = input.files[0]; if(!file) return;
+    const proc = document.getElementById('procUI');
+    const bar = document.getElementById('cBar');
+    const msg = document.getElementById('sMsg');
+    proc.classList.remove('hidden'); bar.style.width = "20%";
     try {
-        if (mode === 'pdfToWord') {
-            const pdf = await pdfjsLib.getDocument(await file.arrayBuffer()).promise;
-            let text = "";
-            for (let i = 1; i <= pdf.numPages; i++) {
+        if(mode === 'pdfToWord') {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+            let fullText = "";
+            for(let i=1; i<=pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
                 const content = await page.getTextContent();
-                text += content.items.map(it => it.str).join(' ') + "<br><br>";
-                bar.style.width = `${30 + (i / pdf.numPages * 60)}%`;
+                fullText += content.items.map(it => it.str).join(' ') + "\n\n";
+                bar.style.width = (20 + (i/pdf.numPages)*60) + "%";
             }
-            const blob = new Blob([`<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset="utf-8"></head><body>${text}</body></html>`], { type: 'application/msword' });
-            baixarArquivo(blob, "Relatorio_Editavel.doc");
-        } 
-        else if (mode === 'wordToPdf' || mode === 'excelToPdf') {
-            msg.innerText = "CONVERTENDO PARA PDF...";
-            bar.style.width = "70%";
-            // Simulação de conversão mantendo a estrutura PDF do sistema
-            setTimeout(() => {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                doc.text("Conversão realizada via AREISPRO", 10, 10);
-                doc.text(`Arquivo original: ${file.name}`, 10, 20);
-                baixarArquivo(doc.output('blob'), file.name.split('.')[0] + ".pdf");
-            }, 1000);
+            const blob = new Blob([fullText], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = file.name.replace('.pdf', '_ED.doc'); a.click();
         }
-        else if (mode === 'pdfToExcel') {
-            msg.innerText = "EXTRAINDO DADOS TABULARES...";
-            const pdf = await pdfjsLib.getDocument(await file.arrayBuffer()).promise;
-            let csvContent = "data:text/csv;charset=utf-8,";
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const content = await page.getTextContent();
-                csvContent += content.items.map(it => it.str).join(',') + "\n";
-            }
-            baixarArquivo(encodeURI(csvContent), "Dados_Extraidos.csv", true);
-        }
-
-        bar.style.width = "100%";
-        msg.innerText = "CONCLUÍDO!";
-        setTimeout(() => { ui.classList.add('hidden'); bar.style.width = "0%"; }, 2000);
-
-    } catch (err) {
-        msg.innerText = "ERRO NA CONVERSÃO";
-        console.error(err);
-    }
+        bar.style.width = "100%"; msg.innerText = "OK!";
+        setTimeout(() => proc.classList.add('hidden'), 2000);
+    } catch(e) { msg.innerText = "Erro"; }
 }
 
-function baixarArquivo(content, name, isUrl = false) {
-    const a = document.createElement('a');
-    a.href = isUrl ? content : URL.createObjectURL(content);
-    a.download = name;
-    a.click();
-}
-
-// --- GERAÇÃO DO PDF ORIGINAL (SEM ALTERAÇÃO DE LOGICA) ---
 async function gerarRelatorio() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'cm', format: 'a4' });
-    
-    const prestadorNome = document.getElementById('prestador').value;
-    const unidadeLoja = document.getElementById('lojaSelect').value;
-    const chamadoNum = document.getElementById('chamado').value || "N/A";
-    const dataServicoInput = document.getElementById('dataServico').value;
-    const dataServico = dataServicoInput ? dataServicoInput.split('-').reverse().join('/') : new Date().toLocaleDateString('pt-BR');
+    const pNome = document.getElementById('prestador').value;
+    const lNome = document.getElementById('lojaSelect').value;
+    const cNum = document.getElementById('chamado').value || "N/A";
+    const dVal = document.getElementById('dataServico').value;
+    const dFinal = dVal ? dVal.split('-').reverse().join('/') : new Date().toLocaleDateString('pt-BR');
 
-    const addGlobalBorder = () => {
-        doc.setLineWidth(0.017); 
-        doc.setDrawColor(0);
-        doc.rect(0.5, 0.5, 20, 28.7); 
+    let fGlobalCount = 3; // Começa em 3 porque Fachada(1) e Marquise(2) já existem
+
+    const border = () => { doc.setLineWidth(0.017); doc.setDrawColor(0); doc.rect(0.5, 0.5, 20, 28.7); };
+    const header = () => {
+        border();
+        if(logos.prestador) doc.addImage(logos.prestador, 'JPEG', 1, 0.8, 1.55, 1.41);
+        doc.line(1, 2.4, 20, 2.4); doc.rect(1, 2.6, 19, 1.0);
+        doc.setFontSize(9); doc.text(`TIPO: Relatório Fotográfico`, 1.3, 3.2);
+        doc.text(`DATA: ${dFinal}`, 10.5, 3.2, { align: 'center' });
+        doc.text(`PREPARADO POR: Jair Ramos`, 14.8, 3.2);
     };
 
     // CAPA
-    addGlobalBorder();
-    if (logos.prestador) doc.addImage(logos.prestador, 'JPEG', 1, 1, 9, 10);
-    if (logos.americanas) doc.addImage(logos.americanas, 'JPEG', 8.5, 1, 11.28, 2.83);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
-    let currentY = 15;
-    doc.text("RELATÓRIO FOTOGRÁFICO", 1.5, currentY); currentY += 1.2;
-    doc.text(`${prestadorNome}`, 1.5, currentY); currentY += 1.2;
-    doc.text(`LOJA: ${unidadeLoja}`, 1.5, currentY); currentY += 1.2;
-    doc.text(`N° CHAMADO: ${chamadoNum}`, 1.5, currentY); currentY += 1.2;
-    doc.text(`DATA DO SERVIÇO: ${dataServico}`, 1.5, currentY);
+    border();
+    if(logos.prestador) doc.addImage(logos.prestador, 'JPEG', 1, 1, 9, 10);
+    if(logos.americanas) doc.addImage(logos.americanas, 'JPEG', 8.5, 1, 11.28, 2.83);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(16);
+    doc.text("RELATÓRIO FOTOGRÁFICO", 1.5, 15);
+    doc.text(pNome, 1.5, 16.2);
+    doc.text(`LOJA: ${lNome}`, 1.5, 17.4);
+    doc.text(`N° CHAMADO: ${cNum}`, 1.5, 18.6);
+    doc.text(`DATA: ${dFinal}`, 1.5, 19.8);
 
-    const addHeader = () => {
-        addGlobalBorder();
-        if (logos.prestador) doc.addImage(logos.prestador, 'JPEG', 1, 0.8, 1.55, 1.41);
-        doc.setLineWidth(0.017);
-        doc.line(1, 2.4, 20, 2.4);
-        doc.rect(1, 2.6, 19, 1.0);
+    // ÍNDICE
+    doc.addPage(); border();
+    doc.setFontSize(14); doc.text("ÍNDICE DE ANEXOS", 10.5, 2.5, { align: 'center' });
+    let idxY = 4.5;
+    anexos.forEach((a, i) => {
+        doc.setFontSize(9); doc.setFont("helvetica", "bold");
+        doc.text(a.titulo, 1.5, idxY);
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        doc.text(`TIPO: Relatório Fotográfico`, 1.3, 3.2);
-        doc.text(`DATA: ${dataServico}`, 10.5, 3.2, { align: 'center' });
-        doc.text(`PREPARADO POR: JAIR RAMOS`, 14.8, 3.2);
-    };
+        const obsTrim = a.obs ? ` - ${a.obs.substring(0, 50)}...` : "";
+        doc.text(obsTrim, 3.5, idxY);
+        doc.text(".".repeat(80), 10, idxY);
+        doc.text((i + 3).toString(), 19.5, idxY);
+        idxY += 1;
+    });
 
-    doc.addPage();
-    addHeader();
-    let y = 4.5;
-    let figCount = 1;
+    // FOTOS OBRIGATÓRIAS
+    if(fotosObrigatorias.fachada || fotosObrigatorias.marquise) {
+        doc.addPage(); header();
+        let curY = 4.5;
+        if(fotosObrigatorias.fachada) { 
+            doc.rect(1.5, curY, 18, 9.5); 
+            doc.addImage(fotosObrigatorias.fachada, 'JPEG', 1.5, curY, 18, 8.5); 
+            doc.text("Figura 1 - Fachada", 1.7, curY + 9.1); curY += 10.5; 
+        }
+        if(fotosObrigatorias.marquise) { 
+            doc.rect(1.5, curY, 18, 9.5); 
+            doc.addImage(fotosObrigatorias.marquise, 'JPEG', 1.5, curY, 18, 8.5); 
+            doc.text("Figura 2 - Marquise", 1.7, curY + 9.1); 
+        }
+    }
 
-    const renderBigPhoto = (img, label) => {
-        if (!img) return;
-        if (y > 18) { doc.addPage(); addHeader(); y = 4.5; }
-        doc.setLineWidth(0.017);
-        doc.rect(1.5, y, 18.08, 9.5);
-        doc.addImage(img, 'JPEG', 1.5, y, 18.08, 8.51);
-        doc.setFontSize(10);
-        doc.text(`Figura ${figCount++} – ${label}`, 1.7, y + 9.1);
-        y += 10.5;
-    };
-
-    renderBigPhoto(fotos.fachada, "Fachada");
-    renderBigPhoto(fotos.marquise, "Marquise, Letreiro");
-
-    const renderTable = (title, data) => {
-        if (data.length === 0) return;
-        if (y > 22) { doc.addPage(); addHeader(); y = 4.5; }
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.text(`RELATÓRIO FOTOGRÁFICO - ${title}`, 10.5, y, { align: 'center' });
+    // PROCESSAR ANEXOS DINÂMICOS
+    const renderGallery = (photos, subtitle, anexoObj) => {
+        if(photos.length === 0) return;
+        doc.addPage(); header();
+        let y = 4.5;
+        doc.setFont("helvetica", "bold"); doc.setFontSize(11);
+        doc.text(subtitle, 10.5, y, { align: 'center' });
         y += 1.2;
+
+        if(subtitle.includes("ANTES") && anexoObj.obs) {
+            doc.setFont("helvetica", "italic"); doc.setFontSize(9);
+            const obsText = doc.splitTextToSize(anexoObj.obs, 17);
+            doc.text(obsText, 1.5, y);
+            y += (obsText.length * 0.4) + 0.5;
+        }
+
         let col = 0;
-        data.forEach((item) => {
+        photos.forEach(foto => {
+            if(y > 22) { doc.addPage(); header(); y = 4.5; }
             const x = col === 0 ? 1.5 : 10.6;
-            doc.setLineWidth(0.017);
             doc.rect(x, y, 8.9, 6.8);
-            doc.addImage(item.src, 'JPEG', x, y, 8.9, 5);
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(8);
-            const splitText = doc.splitTextToSize(`Figura ${figCount++} - ${item.desc}`, 8.5);
-            doc.text(splitText, x + 0.2, y + 5.5);
-            if (col === 1) { col = 0; y += 7.5; if (y > 23) { doc.addPage(); addHeader(); y = 4.5; } } else { col = 1; }
+            doc.addImage(foto.src, 'JPEG', x, y, 8.9, 5);
+            doc.setFont("helvetica", "normal"); doc.setFontSize(7.5);
+            
+            const numFigura = fGlobalCount++;
+            const descFinal = `Figura ${numFigura} - ${foto.desc || 'Averiguação técnica conforme chamado.'}`;
+            const fDesc = doc.splitTextToSize(descFinal, 8.5);
+            doc.text(fDesc, x + 0.2, y + 5.5);
+            
+            if(col === 1) { col = 0; y += 7.5; } else { col = 1; }
         });
-        if (col === 1) y += 7.5;
     };
 
-    renderTable("ANTES", fotos.antes);
-    renderTable("DEPOIS", fotos.depois);
-    doc.save(`RELATORIO_AREISPRO_${unidadeLoja.split(' ')[0]}.pdf`);
+    for (const anexo of anexos) {
+        renderGallery(anexo.fotosAntes, "RELATÓRIO FOTOGRÁFICO - ANTES", anexo);
+        renderGallery(anexo.fotosDepois, "RELATÓRIO FOTOGRÁFICO - DEPOIS", anexo);
+    }
+
+    doc.save(`AREISPRO_${lNome.split(' ')[0]}.pdf`);
 }
 
-const texts = ["GESTÃO DE NEGÓCIOS", "RELATÓRIOS TÉCNICOS", "PADRÃO AREISPRO"];
-let idx = 0;
+const frases = ["GESTÃO DE NEGÓCIOS", "RELATÓRIOS TÉCNICOS", "CONVERSOR DE ARQUIVOS", "PROJETO AREIS"];
+let textIdx = 0;
 setInterval(() => {
     const el = document.getElementById('changingText');
-    if(el) {
-        el.style.opacity = 0;
-        setTimeout(() => {
-            idx = (idx + 1) % texts.length;
-            el.innerText = texts[idx];
-            el.style.opacity = 1;
-        }, 400);
-    }
+    if(el) { el.style.opacity = 0; setTimeout(() => { textIdx = (textIdx + 1) % frases.length; el.innerText = frases[textIdx]; el.style.opacity = 1; }, 500); }
 }, 3000);
 </script>
 </body>
