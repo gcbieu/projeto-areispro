@@ -357,7 +357,6 @@ async function handleConversion(input, type) {
         const result = await response.json();
 
         if (result.url) {
-            // Em vez de window.open, vamos forçar o download
             const link = document.createElement('a');
             link.href = result.url;
             link.download = file.name.replace(".pdf", ".doc");
@@ -545,7 +544,7 @@ if (anexos && anexos.length > 0 && anexos.some(a => a.obs && a.obs.trim() !== ""
             let col = 0;
             
             photos.forEach(f => {
-                if(y > 21) { 
+                if(y > 24) { 
                     doc.addPage(); 
                     header(); 
 
@@ -555,28 +554,31 @@ if (anexos && anexos.length > 0 && anexos.some(a => a.obs && a.obs.trim() !== ""
                     y = 5.5; 
                     col = 0;
                 }
-                        
+            
+            //tamanho da imagem
             const x = col === 0 ? 1.5 : 10.6;
             const larguraImg = 8.9;
-            const alturaImg  = 5.0;
+            const alturaImg  = 4.2;
             const margemExtra = 0.5;
 
             doc.setDrawColor(0);
             doc.setLineWidth(0.017); 
-            doc.rect(x, y, larguraImg, alturaImg + 2.0);
+
+            //tamanho do retangulo
+            doc.rect(x, y, larguraImg, alturaImg + 1.8);
             doc.addImage(f.src, 'JPEG', x, y, larguraImg, alturaImg, undefined, 'FAST');
                 
-                doc.setFontSize(7); 
+                doc.setFontSize(10); 
                 doc.setFont("helvetica", "normal");
 
                 const legendaTexto = `Figura ${fCount++} - ${f.desc || 'Averiguação técnica.'}`;
                 const legendaFormatada = doc.splitTextToSize(legendaTexto, 8.5); 
                 
-                doc.text(legendaFormatada, x + 0.2, y + alturaImg + 0.7);    
+                doc.text(legendaFormatada, x + 0.2, y + alturaImg + 0.6);    
 
                 if(col === 1) { 
                     col = 0; 
-                    y += 7.8; 
+                    y += 6.5; 
                 } else { 
                     col = 1; 
                 }
