@@ -444,7 +444,8 @@ if (logos.americanas) {
 }
 
 // Rodapé da Capa (Informações da Loja)
-doc.setFontSize(14);
+doc.setFont("helvetica", "bold"); 
+doc.setFontSize(16);
 doc.text(`LOJA: ${lNome}`, 10.5, 23.0, { align: 'center' });
 doc.text(`N° CHAMADO: ${cNum}`, 10.5, 24.2, { align: 'center' });
 doc.text(`DATA: ${dFinal}`, 10.5, 25.4, { align: 'center' });
