@@ -87,8 +87,7 @@
                     <span>CONVERSOR</span>
                 </button>
                 <button onclick="toggleMenu()" class="w-9 h-9 rounded-full bg-gray-200 border border-gray-300 overflow-hidden shadow-sm">
-                    <img id="avatarPreview" src="https://ui-avatars.com/api/?name=Jair+Ramos&background=000&color=fff" class="w-full h-full">
-                </button>
+                <img id="avatarPreview" src="https://ui-avatars.com/api/?name=Gabriel+Costa&background=000&color=fff" class="w-full h-full">                </button>
                 
                 <div id="userMenu" class="hidden absolute right-4 top-16 w-52 glass rounded-2xl py-2 shadow-2xl border border-gray-100">
                     <button onclick="navigate('config')" class="w-full text-left px-4 py-3 text-sm hover:bg-white/50">Configurações</button>
@@ -321,32 +320,78 @@ function toggleConverter() { document.getElementById('converterExpand').classLis
 function triggerConverter(id) { document.getElementById(id).click(); }
 
 async function handleConversion(input, mode) {
-    const file = input.files[0]; if(!file) return;
+    const file = input.files[0]; 
+    if(!file) return;
+
     const proc = document.getElementById('procUI');
     const bar = document.getElementById('cBar');
     const msg = document.getElementById('sMsg');
-    proc.classList.remove('hidden'); bar.style.width = "20%"; msg.innerText = "Lendo...";
+
+    proc.classList.remove('hidden'); 
+    bar.style.width = "20%"; 
+    msg.innerText = "Lendo arquivo...";
+
     try {
         if(mode === 'pdfToWord') {
             const arrayBuffer = await file.arrayBuffer();
             const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
             let fullText = "";
+
+            // Extração de texto página por página
+// Extração de texto página por página (CORRIGIDO)
             for(let i=1; i<=pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
                 const content = await page.getTextContent();
-                fullText += content.items.map(it => it.str).join(' ') + "\n\n";
-                bar.style.width = (20 + (i/pdf.numPages)*60) + "%";
-            }
-            const docContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset="utf-8"></head><body style="font-family: Arial;">${fullText.replace(/\n/g, '<br>')}</body></html>`;
-            const blob = new Blob([docContent], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = file.name.replace('.pdf', '_ED.doc'); a.click();
-        }
-        bar.style.width = "100%"; msg.innerText = "OK!";
-        setTimeout(() => proc.classList.add('hidden'), 2000);
-    } catch(e) { msg.innerText = "Erro"; }
-}
+                
+                let lastY;
+                let textDaPagina = "";
 
+                // Percorre cada item de texto para verificar a altura (Y)
+                for (let item of content.items) {
+                    // item.transform[5] é a posição vertical (Y)
+                    if (lastY !== undefined && item.transform[5] < lastY) {
+                        textDaPagina += "<br>"; // Se a altura mudou, pula linha
+                    }
+                    textDaPagina += item.str + " ";
+                    lastY = item.transform[5];
+                }
+
+                fullText += `<div style="margin-bottom: 30px;">${textDaPagina}</div><hr>`;
+                
+                bar.style.width = (20 + (i/pdf.numPages)*60) + "%";            }
+
+            // Criando um HTML que o Word consegue abrir e interpretar como documento
+const docContent = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head><meta charset="utf-8"></head>
+                <body style="font-family: Arial; font-size: 11pt; text-align: justify;">
+                    ${fullText}
+                </body>
+                </html>`;
+
+            const blob = new Blob(['\ufeff' + docContent], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name.replace('.pdf', '_EDITAVEL.doc');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);        }
+
+        bar.style.width = "100%"; 
+        msg.innerText = "CONCLUÍDO!";
+        setTimeout(() => {
+            proc.classList.add('hidden');
+            bar.style.width = "0%";
+        }, 2000);
+
+    } catch(e) { 
+        console.error(e);
+        msg.innerText = "ERRO NA CONVERSÃO"; 
+        bar.style.backgroundColor = "#ff3b30";
+    }
+}
 async function gerarRelatorio() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'cm', format: 'a4' });
