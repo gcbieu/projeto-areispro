@@ -558,14 +558,14 @@ if (anexos && anexos.length > 0 && anexos.some(a => a.obs && a.obs.trim() !== ""
             //tamanho da imagem
             const x = col === 0 ? 1.5 : 10.6;
             const larguraImg = 8.9;
-            const alturaImg  = 4.2;
+            const alturaImg  = 4.5;
             const margemExtra = 0.5;
 
             doc.setDrawColor(0);
             doc.setLineWidth(0.017); 
 
             //tamanho do retangulo
-            doc.rect(x, y, larguraImg, alturaImg + 1.8);
+            doc.rect(x, y, larguraImg, alturaImg + 2.3);
             doc.addImage(f.src, 'JPEG', x, y, larguraImg, alturaImg, undefined, 'FAST');
                 
                 doc.setFontSize(10); 
@@ -578,7 +578,7 @@ if (anexos && anexos.length > 0 && anexos.some(a => a.obs && a.obs.trim() !== ""
 
                 if(col === 1) { 
                     col = 0; 
-                    y += 6.5; 
+                    y += 7.2; 
                 } else { 
                     col = 1; 
                 }
