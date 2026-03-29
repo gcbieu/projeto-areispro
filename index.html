@@ -18,6 +18,7 @@
             overflow-x: hidden;
         }
 
+        /* Animação Tela Inicial - Bolinha maior conforme solicitado */
         .welcome-dot {
             width: 28px; height: 28px; background: black; border-radius: 50%;
             position: absolute; left: 50%; transform: translateX(-50%);
@@ -40,6 +41,10 @@
         .btn-ios-main { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .btn-ios-main:active { transform: scale(0.96); }
 
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0); opacity: 0.5; cursor: pointer;
+        }
+
         .delete-btn {
             position: absolute; top: -8px; right: -8px;
             background: #ff3b30; color: white; width: 22px; height: 22px;
@@ -51,6 +56,7 @@
 </head>
 <body>
 
+<!-- TELA DE BEM VINDO -->
 <section id="welcomeView" class="flex flex-col items-center justify-center min-h-screen bg-[#f2f2f7]">
     <div class="relative mb-32 flex flex-col items-center">
         <h1 class="text-xs font-bold uppercase tracking-[0.5em] text-gray-400">AREISPRO</h1>
@@ -59,6 +65,7 @@
             CARREGANDO...
         </div>
     </div>
+    
     <div class="glass rounded-[32px] p-8 shadow-ios w-[320px] flex flex-col items-center">
         <button onclick="entrarNoSistema()" class="btn-ios-main bg-black text-white w-full py-4 rounded-[20px] font-semibold text-base shadow-lg shadow-black/20">
             Começar
@@ -66,10 +73,12 @@
     </div>
 </section>
 
+<!-- APP PRINCIPAL -->
 <div id="appContainer" class="hidden-view">
     <nav class="fixed top-0 w-full z-50 glass border-b border-gray-200/50">
         <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
             <h1 class="text-xl font-bold tracking-tighter cursor-pointer" onclick="navigate('main')">AREIS<span class="font-light text-gray-400">PRO</span></h1>
+            
             <div class="flex items-center gap-3">
                 <button onclick="gerarRelatorio()" class="flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-full text-[10px] font-bold hover:opacity-80 transition">
                     <span>GERAR PDF</span>
@@ -80,6 +89,7 @@
                 <button onclick="toggleMenu()" class="w-9 h-9 rounded-full bg-gray-200 border border-gray-300 overflow-hidden shadow-sm">
                     <img id="avatarPreview" src="https://ui-avatars.com/api/?name=Jair+Ramos&background=000&color=fff" class="w-full h-full">
                 </button>
+                
                 <div id="userMenu" class="hidden absolute right-4 top-16 w-52 glass rounded-2xl py-2 shadow-2xl border border-gray-100">
                     <button onclick="navigate('config')" class="w-full text-left px-4 py-3 text-sm hover:bg-white/50">Configurações</button>
                     <button onclick="location.reload()" class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50">Sair</button>
@@ -89,6 +99,7 @@
     </nav>
 
     <main id="mainView" class="max-w-6xl mx-auto px-6 mt-24 pb-20">
+        <!-- ÁREA DO CONVERSOR -->
         <div id="converterExpand" class="hidden mb-8 overflow-hidden transition-all duration-500">
             <div class="glass rounded-[32px] p-8 grid grid-cols-1 md:grid-cols-4 gap-4 border border-blue-100">
                 <div class="bg-blue-600/5 p-4 rounded-2xl text-center cursor-pointer border border-blue-200" onclick="triggerConverter('pdfToWordInput')">
@@ -96,6 +107,9 @@
                     <input id="pdfToWordInput" type="file" accept=".pdf" class="hidden" onchange="handleConversion(this, 'pdfToWord')">
                     <span class="text-xs text-blue-400">Selecionar</span>
                 </div>
+                <div class="bg-gray-50 p-4 rounded-2xl text-center opacity-60"><p class="text-[9px] font-black text-gray-500 mb-2 uppercase">Word para PDF</p><span class="text-xs">Em breve</span></div>
+                <div class="bg-gray-50 p-4 rounded-2xl text-center opacity-60"><p class="text-[9px] font-black text-gray-500 mb-2 uppercase">Excel para PDF</p><span class="text-xs">Em breve</span></div>
+                <div class="bg-gray-50 p-4 rounded-2xl text-center opacity-60"><p class="text-[9px] font-black text-gray-500 mb-2 uppercase">PDF para Excel</p><span class="text-xs">Em breve</span></div>
             </div>
             <div id="procUI" class="hidden mt-4 glass p-4 rounded-2xl text-center max-w-xs mx-auto">
                 <div class="w-full bg-gray-200 h-1 rounded-full overflow-hidden"><div id="cBar" class="bg-blue-600 h-full w-0 transition-all duration-300"></div></div>
@@ -111,7 +125,10 @@
                         <select id="prestador" class="w-full p-4 input-ios text-sm font-medium"></select>
                         <select id="lojaSelect" class="w-full p-4 input-ios text-sm font-medium"></select>
                         <input id="chamado" type="text" placeholder="Nº Chamado" class="w-full p-4 input-ios text-sm">
-                        <input id="dataServico" type="date" class="w-full p-4 input-ios text-sm">
+                        <div class="relative">
+                            <input id="dataServico" type="date" class="w-full p-4 input-ios text-sm pl-10">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg">🗓️</span>
+                        </div>
                     </div>
                 </section>
                 <button onclick="document.getElementById('modalLogos').classList.remove('hidden')" class="w-full py-4 bg-gray-100 rounded-2xl text-[10px] font-bold active:bg-gray-200 transition">CONFIGURAR LOGOS CAPA</button>
@@ -131,7 +148,9 @@
                         </div>
                     </div>
                 </div>
+
                 <div id="anexosContainer"></div>
+                
                 <button onclick="addNovoAnexo()" class="w-full py-5 border-2 border-dashed border-gray-300 rounded-3xl text-[11px] font-bold text-gray-400 hover:bg-white transition flex items-center justify-center gap-2">
                     <span class="text-lg">+</span> ADICIONAR NOVO ANEXO (FOTOS)
                 </button>
@@ -169,7 +188,9 @@ let db = {
     lojas: JSON.parse(localStorage.getItem('are_lojas')) || ["1068 – MARITUBA", "368 – CASTANHEIRA"],
     fornecedores: JSON.parse(localStorage.getItem('are_provs')) || ["THERMO ENGENHARIA", "EMC SERVIÇOS"]
 };
-let anexos = [{ id: Date.now(), titulo: "ANEXO 1", obs: "", fotosAntes: [], fotosDepois: [] }];
+let anexos = [
+    { id: Date.now(), titulo: "ANEXO 1", obs: "", fotosAntes: [], fotosDepois: [] }
+];
 let logos = { prestador: null, americanas: null };
 let fotosObrigatorias = { fachada: null, marquise: null };
 
@@ -216,9 +237,11 @@ function renderAnexos() {
                 ${idx > 0 ? `<button onclick="removeAnexo(${anexo.id})" class="text-red-500 text-xs font-bold">EXCLUIR ANEXO</button>` : ''}
             </div>
             <textarea placeholder="Observação geral deste anexo..." onchange="updateAnexoObs(${anexo.id}, this.value)" class="w-full p-3 input-ios text-xs mb-4 h-16 resize-none">${anexo.obs}</textarea>
+            
+            <!-- ANTES -->
             <div class="mb-6">
-                <p class="text-[9px] font-black text-red-500 uppercase mb-2">Antes</p>
-                <input type="file" multiple onchange="handleFotosAnexo(this, ${anexo.id}, 'Antes')" class="text-[10px] mb-3">
+                <p class="text-[9px] font-black text-red-500 uppercase mb-2">Relatório Fotográfico - Antes</p>
+                <input type="file" multiple onchange="handleFotosAnexo(this, ${anexo.id}, 'Antes')" class="text-[10px] mb-3 cursor-pointer">
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     ${anexo.fotosAntes.map((f, fIdx) => `
                         <div class="relative">
@@ -229,9 +252,11 @@ function renderAnexos() {
                     `).join('')}
                 </div>
             </div>
+
+            <!-- DEPOIS -->
             <div>
-                <p class="text-[9px] font-black text-green-500 uppercase mb-2">Depois</p>
-                <input type="file" multiple onchange="handleFotosAnexo(this, ${anexo.id}, 'Depois')" class="text-[10px] mb-3">
+                <p class="text-[9px] font-black text-green-500 uppercase mb-2">Relatório Fotográfico - Depois</p>
+                <input type="file" multiple onchange="handleFotosAnexo(this, ${anexo.id}, 'Depois')" class="text-[10px] mb-3 cursor-pointer">
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     ${anexo.fotosDepois.map((f, fIdx) => `
                         <div class="relative">
@@ -248,7 +273,11 @@ function renderAnexos() {
 }
 
 function updateAnexoObs(id, val) { const a = anexos.find(x => x.id === id); if(a) a.obs = val; }
-function updateFotoDesc(id, fIdx, tipo, val) { const a = anexos.find(x => x.id === id); if(a) a[`fotos${tipo}`][fIdx].desc = val; }
+function updateFotoDesc(id, fIdx, tipo, val) { 
+    const a = anexos.find(x => x.id === id); 
+    if(a) a[`fotos${tipo}`][fIdx].desc = val; 
+}
+
 async function handleFotosAnexo(input, anexoId, tipo) {
     const anexo = anexos.find(a => a.id === anexoId);
     for (const file of Array.from(input.files)) {
@@ -257,23 +286,36 @@ async function handleFotosAnexo(input, anexoId, tipo) {
     }
     renderAnexos();
 }
-function removeFotoAnexo(id, fIdx, tipo) { const a = anexos.find(x => x.id === id); if(a) { a[`fotos${tipo}`].splice(fIdx, 1); renderAnexos(); } }
+
+function removeFotoAnexo(id, fIdx, tipo) {
+    const a = anexos.find(x => x.id === id);
+    if(a) { a[`fotos${tipo}`].splice(fIdx, 1); renderAnexos(); }
+}
+
 async function handleSingleUpload(input, key) {
     if(input.files[0]) {
         fotosObrigatorias[key] = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(input.files[0]); });
-        document.getElementById(`prev-${key}`).innerHTML = `<div class="delete-btn" onclick="removeObrigatoria('${key}')">×</div><img src="${fotosObrigatorias[key]}" class="w-full h-full object-cover rounded-xl">`;
+        document.getElementById(`prev-${key}`).innerHTML = `
+            <div class="delete-btn" onclick="removeObrigatoria('${key}')">×</div>
+            <img src="${fotosObrigatorias[key]}" class="w-full h-full object-cover rounded-xl">`;
     }
 }
+
 function removeObrigatoria(key) {
     fotosObrigatorias[key] = null;
     document.getElementById(`prev-${key}`).innerHTML = `<input type="file" onchange="handleSingleUpload(this, '${key}')" class="absolute inset-0 opacity-0 cursor-pointer"><span class="text-[10px] text-gray-400 font-bold uppercase">Figura ${key === 'fachada' ? '1' : '2'} – ${key}</span>`;
 }
-async function saveLogo(input, key) { if(input.files[0]) logos[key] = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(input.files[0]); }); }
+
+async function saveLogo(input, key) {
+    if(input.files[0]) logos[key] = await new Promise(r => { const f = new FileReader(); f.onload = e => r(e.target.result); f.readAsDataURL(input.files[0]); });
+}
+
 function navigate(v) {
     ['mainView', 'configView'].forEach(id => document.getElementById(id).classList.add('hidden-view'));
     document.getElementById(`${v}View`).classList.remove('hidden-view');
     document.getElementById('userMenu').classList.add('hidden');
 }
+
 function toggleMenu() { document.getElementById('userMenu').classList.toggle('hidden'); }
 function toggleConverter() { document.getElementById('converterExpand').classList.toggle('hidden'); }
 function triggerConverter(id) { document.getElementById(id).click(); }
@@ -283,7 +325,7 @@ async function handleConversion(input, mode) {
     const proc = document.getElementById('procUI');
     const bar = document.getElementById('cBar');
     const msg = document.getElementById('sMsg');
-    proc.classList.remove('hidden'); bar.style.width = "20%";
+    proc.classList.remove('hidden'); bar.style.width = "20%"; msg.innerText = "Lendo...";
     try {
         if(mode === 'pdfToWord') {
             const arrayBuffer = await file.arrayBuffer();
@@ -295,7 +337,8 @@ async function handleConversion(input, mode) {
                 fullText += content.items.map(it => it.str).join(' ') + "\n\n";
                 bar.style.width = (20 + (i/pdf.numPages)*60) + "%";
             }
-            const blob = new Blob([fullText], { type: 'application/msword' });
+            const docContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset="utf-8"></head><body style="font-family: Arial;">${fullText.replace(/\n/g, '<br>')}</body></html>`;
+            const blob = new Blob([docContent], { type: 'application/msword' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a'); a.href = url; a.download = file.name.replace('.pdf', '_ED.doc'); a.click();
         }
@@ -313,9 +356,45 @@ async function gerarRelatorio() {
     const dVal = document.getElementById('dataServico').value;
     const dFinal = dVal ? dVal.split('-').reverse().join('/') : new Date().toLocaleDateString('pt-BR');
 
-    let fGlobalCount = 3; // Começa em 3 porque Fachada(1) e Marquise(2) já existem
-
     const border = () => { doc.setLineWidth(0.017); doc.setDrawColor(0); doc.rect(0.5, 0.5, 20, 28.7); };
+    
+    // CAPA
+        // --- CAPA COM TEXTO NO TOPO ---
+        border();
+
+        // 1. TEXTOS NO TOPO (Antes das Logos)
+        doc.setFont("helvetica", "bold"); 
+        doc.setFontSize(16);
+        doc.text("RELATÓRIO FOTOGRÁFICO", 10.5, 2.5, { align: 'center' });
+        doc.text(pNome, 10.5, 3.8, { align: 'center' }); // pNome é o Prestador/Empresa
+        // 2. LOGOS (Empurradas para baixo para dar espaço ao texto)
+        // Ajustei o Y das logos para começarem em 5cm
+        if(logos.prestador) doc.addImage(logos.prestador, 'JPEG', 1, 6.0, 9, 10);
+        if(logos.americanas) doc.addImage(logos.americanas, 'JPEG', 8.5, 6.0, 11.28, 2.83);
+        // 3. DEMAIS INFORMAÇÕES (Mantidas no meio/baixo da página)
+        doc.text(`LOJA: ${lNome}`, 10.5, 22.0, { align: 'center' });
+        doc.text(`N° CHAMADO: ${cNum}`, 10.5, 23.2, { align: 'center' });
+        doc.text(`DATA: ${dFinal}`, 10.5, 24.4, { align: 'center' });
+
+    // ÍNDICE (Com descrição conforme solicitado)
+    doc.addPage(); border();
+    doc.setFontSize(14); doc.text("ÍNDICE DE ANEXOS", 10.5, 2.5, { align: 'center' });
+    let idxY = 4.5;
+    anexos.forEach((a, i) => {
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.text(a.titulo, 1.5, idxY);
+        
+        doc.setFont("helvetica", "normal");
+        const obsTrim = a.obs ? ` - ${a.obs.substring(0, 50)}${a.obs.length > 50 ? '...' : ''}` : "";
+        doc.text(obsTrim, 3.5, idxY);
+
+        const dotStr = ".".repeat(100);
+        doc.text(dotStr, 11, idxY);
+        doc.text((i + 3).toString(), 19.5, idxY);
+        idxY += 1;
+    });
+
     const header = () => {
         border();
         if(logos.prestador) doc.addImage(logos.prestador, 'JPEG', 1, 0.8, 1.55, 1.41);
@@ -325,94 +404,129 @@ async function gerarRelatorio() {
         doc.text(`PREPARADO POR: Jair Ramos`, 14.8, 3.2);
     };
 
-    // CAPA
-    border();
-    if(logos.prestador) doc.addImage(logos.prestador, 'JPEG', 1, 1, 9, 10);
-    if(logos.americanas) doc.addImage(logos.americanas, 'JPEG', 8.5, 1, 11.28, 2.83);
-    doc.setFont("helvetica", "bold"); doc.setFontSize(16);
-    doc.text("RELATÓRIO FOTOGRÁFICO", 1.5, 15);
-    doc.text(pNome, 1.5, 16.2);
-    doc.text(`LOJA: ${lNome}`, 1.5, 17.4);
-    doc.text(`N° CHAMADO: ${cNum}`, 1.5, 18.6);
-    doc.text(`DATA: ${dFinal}`, 1.5, 19.8);
-
-    // ÍNDICE
-    doc.addPage(); border();
-    doc.setFontSize(14); doc.text("ÍNDICE DE ANEXOS", 10.5, 2.5, { align: 'center' });
-    let idxY = 4.5;
-    anexos.forEach((a, i) => {
-        doc.setFontSize(9); doc.setFont("helvetica", "bold");
-        doc.text(a.titulo, 1.5, idxY);
-        doc.setFont("helvetica", "normal");
-        const obsTrim = a.obs ? ` - ${a.obs.substring(0, 50)}...` : "";
-        doc.text(obsTrim, 3.5, idxY);
-        doc.text(".".repeat(80), 10, idxY);
-        doc.text((i + 3).toString(), 19.5, idxY);
-        idxY += 1;
-    });
-
-    // FOTOS OBRIGATÓRIAS
     if(fotosObrigatorias.fachada || fotosObrigatorias.marquise) {
         doc.addPage(); header();
         let curY = 4.5;
-        if(fotosObrigatorias.fachada) { 
-            doc.rect(1.5, curY, 18, 9.5); 
-            doc.addImage(fotosObrigatorias.fachada, 'JPEG', 1.5, curY, 18, 8.5); 
-            doc.text("Figura 1 - Fachada", 1.7, curY + 9.1); curY += 10.5; 
-        }
-        if(fotosObrigatorias.marquise) { 
-            doc.rect(1.5, curY, 18, 9.5); 
-            doc.addImage(fotosObrigatorias.marquise, 'JPEG', 1.5, curY, 18, 8.5); 
-            doc.text("Figura 2 - Marquise", 1.7, curY + 9.1); 
-        }
+        if(fotosObrigatorias.fachada) { doc.rect(1.5, curY, 18, 9.5); doc.addImage(fotosObrigatorias.fachada, 'JPEG', 1.5, curY, 18, 8.5); doc.text("Figura 1 - Fachada", 1.7, curY + 9.1); curY += 10.5; }
+        if(fotosObrigatorias.marquise) { doc.rect(1.5, curY, 18, 9.5); doc.addImage(fotosObrigatorias.marquise, 'JPEG', 1.5, curY, 18, 8.5); doc.text("Figura 2 - Marquise", 1.7, curY + 9.1); }
     }
 
-    // PROCESSAR ANEXOS DINÂMICOS
-    const renderGallery = (photos, subtitle, anexoObj) => {
-        if(photos.length === 0) return;
+    for (const anexo of anexos) {
+        const hasPhotos = anexo.fotosAntes.length > 0 || anexo.fotosDepois.length > 0;
+        if(!hasPhotos) continue;
+        
         doc.addPage(); header();
-        let y = 4.5;
-        doc.setFont("helvetica", "bold"); doc.setFontSize(11);
-        doc.text(subtitle, 10.5, y, { align: 'center' });
-        y += 1.2;
+        // --- INÍCIO DA SUBSTITUIÇÃO NA FUNÇÃO gerarRelatorio ---
 
-        if(subtitle.includes("ANTES") && anexoObj.obs) {
+    // Processar Anexos
+    let fGlobalCount = 3;
+    for (const anexo of anexos) {
+        const hasPhotos = anexo.fotosAntes.length > 0 || anexo.fotosDepois.length > 0;
+        if(!hasPhotos) continue;
+        
+        // Criamos a função de renderização dentro do loop para ter acesso ao título do anexo
+        const renderGallery = (photos, subtitle) => {
+            if(photos.length === 0) return;
+            
+            // Adiciona nova página para cada galeria (Antes/Depois) para garantir organização
+            doc.addPage(); 
+            header();
+            let y = 4.5;
+
+            // --- NOVO TÍTULO CENTRALIZADO (MODIFICADO) ---
+            doc.setFont("helvetica", "bold"); 
+            doc.setFontSize(11);
+            // Agora usamos o subtítulo ("ANTES" ou "DEPOIS") centralizado
+            doc.text(`${subtitle}`, 10.5, y, { align: 'center' });
+            y += 1.2;
+            
+            // Renderiza a observação geral do anexo apenas na primeira galeria (Antes)
+            if(subtitle.includes("ANTES") && anexo.obs) {
+                doc.setFont("helvetica", "italic"); doc.setFontSize(9);
+                const obsText = doc.splitTextToSize(anexo.obs, 17);
+                doc.text(obsText, 1.5, y);
+                y += (obsText.length * 0.4) + 0.5;
+            }
+            
+            let col = 0;
+            photos.forEach(foto => {
+                if(y > 22) { doc.addPage(); header(); y = 4.5; }
+                const x = col === 0 ? 1.5 : 10.6;
+                doc.rect(x, y, 8.9, 6.8);
+                doc.addImage(foto.src, 'JPEG', x, y, 8.9, 5);
+                doc.setFont("helvetica", "normal"); doc.setFontSize(7.5);
+                
+                // Legenda da foto mantendo o título do anexo (ex: ANEXO 1 - Descrição)
+// Localize o forEach das fotos e use o index (fIdx) para numerar as figuras
+photos.forEach((foto, fIdx) => {
+    // ... código anterior de posicionamento (rect, addImage) ...
+
+    doc.setFont("helvetica", "normal"); 
+    doc.setFontSize(7.5);
+
+    // ESTA É A ALTERAÇÃO: Criamos o texto "Figura X" dinamicamente
+    // fGlobalCount ajuda a manter a contagem sequencial se você quiser
+    // Mas se quiser que recomece em cada anexo, use o fIdx:
+    const numeroFigura = fGlobalCount++; 
+    const descFinal = `Figura ${numeroFigura} - ${foto.desc || 'Averiguação técnica conforme chamado.'}`;
+    
+    const fDesc = doc.splitTextToSize(descFinal, 8.5);
+    doc.text(fDesc, x + 0.2, y + 5.5);
+    
+    // ... resto da lógica de colunas ...
+});                const fDesc = doc.splitTextToSize(descFinal, 8.5);
+                doc.text(fDesc, x + 0.2, y + 5.5);
+                if(col === 1) { col = 0; y += 7.5; } else { col = 1; }
+            });
+        };
+
+        // Chama as galerias com os novos títulos centralizados
+        renderGallery(anexo.fotosAntes, "RELATÓRIO FOTOGRÁFICO - ANTES");
+        renderGallery(anexo.fotosDepois, "RELATÓRIO FOTOGRÁFICO - DEPOIS");
+    }
+
+// --- FIM DA SUBSTITUIÇÃO ---
+
+        if(anexo.obs) {
             doc.setFont("helvetica", "italic"); doc.setFontSize(9);
-            const obsText = doc.splitTextToSize(anexoObj.obs, 17);
+            const obsText = doc.splitTextToSize(anexo.obs, 17);
             doc.text(obsText, 1.5, y);
             y += (obsText.length * 0.4) + 0.5;
         }
 
-        let col = 0;
-        photos.forEach(foto => {
-            if(y > 22) { doc.addPage(); header(); y = 4.5; }
-            const x = col === 0 ? 1.5 : 10.6;
-            doc.rect(x, y, 8.9, 6.8);
-            doc.addImage(foto.src, 'JPEG', x, y, 8.9, 5);
-            doc.setFont("helvetica", "normal"); doc.setFontSize(7.5);
+        const renderGallery = (photos, subtitle) => {
+            if(photos.length === 0) return;
+            if(y > 25) { doc.addPage(); header(); y = 4.5; }
+            doc.setFont("helvetica", "bold"); doc.setFontSize(10);
+            doc.text(`${subtitle}`, 1.5, y); y += 0.8;
             
-            const numFigura = fGlobalCount++;
-            const descFinal = `Figura ${numFigura} - ${foto.desc || 'Averiguação técnica conforme chamado.'}`;
-            const fDesc = doc.splitTextToSize(descFinal, 8.5);
-            doc.text(fDesc, x + 0.2, y + 5.5);
-            
-            if(col === 1) { col = 0; y += 7.5; } else { col = 1; }
-        });
-    };
+            let col = 0;
+            photos.forEach(foto => {
+                if(y > 22) { doc.addPage(); header(); y = 4.5; }
+                const x = col === 0 ? 1.5 : 10.6;
+                doc.rect(x, y, 8.9, 6.8);
+                doc.addImage(foto.src, 'JPEG', x, y, 8.9, 5);
+                doc.setFont("helvetica", "normal"); doc.setFontSize(7.5);
+                const descFinal = `${anexo.titulo} - ${foto.desc || 'Averiguação técnica conforme chamado.'}`;
+                const fDesc = doc.splitTextToSize(descFinal, 8.5);
+                doc.text(fDesc, x + 0.2, y + 5.5);
+                if(col === 1) { col = 0; y += 7.5; } else { col = 1; }
+            });
+            if(col === 1) y += 7.5;
+        };
 
-    for (const anexo of anexos) {
-        renderGallery(anexo.fotosAntes, "RELATÓRIO FOTOGRÁFICO - ANTES", anexo);
-        renderGallery(anexo.fotosDepois, "RELATÓRIO FOTOGRÁFICO - DEPOIS", anexo);
+        renderGallery(anexo.fotosAntes, "RELATÓRIO FOTOGRÁFICO - ANTES");
+        renderGallery(anexo.fotosDepois, "RELATÓRIO FOTOGRÁFICO - DEPOIS");
     }
 
     doc.save(`AREISPRO_${lNome.split(' ')[0]}.pdf`);
 }
 
-const frases = ["GESTÃO DE NEGÓCIOS", "RELATÓRIOS TÉCNICOS", "CONVERSOR DE ARQUIVOS", "PROJETO AREIS"];
-let textIdx = 0;
+const frases = ["GESTÃO DE NEGÓCIOS", "RELATÓRIOS TÉCNICOS", "GESTÃO DE NEGOCIOS", "CONVERTOR DE ARQUIVOS", "PROJETO AREIS" ];
+let fIdx = 0;
 setInterval(() => {
     const el = document.getElementById('changingText');
-    if(el) { el.style.opacity = 0; setTimeout(() => { textIdx = (textIdx + 1) % frases.length; el.innerText = frases[textIdx]; el.style.opacity = 1; }, 500); }
+    if(el) { el.style.opacity = 0; setTimeout(() => { fIdx = (fIdx + 1) % frases.length; el.innerText = frases[fIdx]; el.style.opacity = 1; }, 500); }
 }, 3000);
 </script>
 </body>
