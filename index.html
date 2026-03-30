@@ -448,7 +448,7 @@ async function gerarRelatorio() {
     };
     
 // --- 1. CAPA (Página 1) ---
-header(); // Agora chamamos o cabeçalho logo no início da primeira página
+header();
 
 doc.setFont("helvetica", "bold"); 
 doc.setFontSize(16);
@@ -484,7 +484,7 @@ if (fotosObrigatorias.fachada || fotosObrigatorias.marquise) {
     doc.addPage();
     header();
 
-    let curY = 5.2; // Ponto inicial abaixo do cabeçalho
+    let curY = 5.2;
     const larguraTabela = 18.0;
     const alturaImagem = 8.5;
     const alturaLegenda = 1.0;
@@ -529,7 +529,7 @@ if (fotosObrigatorias.marquise) {
 // --- 2. ÍNDICE (Geração Condicional) ---
 if (anexos && anexos.length > 0 && anexos.some(a => a.obs && a.obs.trim() !== "")) {
     doc.addPage();
-    header(); // Cabeçalho Jair Ramos
+    header(); // Cabeçalho
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(14); 
@@ -567,7 +567,7 @@ const renderGal = (photos, sub) => {
     doc.setFontSize(11); 
     doc.text(sub, 10.5, 5.2, {align:'center'}); // Título centralizado
 
-    doc.setFontSize(10);
+    doc.setFontSize(8);
     doc.setFont("helvetica", "normal"); 
     doc.text(descricaoGeralAnexo, 1.5, 5.8, { align: 'left' }); // Descrição esquerda
 
@@ -584,7 +584,7 @@ const renderGal = (photos, sub) => {
             doc.setFontSize(11); 
             doc.text(sub, 10.5, 5.2, {align:'center'}); 
 
-            doc.setFontSize(10);
+            doc.setFontSize(8);
             doc.setFont("helvetica", "normal");
             doc.text(descricaoGeralAnexo, 1.5, 5.8, {align:'left'});
 
