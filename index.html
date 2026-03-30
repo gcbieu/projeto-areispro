@@ -212,17 +212,19 @@ let db = {
     // Removido o localStorage para forçar a exibição do "- PA"
     lojas: [
         "#102 - PATIO BELEM",
-        "#133 SHC PARQUE SHOPPING - PA",
+        "#133 -SHC PARQUE SHOPPING - PA",
         "#368 - CASTANHAL - PA",
         "#403 PEDREIRA - PA",
         "#421 - ICOARACI - PA",
         "#1068 – MARITUBA - PA",
         "#1093 - Santarém - PA",
-        "#1113 - Shopping Rio Tapajos - PA",
+        "#1113 - SHC RIO TAPAJOS - PA",
         "#1119 - ALTAMIRA - PA",
         "#1261 - ANANINDEUA - PA",
+        "#1270 - CASTANHEIRA - PA",
         "#1333 - SHC METROPOLE - PA",
         "#1402 - DISTRITO - PA",
+        "#1548 - BENEVIDES - PA",
         "#5186 - MARAMBAIA - PA",
     ],
     fornecedores: [
@@ -554,7 +556,7 @@ if (anexos && anexos.length > 0 && anexos.some(a => a.obs && a.obs.trim() !== ""
 // 4. PROCESSAR ANEXOS (GALERIA)
     let fCount = 3;
 for (const anexo of anexos) {
-    const descricaoGeralAnexo = anexo.obs || "RELATÓRIO FOTOGRÁFICO";
+    const descricaoGeralAnexo = anexo.obs || " ";
     if(anexo.fotosAntes.length === 0 && anexo.fotosDepois.length === 0) continue;
 
 const renderGal = (photos, sub) => {
