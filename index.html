@@ -313,16 +313,42 @@ function renderAnexos() {
             <textarea placeholder="Observação geral deste anexo..." onchange="updateAnexoObs(${anexo.id}, this.value)" class="w-full p-3 input-ios text-xs mb-4 h-16 resize-none">${anexo.obs}</textarea>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <p class="text-[9px] font-black text-red-500 uppercase mb-2">Antes</p>
-                    <input type="file" multiple onchange="handleFotosAnexo(this, ${anexo.id}, 'Antes')" class="text-[10px] mb-3">
-                    <div class="grid grid-cols-2 gap-2">${anexo.fotosAntes.map((f, fi) => `<div class="relative"><img src="${f.src}" class="w-full h-24 object-cover rounded-xl"><textarea onchange="updateFotoDesc(${anexo.id}, ${fi}, 'Antes', this.value)" class="w-full mt-1 p-1 text-[8px] bg-white/20 rounded h-10 border-none">${f.desc}</textarea><div class="delete-btn" onclick="removeFotoAnexo(${anexo.id}, ${fi}, 'Antes')">×</div></div>`).join('')}</div>
+<p class="text-[9px] font-black text-red-500 uppercase mb-2">Antes</p>
+        <input type="file" multiple onchange="handleFotosAnexo(this, ${anexo.id}, 'Antes')" class="text-[10px] mb-3">
+        <div class="grid grid-cols-2 gap-2">
+            ${(anexo.fotosAntes || []).map((f, fi) => `
+                <div class="relative">
+                    <img src="${f.src}" class="w-full h-24 object-cover rounded-xl">
+                    <textarea 
+                        placeholder="Insira uma Descrição..." 
+                        onchange="updateFotoDesc(${anexo.id}, ${fi}, 'Antes', this.value)" 
+                        class="w-full mt-1 p-1 text-[8px] bg-white/20 rounded h-10 border-none resize-none"
+                    >${f.desc || ""}</textarea>
+                    <div class="delete-btn" onclick="removeFotoAnexo(${anexo.id}, ${fi}, 'Antes')">×</div>
                 </div>
-                <div>
-                    <p class="text-[9px] font-black text-green-500 uppercase mb-2">Depois</p>
-                    <input type="file" multiple onchange="handleFotosAnexo(this, ${anexo.id}, 'Depois')" class="text-[10px] mb-3">
-                    <div class="grid grid-cols-2 gap-2">${anexo.fotosDepois.map((f, fi) => `<div class="relative"><img src="${f.src}" class="w-full h-24 object-cover rounded-xl"><textarea onchange="updateFotoDesc(${anexo.id}, ${fi}, 'Depois', this.value)" class="w-full mt-1 p-1 text-[8px] bg-white/20 rounded h-10 border-none">${f.desc}</textarea><div class="delete-btn" onclick="removeFotoAnexo(${anexo.id}, ${fi}, 'Depois')">×</div></div>`).join('')}</div>
+            `).join('')}
+        </div>
+    </div>
+
+    <div>
+        <p class="text-[9px] font-black text-green-500 uppercase mb-2">Depois</p>
+        <input type="file" multiple onchange="handleFotosAnexo(this, ${anexo.id}, 'Depois')" class="text-[10px] mb-3">
+        <div class="grid grid-cols-2 gap-2">
+            ${(anexo.fotosDepois || []).map((f, fi) => `
+                <div class="relative">
+                    <img src="${f.src}" class="w-full h-24 object-cover rounded-xl">
+                    <textarea 
+                        placeholder="Insira uma Descrição..." 
+                        onchange="updateFotoDesc(${anexo.id}, ${fi}, 'Depois', this.value)" 
+                        class="w-full mt-1 p-1 text-[8px] bg-white/20 rounded h-10 border-none resize-none"
+                    >${f.desc || ""}</textarea>
+                    <div class="delete-btn" onclick="removeFotoAnexo(${anexo.id}, ${fi}, 'Depois')">×</div>
                 </div>
-            </div>`;
+            `).join('')}
+        </div>
+    </div>
+</div>
+</div>`;
         cont.appendChild(div);
     });
 }
@@ -427,11 +453,11 @@ header(); // Agora chamamos o cabeçalho logo no início da primeira página
 doc.setFont("helvetica", "bold"); 
 doc.setFontSize(16);
 
-// Título da Capa: Desci para 5.0 para não bater no header
+// Título da Capa:
 doc.text("RELATÓRIO FOTOGRÁFICO", 10.5, 5.0, { align: 'center' });
 doc.text(pNome, 10.5, 6.2, { align: 'center' });
 
-let yAtualCapa = 7.5; // Começa a desenhar as logos abaixo do título
+let yAtualCapa = 7.5;
 
 // Logo 1 (Prestador)
 if (logos.prestador) {
@@ -456,7 +482,7 @@ doc.text(`DATA: ${dFinal}`, 10.5, 25.4, { align: 'center' });
 // Segunda página
 if (fotosObrigatorias.fachada || fotosObrigatorias.marquise) {
     doc.addPage();
-    header(); // Cabeçalho padrão do Jair Ramos
+    header();
 
     let curY = 5.2; // Ponto inicial abaixo do cabeçalho
     const larguraTabela = 18.0;
@@ -468,7 +494,6 @@ if (fotosObrigatorias.fachada || fotosObrigatorias.marquise) {
     doc.setLineWidth(0.017);
 
 if (fotosObrigatorias.fachada) {
-    // Moldura externa
     doc.rect(1.0, curY - 0.5, 19.0, alturaTotalCelula + 0.5);
 
     // Imagem
@@ -515,9 +540,9 @@ if (anexos && anexos.length > 0 && anexos.some(a => a.obs && a.obs.trim() !== ""
     anexos.forEach((a, i) => {
         doc.setFontSize(9); 
         doc.setFont("helvetica", "bold"); 
-        doc.text(a.titulo || "", 1.5, idxY); 
+        doc.text(`ANEXO ${i + 1}`, 1.5, idxY); 
         
-        doc.setFont("helvetica", "normal"); 
+        doc.setFont("helvetica", "bold"); 
         let descricao = a.obs ? a.obs.substring(0, 60) : "";
         doc.text(descricao, 4.5, idxY);
         
@@ -528,62 +553,65 @@ if (anexos && anexos.length > 0 && anexos.some(a => a.obs && a.obs.trim() !== ""
 
 // 4. PROCESSAR ANEXOS (GALERIA)
     let fCount = 3;
-    for (const anexo of anexos) {
-        if(anexo.fotosAntes.length === 0 && anexo.fotosDepois.length === 0) continue;
-        
-        const renderGal = (photos, sub) => {
-            if(photos.length === 0) return;
+for (const anexo of anexos) {
+    const descricaoGeralAnexo = anexo.obs || "RELATÓRIO FOTOGRÁFICO";
+    if(anexo.fotosAntes.length === 0 && anexo.fotosDepois.length === 0) continue;
+
+const renderGal = (photos, sub) => {
+    if(photos.length === 0) return;
+    
+    doc.addPage(); 
+    header();
+    
+    doc.setFont("helvetica", "bold"); 
+    doc.setFontSize(11); 
+    doc.text(sub, 10.5, 5.2, {align:'center'}); // Título centralizado
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal"); 
+    doc.text(descricaoGeralAnexo, 1.5, 5.8, { align: 'left' }); // Descrição esquerda
+
+    let y = 6.3; 
+    let col = 0;
+    
+    photos.forEach(f => {
+        if(y > 24) { 
             doc.addPage(); 
-            header();
-            
+            header(); 
+
+            // --- SEGUNDA PÁGINA DO ANEXO
             doc.setFont("helvetica", "bold"); 
             doc.setFontSize(11); 
-            doc.text(sub, 10.5, 4.5, {align:'center'});
-            
-            let y = 5.5; 
-            let col = 0;
-            
-            photos.forEach(f => {
-                if(y > 24) { 
-                    doc.addPage(); 
-                    header(); 
+            doc.text(sub, 10.5, 5.2, {align:'center'}); 
 
-                    doc.setFont("helvetica", "bold"); 
-                    doc.setFontSize(11); 
-                    doc.text(sub, 10.5, 4.5, {align:'center'});
-                    y = 5.5; 
-                    col = 0;
-                }
-            
-            //tamanho da imagem
-            const x = col === 0 ? 1.5 : 10.6;
-            const larguraImg = 8.9;
-            const alturaImg  = 4.5;
-            const margemExtra = 0.5;
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text(descricaoGeralAnexo, 1.5, 5.8, {align:'left'});
 
-            doc.setDrawColor(0);
-            doc.setLineWidth(0.017); 
+            y = 6.3; 
+            col = 0;
+        }
+        
+        const x = col === 0 ? 1.5 : 10.6;
+        const larguraImg = 8.9;
+        const alturaImg  = 4.5;
 
-            //tamanho do retangulo
-            doc.rect(x, y, larguraImg, alturaImg + 2.3);
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.017); 
+        doc.rect(x, y, larguraImg, alturaImg + 2.3);
+
+        if (f.src) {
             doc.addImage(f.src, 'JPEG', x, y, larguraImg, alturaImg, undefined, 'FAST');
-                
-                doc.setFontSize(10); 
-                doc.setFont("helvetica", "normal");
+        }
+            
+        doc.setFontSize(10); 
+        const legendaTexto = `Figura ${fCount++} - ${f.desc || 'Averiguação técnica.'}`;
+        const legendaFormatada = doc.splitTextToSize(legendaTexto, 8.2); 
+        doc.text(legendaFormatada, x + 0.3, y + alturaImg + 0.7);    
 
-                const legendaTexto = `Figura ${fCount++} - ${f.desc || 'Averiguação técnica.'}`;
-                const legendaFormatada = doc.splitTextToSize(legendaTexto, 8.5); 
-                
-                doc.text(legendaFormatada, x + 0.2, y + alturaImg + 0.6);    
-
-                if(col === 1) { 
-                    col = 0; 
-                    y += 7.2; 
-                } else { 
-                    col = 1; 
-                }
-            });
-        };
+        if(col === 1) { col = 0; y += 7.2; } else { col = 1; }
+    });
+};
         
         renderGal(anexo.fotosAntes, "RELATÓRIO FOTOGRÁFICO - ANTES");
         renderGal(anexo.fotosDepois, "RELATÓRIO FOTOGRÁFICO - DEPOIS");
