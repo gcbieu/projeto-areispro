@@ -209,7 +209,7 @@
 <script>
 // --- BANCO DE DADOS LOCAL ---
 let db = {
-    // Removido o localStorage para forçar a exibição do "- PA"
+
     lojas: [
         "#102 - PATIO BELEM",
         "#133 -SHC PARQUE SHOPPING - PA",
@@ -222,10 +222,14 @@ let db = {
         "#1119 - ALTAMIRA - PA",
         "#1261 - ANANINDEUA - PA",
         "#1270 - CASTANHEIRA - PA",
+        "#1317 – ITAITUBA - PA",
         "#1333 - SHC METROPOLE - PA",
         "#1402 - DISTRITO - PA",
+        "1476 - S. M. GUAMA - PA",
+        "#1527 - ALENQUER - PA",
         "#1548 - BENEVIDES - PA",
         "#5186 - MARAMBAIA - PA",
+        "#5255 - SANTA IZABEL - PA",
     ],
     fornecedores: [
         "THERMO ENGENHARIA SOLUÇÕES LTDA", 
@@ -598,20 +602,25 @@ const renderGal = (photos, sub) => {
         const larguraImg = 8.9;
         const alturaImg  = 4.5;
 
+        // 1. Calcular a legenda e quantas linhas ela terá
+        doc.setFontSize(10); 
+        const legendaTexto = `Figura ${fCount++} - ${f.desc || 'Averiguação técnica.'}`;
+        const legendaFormatada = doc.splitTextToSize(legendaTexto, 8.2); // Texto quebrado
+        const qtdLinhas = legendaFormatada.length;
+        const alturaTexto = (qtdLinhas * 0.5); // 0.5 é um espaçamento médio por linha em cm
+
+        // 2. Desenhar o retângulo com altura dinâmica
+        // A altura agora é a imagem + margem superior legenda (0.7) + altura real do texto + folga inferior (0.3)
+        const alturaTotalBorda = alturaImg + 0.7 + alturaTexto + 0.3;
         doc.setDrawColor(0);
         doc.setLineWidth(0.017); 
-        doc.rect(x, y, larguraImg, alturaImg + 2.3);
+        doc.rect(x, y, larguraImg, alturaTotalBorda);
 
         if (f.src) {
             doc.addImage(f.src, 'JPEG', x, y, larguraImg, alturaImg, undefined, 'FAST');
         }
             
-        doc.setFontSize(10); 
-        const legendaTexto = `Figura ${fCount++} - ${f.desc || 'Averiguação técnica.'}`;
-        const legendaFormatada = doc.splitTextToSize(legendaTexto, 8.2); 
-        doc.text(legendaFormatada, x + 0.3, y + alturaImg + 0.7);    
-
-        if(col === 1) { col = 0; y += 7.2; } else { col = 1; }
+        if(col === 1) { col = 0; y += 8.5; } else { col = 1; }
     });
 };
         
