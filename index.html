@@ -563,12 +563,13 @@ for (const anexo of anexos) {
     const descricaoGeralAnexo = anexo.obs || " ";
     if(anexo.fotosAntes.length === 0 && anexo.fotosDepois.length === 0) continue;
 
-const renderGal = (photos, sub) => {
+    const renderGal = (photos, sub) => {
     if(photos.length === 0) return;
     
     doc.addPage(); 
     header();
     
+    // Título da primeira página do anexo
     doc.setFont("helvetica", "bold"); 
     doc.setFontSize(11); 
     doc.text(sub, 10.5, 5.2, {align:'center'}); // Título centralizado
@@ -579,50 +580,74 @@ const renderGal = (photos, sub) => {
 
     let y = 6.3; 
     let col = 0;
+    let alturaUltimaFileira = 0;
+
+    photos.forEach((f, index) => {
+    const x = col === 0 ? 1.5 : 10.6;
+    const larguraImg = 8.9;
+    //altura da imagem a baixo
+    const alturaImg  = 3.9;
+
+    // 1. CALCULA A LEGENDA PRIMEIRO
+    doc.setFontSize(10); 
+    const legendaTexto = `Figura ${fCount++} - ${f.desc || 'Averiguação técnica.'}`;
+    const legendaFormatada = doc.splitTextToSize(legendaTexto, 8.2); 
     
-    photos.forEach(f => {
-        if(y > 24) { 
-            doc.addPage(); 
-            header(); 
+    // Calcula a altura do texto (quantidade de linhas * entrelinha de ~0.45cm)
+    const alturaTextoReal = legendaFormatada.length * 0.45;
+    
+    // 2. DEFINE A ALTURA DA TABELA (Imagem + Margem + Texto + Respiro inferior)
+    const alturaTotalTabela = alturaImg + 0.6 + alturaTextoReal + 0.2;
 
-            // --- SEGUNDA PÁGINA DO ANEXO
-            doc.setFont("helvetica", "bold"); 
-            doc.setFontSize(11); 
-            doc.text(sub, 10.5, 5.2, {align:'center'}); 
+    // 3. QUEBRA DE PÁGINA INTELIGENTE
+    if (y + alturaTotalTabela > 27.5) {
+        doc.addPage();
+        header();
 
-            doc.setFontSize(8);
-            doc.setFont("helvetica", "normal");
-            doc.text(descricaoGeralAnexo, 1.5, 5.8, {align:'left'});
+        // 1. Título (Antes/Depois)
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text(sub, 10.5, 5.2, { align: 'center' });
 
-            y = 6.3; 
-            col = 0;
+        // 2. Descrição Geral
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text(descricaoGeralAnexo, 1.5, 5.8, { align: 'left' });
+
+        y = 6.5; 
+        col = 0;
+        alturaUltimaFileira = 0;
+    }
+    // 4. DESENHA A TABELA
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.017); 
+    doc.rect(x, y, larguraImg, alturaTotalTabela);
+
+    // 5. CONTEÚDO
+    if (f.src) {
+        doc.addImage(f.src, 'JPEG', x, y, larguraImg, alturaImg, undefined, 'FAST');
+    }
+    doc.text(legendaFormatada, x + 0.3, y + alturaImg + 0.5);
+
+    // 6. LOGICA DE COLUNAS
+    if (alturaTotalTabela > alturaUltimaFileira) {
+        alturaUltimaFileira = alturaTotalTabela;
+    }
+
+    if (col === 1) { 
+
+        y += alturaUltimaFileira + 0.1;
+        col = 0;
+        alturaUltimaFileira = 0; // Reseta para a próxima linha
+    } else {
+        // Se for a primeira foto e for a ÚLTIMA do array (não tem par)
+        if (index === photos.length - 1) {
+            y += alturaTotalTabela + 0.1;
         }
-        
-        const x = col === 0 ? 1.5 : 10.6;
-        const larguraImg = 8.9;
-        const alturaImg  = 4.5;
-
-        // 1. Calcular a legenda e quantas linhas ela terá
-        doc.setFontSize(9); 
-        const legendaTexto = `Figura ${fCount++} - ${f.desc || 'Averiguação técnica.'}`;
-        const legendaFormatada = doc.splitTextToSize(legendaTexto, 8.2);
-        const qtdLinhas = legendaFormatada.length;
-        const alturaTexto = (qtdLinhas * 0.45); // 0.5 é um espaçamento médio por linha em cm
-
-        // 2. Desenhar o retângulo com altura dinâmica
-        const alturaTotalBorda = alturaImg + 0.6 + alturaTexto + 0.2;
-        doc.setDrawColor(0);
-        doc.setLineWidth(0.017); 
-        doc.rect(x, y, larguraImg, alturaTotalBorda);
-
-        if (f.src) {
-            doc.addImage(f.src, 'JPEG', x, y, larguraImg, alturaImg, undefined, 'FAST');
-        }
-            doc.text(legendaFormatada, x + 0.3, y + alturaImg + 0.7);
-        if(col === 1) { col = 0; y += 8.5; } else { col = 1; }
-    });
-};
-        
+        col = 1;
+                }
+            });
+        };  
         renderGal(anexo.fotosAntes, "RELATÓRIO FOTOGRÁFICO - ANTES");
         renderGal(anexo.fotosDepois, "RELATÓRIO FOTOGRÁFICO - DEPOIS");
     }
