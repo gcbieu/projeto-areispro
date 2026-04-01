@@ -619,7 +619,7 @@ const renderGal = (photos, sub) => {
         if (f.src) {
             doc.addImage(f.src, 'JPEG', x, y, larguraImg, alturaImg, undefined, 'FAST');
         }
-            
+            doc.text(legendaFormatada, x + 0.3, y + alturaImg + 0.7);
         if(col === 1) { col = 0; y += 8.5; } else { col = 1; }
     });
 };
