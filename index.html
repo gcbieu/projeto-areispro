@@ -603,15 +603,14 @@ const renderGal = (photos, sub) => {
         const alturaImg  = 4.5;
 
         // 1. Calcular a legenda e quantas linhas ela terá
-        doc.setFontSize(10); 
+        doc.setFontSize(9); 
         const legendaTexto = `Figura ${fCount++} - ${f.desc || 'Averiguação técnica.'}`;
-        const legendaFormatada = doc.splitTextToSize(legendaTexto, 8.2); // Texto quebrado
+        const legendaFormatada = doc.splitTextToSize(legendaTexto, 8.2);
         const qtdLinhas = legendaFormatada.length;
-        const alturaTexto = (qtdLinhas * 0.5); // 0.5 é um espaçamento médio por linha em cm
+        const alturaTexto = (qtdLinhas * 0.45); // 0.5 é um espaçamento médio por linha em cm
 
         // 2. Desenhar o retângulo com altura dinâmica
-        // A altura agora é a imagem + margem superior legenda (0.7) + altura real do texto + folga inferior (0.3)
-        const alturaTotalBorda = alturaImg + 0.7 + alturaTexto + 0.3;
+        const alturaTotalBorda = alturaImg + 0.6 + alturaTexto + 0.2;
         doc.setDrawColor(0);
         doc.setLineWidth(0.017); 
         doc.rect(x, y, larguraImg, alturaTotalBorda);
