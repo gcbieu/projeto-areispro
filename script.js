@@ -1,4 +1,9 @@
-// --- BANCO DE DADOS LOCAL ---
+// --- CONFIGURAÇÃO SUPABASE ---
+const _supabaseUrl = 'https://ujwfggunvzsonnsjuvpl.supabase.co';
+const _supabaseKey = 'sb_publishable_hcM_2Z8eE_3sdJybZGz1HQ_rae8MIH7'; 
+
+const supabaseClient = supabase.createClient(_supabaseUrl, _supabaseKey);
+//--- BANCO DE DADOS LOCAL ---
 let db = {
 
     lojas: [
@@ -23,17 +28,40 @@ let db = {
         "#5186 - MARAMBAIA - PA",
         "#5255 - SANTA IZABEL - PA",
     ],
-    fornecedores: [
-        "THERMO ENGENHARIA SOLUÇÕES LTDA", 
-        "EMC SERVIÇOS REFORMA PREDIAL E METALURGIA",
-        "JSERVICE INSTAÇÃO E MANUTENÇÃO PREDIAL ",
-        "RELATÓRIO INSPEÇÃO DE SEGURANÇA",
-    ]
+    prestadores: [ ]
 };
 
 let anexos = [{ id: Date.now(), titulo: "ANEXO 1", obs: "", fotosAntes: [], fotosDepois: [] }];
-let logos = { prestador: null, americanas: null };
+let logos = { prestador: null, americanas: "https://ujwfggunvzsonnsjuvpl.supabase.co/storage/v1/object/public/logos-prestadores/americanas.png" };
 let fotosObrigatorias = { fachada: null, marquise: null };
+
+async function carregarPrestadoresDoBanco() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('prestadores')
+            .select('nome, logo_url');
+
+        if (error) throw error;
+
+        const select = document.getElementById('prestador');
+        if (data && data.length > 0) {
+            select.innerHTML = data.map(p => 
+                `<option value="${p.nome}" data-logo="${p.logo_url}">${p.nome}</option>`
+            ).join('');
+            
+            // Ativa a logo do primeiro prestador da lista
+            atualizarLogoAutomatica();
+        }
+    } catch (error) {
+        console.error("Erro no Supabase:", error.message);
+    }
+}
+function atualizarLogoAutomatica() {
+    const select = document.getElementById('prestador');
+    const opcao = select.options[select.selectedIndex];
+    const url = opcao.getAttribute('data-logo');
+    if (url) logos.prestador = url; // Define a logo para o PDF
+}
 
 // --- DARK MODE LOGIC ---
 function toggleDarkMode() {
@@ -44,10 +72,13 @@ if(localStorage.getItem('are_theme') === 'dark') document.documentElement.classL
 
 // --- SISTEMA DE GESTÃO DE DADOS ---
 function renderDB() {
+// Mantém o salvamento local
     localStorage.setItem('are_lojas', JSON.stringify(db.lojas));
-    localStorage.setItem('are_provs', JSON.stringify(db.fornecedores));
     
-    document.getElementById('lojaSelect').innerHTML = db.lojas.map(l => `<option value="${l}">${l}</option>`).join('');
+    // Popula o select das lojas
+    document.getElementById('lojaSelect').innerHTML = db.lojas.map(l => 
+        `<option value="${l}">${l}</option>`
+    ).join('');
     document.getElementById('prestador').innerHTML = db.fornecedores.map(f => `<option value="${f}">${f}</option>`).join('');
     
     document.getElementById('storeList').innerHTML = db.lojas.map((l, i) => `<div class="flex justify-between p-3 glass rounded-xl text-xs font-medium"><span>${l}</span><button onclick="db.lojas.splice(${i},1);renderDB()" class="text-red-500 font-bold">×</button></div>`).join('');
@@ -152,11 +183,28 @@ function renderAnexos() {
 }
 
 // --- FUNÇÕES DE AUXÍLIO ---
-function entrarNoSistema() { document.getElementById('welcomeView').classList.add('hidden-view'); document.getElementById('appContainer').classList.remove('hidden-view'); renderDB(); renderAnexos(); }
+async function entrarNoSistema() { 
+    try {
+        document.getElementById('welcomeView').classList.add('hidden-view'); 
+        document.getElementById('appContainer').classList.remove('hidden-view'); 
+        
+        // Chamamos a função que você colou acima
+        await carregarPrestadoresDoBanco();
+        
+        // Adicionamos o evento para mudar a logo quando você clicar em outro prestador
+        document.getElementById('prestador').addEventListener('change', atualizarLogoAutomatica);
+
+        renderDB(); 
+        renderAnexos(); 
+    } catch (err) {
+        console.error("Erro ao iniciar sistema:", err);
+    }
+}
 function navigate(v) { ['mainView', 'configView'].forEach(id => document.getElementById(id).classList.add('hidden-view')); document.getElementById(`${v}View`).classList.remove('hidden-view'); document.getElementById('userMenu').classList.add('hidden'); }
 function toggleMenu() { document.getElementById('userMenu').classList.toggle('hidden'); }
 function toggleConverter() { document.getElementById('converterExpand').classList.toggle('hidden'); }
 function triggerConverter(id) { document.getElementById(id).click(); }
+
 async function handleConversion(input, type) {
     const file = input.files[0];
     if (!file) return;
@@ -226,10 +274,9 @@ async function gerarRelatorio() {
     const header = () => {
     border();
 
-    if(logos.prestador) {
-        doc.addImage(logos.prestador, 'JPEG', 1, 0.8, 1.55, 1.41, undefined, 'FAST');
-    }
-
+if(logos.prestador) {
+    doc.addImage(logos.prestador, 'JPEG', 1, 0.8, 1.55, 1.41, undefined, 'FAST');
+}
     const pageNumber = doc.getCurrentPageInfo().pageNumber;
     const totalPages = doc.internal.getNumberOfPages();
 
