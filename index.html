@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,136 +10,193 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-   
+
     <link rel="stylesheet" href="style.css">
-    
+
 </head>
+
 <body>
 
-<!-- TELA DE BEM VINDO -->
-<section id="welcomeView" class="flex flex-col items-center justify-center min-h-screen">
-    <div class="relative mb-32 flex flex-col items-center">
-        <h1 class="text-xs font-bold uppercase tracking-[0.5em] opacity-40">AREISPRO</h1>
-        <div class="welcome-dot"></div>
-        <div class="mt-20 text-2xl font-light text-center transition-opacity duration-500" id="changingText">CARREGANDO...</div>
-    </div>
-    
-    <div class="glass rounded-[32px] p-8 shadow-2xl w-[320px] flex flex-col items-center">
-        <button onclick="entrarNoSistema()" class="bg-black text-white dark:bg-white dark:text-black w-full py-4 rounded-[20px] font-semibold text-base shadow-lg">
-            Começar
-        </button>
-    </div>
-</section>
-
-<!-- APP PRINCIPAL -->
-<div id="appContainer" class="hidden-view">
-    <nav class="fixed top-0 w-full z-50 glass border-b">
-        <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-tighter cursor-pointer" onclick="navigate('main')">AREIS<span class="font-light opacity-40">PRO</span></h1>
-            
-            <div class="flex items-center gap-3">
-                <!-- BOTÃO DARK MODE QUADRADO -->
-                <button onclick="toggleDarkMode()" class="dark-toggle-btn">
-                    <svg id="sunIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
-                    <svg id="moonIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                </button>
-
-                <button onclick="gerarRelatorio()" class="flex items-center gap-2 px-5 py-2.5 bg-black text-white dark:bg-white dark:text-black rounded-full text-[10px] font-bold">GERAR PDF</button>
-                
-                <button onclick="toggleConverter()" class="flex items-center gap-2 px-5 py-2.5 bg-blue-500/10 text-blue-600 rounded-full text-[10px] font-bold">CONVERSOR</button>
-                
-                <button onclick="toggleMenu()" class="w-9 h-9 rounded-full bg-gray-200 border border-gray-300 overflow-hidden shadow-sm">
-                <img id="avatarPreview" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-full h-full object-cover">                
-                </button>
-                
-                <div id="userMenu" class="hidden absolute right-4 top-16 w-52 glass rounded-2xl py-2 shadow-2xl">
-                    <button onclick="navigate('config')" class="w-full text-left px-4 py-3 text-sm hover:bg-black/5">Configurações</button>
-                    <button onclick="location.reload()" class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-500/10">Sair</button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <main id="mainView" class="max-w-6xl mx-auto px-6 mt-24 pb-20">
-        <!-- ÁREA DO CONVERSOR -->
-        <div id="converterExpand" class="hidden mb-8 overflow-hidden">
-            <div class="glass rounded-[32px] p-8 grid grid-cols-1 md:grid-cols-4 gap-4 border-blue-500/20">
-                <div class="bg-blue-600/5 p-4 rounded-2xl text-center cursor-pointer border border-blue-500/20" onclick="triggerConverter('pdfToWordInput')">
-                    <p class="text-[9px] font-black text-blue-700 mb-2 uppercase">PDF para Word</p>
-                    <input id="pdfToWordInput" type="file" accept=".pdf" class="hidden" onchange="handleConversion(this, 'pdfToWord')">
-                    <span class="text-xs text-blue-400">Selecionar</span>
-                </div>
-                <div class="bg-gray-500/5 p-4 rounded-2xl text-center opacity-60"><p class="text-[9px] font-black opacity-50 mb-2 uppercase">Word para PDF</p><span class="text-xs">Em breve</span></div>
-                <div class="bg-gray-500/5 p-4 rounded-2xl text-center opacity-60"><p class="text-[9px] font-black opacity-50 mb-2 uppercase">Excel para PDF</p><span class="text-xs">Em breve</span></div>
-                <div class="bg-gray-500/5 p-4 rounded-2xl text-center opacity-60"><p class="text-[9px] font-black opacity-50 mb-2 uppercase">PDF para Excel</p><span class="text-xs">Em breve</span></div>
-            </div>
+    <!-- TELA DE BEM VINDO -->
+    <section id="welcomeView" class="flex flex-col items-center justify-center min-h-screen">
+        <div class="relative mb-32 flex flex-col items-center">
+            <h1 class="text-xs font-bold uppercase tracking-[0.5em] opacity-40">AREISPRO</h1>
+            <div class="welcome-dot"></div>
+            <div class="mt-20 text-2xl font-light text-center transition-opacity duration-500" id="changingText">
+                CARREGANDO...</div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-4 space-y-6">
-                <section class="glass rounded-3xl p-6 shadow-sm">
-                    <h3 class="text-[10px] font-bold opacity-40 uppercase tracking-widest mb-6">Informações</h3>
-                    <div class="space-y-4">
-                        <select id="prestador" class="w-full p-4 input-ios text-sm font-medium"></select>
-                        <select id="lojaSelect" class="w-full p-4 input-ios text-sm font-medium"></select>
-                        <input id="chamado" type="text" placeholder="Nº Chamado" class="w-full p-4 input-ios text-sm">
-                        <input id="dataServico" type="date" class="w-full p-4 input-ios text-sm">
-                    </div>
-                </section>
-                <button onclick="document.getElementById('modalLogos').classList.remove('hidden')" class="w-full py-4 bg-gray-500/10 rounded-2xl text-[10px] font-bold">CONFIGURAR LOGOS CAPA</button>
-            </div>
-
-            <div class="lg:col-span-8 space-y-8">
-                <div class="glass rounded-3xl p-6">
-                    <h3 class="text-[10px] font-bold opacity-40 uppercase mb-4">Fotos Obrigatórias</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div id="prev-fachada" class="bg-gray-500/10 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
-                            <input type="file" onchange="handleSingleUpload(this, 'fachada')" class="absolute inset-0 opacity-0 cursor-pointer">
-                            <span class="text-[10px] opacity-40 font-bold uppercase">Figura 1 – Fachada</span>
-                        </div>
-                        <div id="prev-marquise" class="bg-gray-500/10 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
-                            <input type="file" onchange="handleSingleUpload(this, 'marquise')" class="absolute inset-0 opacity-0 cursor-pointer">
-                            <span class="text-[10px] opacity-40 font-bold uppercase">Figura 2 – Marquise</span>
-                        </div>
-                    </div>
-                </div>
-                <div id="anexosContainer"></div>
-                <button onclick="addNovoAnexo()" class="w-full py-5 border-2 border-dashed border-gray-400/30 rounded-3xl text-[11px] font-bold opacity-40 flex items-center justify-center gap-2">
-                    <span class="text-lg">+</span> ADICIONAR NOVO ANEXO (FOTOS)
-                </button>
-            </div>
+        <div class="glass rounded-[32px] p-8 shadow-2xl w-[320px] flex flex-col items-center">
+            <button onclick="entrarNoSistema()"
+                class="bg-black text-white dark:bg-white dark:text-black w-full py-4 rounded-[20px] font-semibold text-base shadow-lg">
+                Começar
+            </button>
         </div>
-    </main>
-
-    <!-- VIEW CONFIGURAÇÕES -->
-    <section id="configView" class="hidden-view max-w-2xl mx-auto px-6 mt-24 pb-20">
-        <div class="glass rounded-3xl p-8 mb-6">
-            <h3 class="text-xl font-bold mb-6">Lojas</h3>
-            <div class="flex gap-2 mb-6"><input id="newStore" type="text" class="flex-1 p-3 input-ios text-sm uppercase" placeholder="Nome da Loja"><button onclick="addStore()" class="bg-black text-white px-4 rounded-xl text-sm font-bold">ADICIONAR</button></div>
-            <div id="storeList" class="space-y-2 max-h-60 overflow-y-auto"></div>
-        </div>
-        <div class="glass rounded-3xl p-8">
-            <h3 class="text-xl font-bold mb-6">Fornecedores</h3>
-            <div class="flex gap-2 mb-6"><input id="newProv" type="text" class="flex-1 p-3 input-ios text-sm uppercase" placeholder="Nome da Empresa"><button onclick="addProv()" class="bg-black text-white px-4 rounded-xl text-sm font-bold">ADICIONAR</button></div>
-            <div id="provList" class="space-y-2 max-h-60 overflow-y-auto"></div>
-        </div>
-        <button onclick="navigate('main')" class="mt-8 w-full py-4 bg-black text-white dark:bg-white dark:text-black rounded-2xl font-bold">Salvar e Voltar</button>
     </section>
-</div>
 
-<!-- MODAL LOGOS -->
-<div id="modalLogos" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100]">
-    <div class="glass p-8 rounded-[32px] max-w-sm w-full mx-4 shadow-2xl">
-        <h2 class="text-lg font-bold mb-6">Configuração de Logos</h2>
-        <div class="space-y-6">
-            <div><label class="text-[9px] font-black opacity-40 block mb-2 uppercase">Logo Prestador</label><input type="file" onchange="saveLogo(this, 'prestador')" class="text-xs"></div>
-            <div><label class="text-[9px] font-black opacity-40 block mb-2 uppercase">Logo Cliente</label><input type="file" onchange="saveLogo(this, 'americanas')" class="text-xs"></div>
-        </div>
-        <button onclick="document.getElementById('modalLogos').classList.add('hidden')" class="mt-10 w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-sm">Salvar Alterações</button>
+    <!-- APP PRINCIPAL -->
+    <div id="appContainer" class="hidden-view">
+        <nav class="fixed top-0 w-full z-50 glass border-b">
+            <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
+                <h1 class="text-xl font-bold tracking-tighter cursor-pointer" onclick="navigate('main')">AREIS<span
+                        class="font-light opacity-40">PRO</span></h1>
+
+                <div class="flex items-center gap-3">
+                    <!-- BOTÃO DARK MODE QUADRADO -->
+                    <button onclick="toggleDarkMode()" class="dark-toggle-btn">
+                        <svg id="sunIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707.707M12 8a4 4 0 100 8 4 4 0 000-8z">
+                            </path>
+                        </svg>
+                        <svg id="moonIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <button onclick="gerarRelatorio()"
+                        class="flex items-center gap-2 px-5 py-2.5 bg-black text-white dark:bg-white dark:text-black rounded-full text-[10px] font-bold">GERAR
+                        PDF</button>
+
+                    <button onclick="toggleConverter()"
+                        class="flex items-center gap-2 px-5 py-2.5 bg-blue-500/10 text-blue-600 rounded-full text-[10px] font-bold">CONVERSOR</button>
+
+                    <button onclick="toggleMenu()"
+                        class="w-9 h-9 rounded-full bg-gray-200 border border-gray-300 overflow-hidden shadow-sm">
+                        <img id="avatarPreview" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                            class="w-full h-full object-cover">
+                    </button>
+
+                    <div id="userMenu" class="hidden absolute right-4 top-16 w-52 glass rounded-2xl py-2 shadow-2xl">
+                        <button onclick="navigate('config')"
+                            class="w-full text-left px-4 py-3 text-sm hover:bg-black/5">Configurações</button>
+                        <button onclick="location.reload()"
+                            class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-500/10">Sair</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main id="mainView" class="max-w-6xl mx-auto px-6 mt-24 pb-20">
+            <!-- ÁREA DO CONVERSOR -->
+            <div id="converterExpand" class="hidden mb-8 overflow-hidden">
+                <div class="glass rounded-[32px] p-8 grid grid-cols-1 md:grid-cols-4 gap-4 border-blue-500/20">
+                    <div class="bg-blue-600/5 p-4 rounded-2xl text-center cursor-pointer border border-blue-500/20"
+                        onclick="triggerConverter('pdfToWordInput')">
+                        <p class="text-[9px] font-black text-blue-700 mb-2 uppercase">PDF para Word</p>
+                        <input id="pdfToWordInput" type="file" accept=".pdf" class="hidden"
+                            onchange="handleConversion(this, 'pdfToWord')">
+                        <span class="text-xs text-blue-400">Selecionar</span>
+                    </div>
+                    <div class="bg-gray-500/5 p-4 rounded-2xl text-center opacity-60">
+                        <p class="text-[9px] font-black opacity-50 mb-2 uppercase">Word para PDF</p><span
+                            class="text-xs">Em breve</span>
+                    </div>
+                    <div class="bg-gray-500/5 p-4 rounded-2xl text-center opacity-60">
+                        <p class="text-[9px] font-black opacity-50 mb-2 uppercase">Excel para PDF</p><span
+                            class="text-xs">Em breve</span>
+                    </div>
+                    <div class="bg-gray-500/5 p-4 rounded-2xl text-center opacity-60">
+                        <p class="text-[9px] font-black opacity-50 mb-2 uppercase">PDF para Excel</p><span
+                            class="text-xs">Em breve</span>
+                    </div>
+                    <div id="convProgress" class="hidden w-full bg-gray-200 h-1 mt-2 rounded-full overflow-hidden">
+                        <div class="bg-blue-600 h-full animate-progress" style="width: 50%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-4 space-y-6">
+                    <section class="glass rounded-3xl p-6 shadow-sm">
+                        <h3 class="text-[10px] font-bold opacity-40 uppercase tracking-widest mb-6">Informações</h3>
+                        <div class="space-y-4">
+                            <select id="prestador" class="w-full p-4 input-ios text-sm font-medium"></select>
+                            <select id="lojaSelect" class="w-full p-4 input-ios text-sm font-medium"></select>
+                            <input id="chamado" type="text" placeholder="Nº Chamado"
+                                class="w-full p-4 input-ios text-sm">
+                            <input id="dataServico" type="date" class="w-full p-4 input-ios text-sm">
+                        </div>
+                    </section>
+                    <button onclick="document.getElementById('modalLogos').classList.remove('hidden')"
+                        class="w-full py-4 bg-gray-500/10 rounded-2xl text-[10px] font-bold">CONFIGURAR LOGOS
+                        CAPA</button>
+                </div>
+
+                <div class="lg:col-span-8 space-y-8">
+                    <div class="glass rounded-3xl p-6">
+                        <h3 class="text-[10px] font-bold opacity-40 uppercase mb-4">Fotos Obrigatórias</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div id="prev-fachada"
+                                class="bg-gray-500/10 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
+                                <input type="file" onchange="handleSingleUpload(this, 'fachada')"
+                                    class="absolute inset-0 opacity-0 cursor-pointer">
+                                <span class="text-[10px] opacity-40 font-bold uppercase">Figura 1 – Fachada</span>
+                            </div>
+                            <div id="prev-marquise"
+                                class="bg-gray-500/10 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
+                                <input type="file" onchange="handleSingleUpload(this, 'marquise')"
+                                    class="absolute inset-0 opacity-0 cursor-pointer">
+                                <span class="text-[10px] opacity-40 font-bold uppercase">Figura 2 – Marquise</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="anexosContainer"></div>
+                    <button onclick="addNovoAnexo()"
+                        class="w-full py-5 border-2 border-dashed border-gray-400/30 rounded-3xl text-[11px] font-bold opacity-40 flex items-center justify-center gap-2">
+                        <span class="text-lg">+</span> ADICIONAR NOVO ANEXO (FOTOS)
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- VIEW CONFIGURAÇÕES -->
+        <section id="configView" class="hidden-view max-w-2xl mx-auto px-6 mt-24 pb-20">
+            <div class="glass rounded-3xl p-8 mb-6">
+                <h3 class="text-xl font-bold mb-6">Lojas</h3>
+                <div class="flex gap-2 mb-6"><input id="newStore" type="text"
+                        class="flex-1 p-3 input-ios text-sm uppercase" placeholder="Nome da Loja"><button
+                        onclick="addStore()"
+                        class="bg-black text-white px-4 rounded-xl text-sm font-bold">ADICIONAR</button></div>
+                <div id="storeList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+            </div>
+            <div class="glass rounded-3xl p-8">
+                <h3 class="text-xl font-bold mb-6">Fornecedores</h3>
+                <div class="flex gap-2 mb-6"><input id="newProv" type="text"
+                        class="flex-1 p-3 input-ios text-sm uppercase" placeholder="Nome da Empresa"><button
+                        onclick="addProv()"
+                        class="bg-black text-white px-4 rounded-xl text-sm font-bold">ADICIONAR</button></div>
+                <div id="provList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+            </div>
+            <button onclick="navigate('main')"
+                class="mt-8 w-full py-4 bg-black text-white dark:bg-white dark:text-black rounded-2xl font-bold">Salvar
+                e Voltar</button>
+        </section>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js" defer></script>
+
+    <!-- MODAL LOGOS -->
+    <div id="modalLogos"
+        class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100]">
+        <div class="glass p-8 rounded-[32px] max-w-sm w-full mx-4 shadow-2xl">
+            <h2 class="text-lg font-bold mb-6">Configuração de Logos</h2>
+            <div class="space-y-6">
+                <div><label class="text-[9px] font-black opacity-40 block mb-2 uppercase">Logo Prestador</label><input
+                        type="file" onchange="saveLogo(this, 'prestador')" class="text-xs"></div>
+                <div><label class="text-[9px] font-black opacity-40 block mb-2 uppercase">Logo Cliente</label><input
+                        type="file" onchange="saveLogo(this, 'americanas')" class="text-xs"></div>
+            </div>
+            <button onclick="document.getElementById('modalLogos').classList.add('hidden')"
+                class="mt-10 w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-sm">Salvar
+                Alterações</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js" defer></script>
 
 </body>
+
 </html>
