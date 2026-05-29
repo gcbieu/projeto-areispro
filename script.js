@@ -3,37 +3,80 @@ const _supabaseUrl = 'https://ujwfggunvzsonnsjuvpl.supabase.co';
 const _supabaseKey = 'sb_publishable_hcM_2Z8eE_3sdJybZGz1HQ_rae8MIH7';
 
 const supabaseClient = supabase.createClient(_supabaseUrl, _supabaseKey);
-//--- BANCO DE DADOS LOCAL ---
-let db = {
 
-    lojas: [
-        "#102 - PATIO BELEM",
-        "#133 -SHC PARQUE SHOPPING - PA",
-        "#368 - CASTANHAL - PA",
-        "#403 PEDREIRA - PA",
-        "#421 - ICOARACI - PA",
-        "#1068 – MARITUBA - PA",
-        "#1093 - Santarém - PA",
-        "#1113 - SHC RIO TAPAJOS - PA",
-        "#1119 - ALTAMIRA - PA",
-        "#1227 - SHC GRÃO PARA - PA",
-        "#1261 - ANANINDEUA - PA",
-        "#1270 - CASTANHEIRA - PA",
-        "#1317 – ITAITUBA - PA",
-        "#1333 - SHC METROPOLE - PA",
-        "#1402 - DISTRITO - PA",
-        "#1476 - S. M. GUAMA - PA",
-        "#1527 - ALENQUER - PA",
-        "#1548 - BENEVIDES - PA",
-        "#5186 - MARAMBAIA - PA",
-        "#5255 - SANTA IZABEL - PA",
-    ],
+//--- BANCO DE DADOS LOJAS ---
+let db = {
+    lojas: [],
     prestadores: []
 };
 
 let anexos = [{ id: Date.now(), titulo: "ANEXO 1", obs: "", fotosAntes: [], fotosDepois: [] }];
 let logos = { prestador: null, americanas: "https://ujwfggunvzsonnsjuvpl.supabase.co/storage/v1/object/public/logos-prestadores/americanas.png" };
 let fotosObrigatorias = { fachada: null, marquise: null };
+
+// FUNÇÃO PARA BUSCAR AS LOJAS NO SUPABASE
+async function carregarLojas() {
+    try {
+        console.log("A procurar lojas no Supabase...");
+        const { data, error } = await supabaseClient
+            .from('lojas')
+            .select('*');
+
+        if (error) {
+            console.error('Erro ao buscar lojas:', error.message);
+            return;
+        }
+
+        if (data && data.length > 0) {
+            // Guarda as lojas vindas do banco de dados
+            db.lojas = data;
+            console.log('Lojas carregadas com sucesso do Supabase:', db.lojas);
+        } else {
+            console.warn("A tabela 'lojas' retornou vazia do Supabase.");
+        }
+
+    } catch (err) {
+        console.error('Erro inesperado ao carregar lojas:', err);
+    }
+}
+
+// FUNÇÃO PARA ATUALIZAR AS FOTOS DO STORAGE COM BASE NA LOJA SELECIONADA
+function atualizarFotosObrigatorias() {
+    const selectLoja = document.getElementById('lojaSelect');
+    if (!selectLoja || !selectLoja.value) return;
+    
+    const nomeLojaSelecionada = selectLoja.value;
+
+    // Encontra o objeto da loja que está selecionada no select
+    const dadosLoja = db.lojas.find(l => l.LOJA === nomeLojaSelecionada);
+
+    if (dadosLoja) {
+        // Mapeia as colunas exatamente como estão no teu painel do Supabase
+        fotosObrigatorias.fachada = dadosLoja['Foto Fachada'] || null;
+        fotosObrigatorias.marquise = dadosLoja['Foto Marquise'] || null;
+
+        console.log("URLs das fotos carregadas para esta loja:", fotosObrigatorias);
+
+        // Atualiza os blocos cinzentos na interface do utilizador (Figura 1 e Figura 2)
+        atualizarPreviewInterface('fachada');
+        atualizarPreviewInterface('marquise');
+    }
+}
+
+// FUNÇÃO PARA REDESENHAR A INTERFACE DOS CARDS DE FOTO (FIGURA 1 E 2)
+// CORRIJA O NOME AQUI (Troque o 'c' pelo 'z')
+function atualizarPreviewInterface(key) {
+    const elementoPrev = document.getElementById(`prev-${key}`);
+    if (elementoPrev) {
+        if (fotosObrigatorias[key]) {
+            // Se tem o link do Storage, mostra a imagem direto do Supabase
+            elementoPrev.innerHTML = `<div class="delete-btn" onclick="removeObrigatoria('${key}')">×</div><img src="${fotosObrigatorias[key]}" class="w-full h-full object-cover rounded-xl">`;
+        } else {
+            // Se está NULL no banco, mantém o botão de upload manual ativo
+            elementoPrev.innerHTML = `<input type="file" onchange="handleSingleUpload(this, '${key}')" class="absolute inset-0 opacity-0 cursor-pointer"><span class="text-[10px] opacity-40 font-bold uppercase">Figura ${key === 'fachada' ? '1' : '2'} – ${key}</span>`;
+        }
+    }
+}
 
 async function carregarPrestadoresDoBanco() {
     try {
@@ -71,18 +114,40 @@ function toggleDarkMode() {
 if (localStorage.getItem('are_theme') === 'dark') document.documentElement.classList.add('dark');
 
 // --- SISTEMA DE GESTÃO DE DADOS ---
+// --- SISTEMA DE GESTÃO DE DADOS ---
+// --- SISTEMA DE GESTÃO DE DADOS ---
+// --- SISTEMA DE GESTÃO DE DADOS ---
 function renderDB() {
-    // Mantém o salvamento local
+    console.log("Executando renderDB(). Status atual de db.lojas:", db.lojas);
+
+    // Salva no localStorage para manter o cache local atualizado
     localStorage.setItem('are_lojas', JSON.stringify(db.lojas));
 
-    // Popula o select das lojas
-    document.getElementById('lojaSelect').innerHTML = db.lojas.map(l =>
-        `<option value="${l}">${l}</option>`
-    ).join('');
-    document.getElementById('prestador').innerHTML = db.fornecedores.map(f => `<option value="${f}">${f}</option>`).join('');
+    const selectLoja = document.getElementById('lojaSelect');
+    
+    if (selectLoja) {
+        if (db.lojas && db.lojas.length > 0) {
+            // Popula o select mapeando a coluna LOJA de cada objeto do Supabase
+            selectLoja.innerHTML = db.lojas.map(l =>
+                `<option value="${l.LOJA}">${l.LOJA}</option>`
+            ).join('');
+            
+            console.log("Select de lojas populado com sucesso!");
+        } else {
+            selectLoja.innerHTML = `<option value="">Nenhuma loja carregada</option>`;
+        }
+    }
 
-    document.getElementById('storeList').innerHTML = db.lojas.map((l, i) => `<div class="flex justify-between p-3 glass rounded-xl text-xs font-medium"><span>${l}</span><button onclick="db.lojas.splice(${i},1);renderDB()" class="text-red-500 font-bold">×</button></div>`).join('');
-    document.getElementById('provList').innerHTML = db.fornecedores.map((f, i) => `<div class="flex justify-between p-3 glass rounded-xl text-xs font-medium"><span>${f}</span><button onclick="db.fornecedores.splice(${i},1);renderDB()" class="text-red-500 font-bold">×</button></div>`).join('');
+    // Atualiza a listagem visual na aba de configurações (se o elemento existir na tela)
+    const storeListEl = document.getElementById('storeList');
+    if (storeListEl && db.lojas && db.lojas.length > 0) {
+        storeListEl.innerHTML = db.lojas.map((l, i) => 
+            `<div class="flex justify-between p-3 glass rounded-xl text-xs font-medium"><span>${l.LOJA}</span><button onclick="db.lojas.splice(${i},1);renderDB()" class="text-red-500 font-bold">×</button></div>`
+        ).join('');
+    }
+
+    // Dispara a função para buscar as fotos da primeira loja que ficou selecionada por padrão
+    atualizarFotosObrigatorias();
 }
 
 function addStore() { const v = document.getElementById('newStore').value.toUpperCase(); if (v) { db.lojas.push(v); document.getElementById('newStore').value = ""; renderDB(); } }
@@ -185,21 +250,26 @@ function renderAnexos() {
 // --- FUNÇÕES DE AUXÍLIO ---
 async function entrarNoSistema() {
     try {
+        // 1. Altera as telas visíveis do App
         document.getElementById('welcomeView').classList.add('hidden-view');
         document.getElementById('appContainer').classList.remove('hidden-view');
 
-        // Chamamos a função que você colou acima
+        // 2. AGUARDA que os dados venham do Supabase antes de desenhar qualquer coisa no ecrã
         await carregarPrestadoresDoBanco();
+        await carregarLojas(); // Aguarda a resposta das lojas
 
-        // Adicionamos o evento para mudar a logo quando você clicar em outro prestador
+        // 3. Adiciona os ouvintes de evento nos Selects que agora já existem na tela
         document.getElementById('prestador').addEventListener('change', atualizarLogoAutomatica);
+        document.getElementById('lojaSelect').addEventListener('change', atualizarFotosObrigatorias);
 
+        // 4. Agora sim, com os dados prontos no objeto 'db', desenha na interface
         renderDB();
         renderAnexos();
     } catch (err) {
         console.error("Erro ao iniciar sistema:", err);
     }
 }
+
 function navigate(v) { ['mainView', 'configView'].forEach(id => document.getElementById(id).classList.add('hidden-view')); document.getElementById(`${v}View`).classList.remove('hidden-view'); document.getElementById('userMenu').classList.add('hidden'); }
 function toggleMenu() { document.getElementById('userMenu').classList.toggle('hidden'); }
 function toggleConverter() { document.getElementById('converterExpand').classList.toggle('hidden'); }
@@ -342,7 +412,7 @@ async function gerarRelatorio() {
     // Rodapé da Capa (Informações da Loja)
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
-    doc.text(`LOJA: ${lNome}`, 10.5, 21.0, { align: 'center' });
+    doc.text(`LOJA -  ${lNome}`, 10.5, 21.0, { align: 'center' });
     doc.text(`N° CHAMADO: ${cNum}`, 10.5, 22.2, { align: 'center' });
     doc.text(`DATA: ${dFinal}`, 10.5, 23.4, { align: 'center' });
 

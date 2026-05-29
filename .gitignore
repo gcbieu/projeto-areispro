@@ -1,0 +1,12 @@
+# Node modules (pastas pesadas - CERTO ignorar)
+node_modules/
+
+# Variáveis de ambiente (senhas - CERTO ignorar)
+.env
+
+# Arquivos do sistema
+.DS_Store
+npm-debug.log*
+
+# Configurações LOCAIS do Supabase (NÃO ignore a pasta 'supabase/' inteira)
+.supabase/
