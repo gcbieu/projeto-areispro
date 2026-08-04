@@ -273,34 +273,41 @@ async function entrarNoSistema() {
     }
 }
 
-function navigate(v) {
-    const views = ['homeView', 'mainView', 'chamadosView', 'configView'];
+function navigate(view) {
+    const views = {
+        home: "homeView",
+        main: "mainView",
+        chamados: "chamadosView",
+        lojas: "lojasView",
+        prestadores: "prestadoresView",
+        config: "configView"
+    };
 
-    views.forEach(id => {
-        const view = document.getElementById(id);
-        if (view) view.classList.add('hidden-view');
+    // Esconde todas as telas
+    Object.values(views).forEach((viewId) => {
+        const elemento = document.getElementById(viewId);
+
+        if (elemento) {
+            elemento.classList.add("hidden-view");
+        }
     });
 
-    const targetView = document.getElementById(`${v}View`);
-    if (!targetView) {
-        console.error(`View não encontrada: ${v}View`);
+    const destinoId = views[view];
+    const destino = document.getElementById(destinoId);
+
+    if (!destino) {
+        console.error(`View não encontrada: ${view}`);
         return;
     }
 
-    targetView.classList.remove('hidden-view');
+    destino.classList.remove("hidden-view");
 
-    // Ações de PDF e conversor aparecem somente no módulo Relatórios.
-    const reportActions = document.getElementById('reportActions');
-    if (reportActions) {
-        reportActions.classList.toggle('hidden', v !== 'main');
-        reportActions.classList.toggle('flex', v === 'main');
-    }
-
-    const userMenu = document.getElementById('userMenu');
-    if (userMenu) userMenu.classList.add('hidden');
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
+
 function toggleMenu() { document.getElementById('userMenu').classList.toggle('hidden'); }
 function toggleConverter() { document.getElementById('converterExpand').classList.toggle('hidden'); }
 function triggerConverter(id) { document.getElementById(id).click(); }
