@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="shortcut icon" href="IMAGENS/areispro.png" type="image/x-icon">
-    <title>AREISPRO - Sistema de Relatórios</title>
+    <title>AREISPRO - Plataforma Interna</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -13,6 +13,7 @@
 
     <link rel="stylesheet" href="style.css">
 
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -38,7 +39,7 @@
     <div id="appContainer" class="hidden-view">
         <nav class="fixed top-0 w-full z-50 glass border-b">
             <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
-                <h1 class="text-xl font-bold tracking-tighter cursor-pointer" onclick="navigate('main')">AREIS<span
+                <h1 class="text-xl font-bold tracking-tighter cursor-pointer" onclick="navigate('home')">AREIS<span
                         class="font-light opacity-40">PRO</span></h1>
 
                 <div class="flex items-center gap-3">
@@ -58,12 +59,14 @@
                         </svg>
                     </button>
 
-                    <button onclick="gerarRelatorio()"
-                        class="flex items-center gap-2 px-5 py-2.5 bg-black text-white dark:bg-white dark:text-black rounded-full text-[10px] font-bold">GERAR
-                        PDF</button>
+                    <div id="reportActions" class="hidden items-center gap-3">
+                        <button onclick="gerarRelatorio()"
+                            class="flex items-center gap-2 px-5 py-2.5 bg-black text-white dark:bg-white dark:text-black rounded-full text-[10px] font-bold">GERAR
+                            PDF</button>
 
-                    <button onclick="toggleConverter()"
-                        class="flex items-center gap-2 px-5 py-2.5 bg-blue-500/10 text-blue-600 rounded-full text-[10px] font-bold">CONVERSOR</button>
+                        <button onclick="toggleConverter()"
+                            class="flex items-center gap-2 px-5 py-2.5 bg-blue-500/10 text-blue-600 rounded-full text-[10px] font-bold">CONVERSOR</button>
+                    </div>
 
                     <button onclick="toggleMenu()"
                         class="w-9 h-9 rounded-full bg-gray-200 border border-gray-300 overflow-hidden shadow-sm">
@@ -72,6 +75,8 @@
                     </button>
 
                     <div id="userMenu" class="hidden absolute right-4 top-16 w-52 glass rounded-2xl py-2 shadow-2xl">
+                        <button onclick="navigate('home')"
+                            class="w-full text-left px-4 py-3 text-sm hover:bg-black/5">Início</button>
                         <button onclick="navigate('config')"
                             class="w-full text-left px-4 py-3 text-sm hover:bg-black/5">Configurações</button>
                         <button onclick="location.reload()"
@@ -81,7 +86,195 @@
             </div>
         </nav>
 
-        <main id="mainView" class="max-w-6xl mx-auto px-6 mt-24 pb-20">
+        <!-- HOME DA PLATAFORMA -->
+        <section id="homeView" class="max-w-6xl mx-auto px-6 mt-28 pb-20">
+            <div class="mb-10">
+                <p class="text-[10px] font-bold uppercase tracking-[0.35em] opacity-40 mb-3">AREISPRO</p>
+                <h2 class="text-3xl md:text-5xl font-light tracking-tight">Central de Operações</h2>
+                <p class="mt-4 text-sm md:text-base opacity-50 max-w-2xl">Em desenvolvimento...</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <button onclick="navigate('main')" class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
+                    <div class="module-icon">R</div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mt-8">Módulo 1</p>
+                    <h3 class="text-2xl font-semibold mt-3">Relatórios Técnicos</h3>
+                    <p class="text-sm opacity-50 mt-3 leading-relaxed">Crie relatórios fotográficos, organize anexos e
+                        gere arquivos em PDF.</p>
+                    <span class="module-link">Acessar →</span>
+                </button>
+
+                <button onclick="navigate('chamados')" class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
+                    <div class="module-icon">C</div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mt-8">Novo módulo</p>
+                    <h3 class="text-2xl font-semibold mt-3">Central de Chamados</h3>
+                    <p class="text-sm opacity-50 mt-3 leading-relaxed">Importação, pesquisa por loja, duplicidades,
+                        acompanhamento e exportação.</p>
+                    <span class="module-link">Acessar →</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- MÓDULO CENTRAL DE CHAMADOS -->
+        <section id="chamadosView" class="hidden-view max-w-6xl mx-auto px-6 mt-28 pb-20">
+            <!-- Cabeçalho -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <button onclick="navigate('home')"
+                        class="text-xs font-bold opacity-50 hover:opacity-100 transition-opacity mb-2 block">
+                        ← Voltar para a Home
+                    </button>
+                    <h2 class="text-3xl font-light tracking-tight">Central de Chamados</h2>
+                    <p class="text-xs opacity-50 mt-1">Gestão e acompanhamento de chamados</p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="exportarPlanilhaAmericanas()"
+                        class="flex items-center gap-2 px-5 py-3 bg-emerald-600 text-white rounded-2xl text-xs font-semibold shadow-md hover:bg-emerald-700 transition-all cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        Exportar Planilha
+                    </button>
+                    <label
+                        class="flex items-center gap-2 px-5 py-3 bg-black text-white dark:bg-white dark:text-black rounded-2xl text-xs font-semibold shadow-md hover:opacity-90 transition-all cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                        </svg>
+                        Importar Planilha
+                        <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" class="hidden"
+                            onchange="processarExcelImportacao(event)">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Indicadores Topo -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="glass rounded-3xl p-5 border border-black/5 dark:border-white/5">
+                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-40">Total</span>
+                    <p class="text-3xl font-semibold mt-2" id="dashTotal">0</p>
+                </div>
+                <div class="glass rounded-3xl p-5 border border-black/5 dark:border-white/5">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-amber-500">Pendentes</span>
+                    <p class="text-3xl font-semibold mt-2 text-amber-500" id="dashPendentes">0</p>
+                </div>
+                <div class="glass rounded-3xl p-5 border border-black/5 dark:border-white/5">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-red-500">Duplicados</span>
+                    <p class="text-3xl font-semibold mt-2 text-red-500" id="dashDuplicados">0</p>
+                </div>
+                <div class="glass rounded-3xl p-5 border border-black/5 dark:border-white/5">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-500">Encerrados</span>
+                    <p class="text-3xl font-semibold mt-2 text-emerald-500" id="dashFechados">0</p>
+                </div>
+            </div>
+
+            <!-- Mapa das Lojas -->
+            <div class="glass rounded-3xl p-6 mb-8 border border-black/5 dark:border-white/5 relative">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest opacity-40">Visão Geográfica</span>
+                        <h3 class="text-xl font-semibold mt-1">Mapa por Loja</h3>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-4">
+                        <div class="flex items-center gap-1 bg-black/5 dark:bg-white/10 p-1 rounded-xl">
+                            <button onclick="aplicarZoomMapa(0.2)"
+                                class="w-7 h-7 rounded-lg glass font-bold text-sm hover:bg-black/10 flex items-center justify-center">+</button>
+                            <button onclick="aplicarZoomMapa(-0.2)"
+                                class="w-7 h-7 rounded-lg glass font-bold text-sm hover:bg-black/10 flex items-center justify-center">-</button>
+                            <button onclick="resetarZoomMapa()"
+                                class="px-2 h-7 rounded-lg glass font-bold text-[10px] hover:bg-black/10 flex items-center justify-center">Reset</button>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-3 text-[10px] font-bold">
+                            <span class="flex items-center gap-1.5"><i
+                                    class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></i> 0</span>
+                            <span class="flex items-center gap-1.5"><i
+                                    class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></i> 1-5</span>
+                            <span class="flex items-center gap-1.5"><i
+                                    class="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block"></i> 6-10</span>
+                            <span class="flex items-center gap-1.5"><i
+                                    class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></i> >10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative w-full h-[420px] rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 overflow-hidden cursor-grab active:cursor-grabbing"
+                    id="mapaViewport">
+                    <div id="mapaLojasContainer"
+                        class="relative w-full h-full transition-transform duration-150 ease-out origin-center"></div>
+                </div>
+            </div>
+
+            <!-- Filtros e Busca -->
+            <div class="glass rounded-3xl p-6 mb-8 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="relative md:col-span-4">
+                        <input type="text" id="inputLojaAuto" oninput="filtrarAutoCompleteLojas(this.value)"
+                            placeholder="Pesquisar loja (Ex: 1402)..." class="w-full p-4 input-ios text-xs">
+                        <div id="autocompleteList"
+                            class="hidden absolute left-0 right-0 top-full mt-2 glass rounded-2xl shadow-2xl z-50 overflow-hidden max-h-48 overflow-y-auto border border-black/10 dark:border-white/10">
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-8">
+                        <input type="text" id="inputPesquisaGeral" oninput="aplicarFiltrosChamados()"
+                            placeholder="Pesquisar por número do chamado ou descrição..."
+                            class="w-full p-4 input-ios text-xs">
+                    </div>
+                </div>
+
+                <div
+                    class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-black/5 dark:border-white/5">
+                    <div class="flex flex-wrap items-center gap-2" id="filterStatusChips">
+                        <button onclick="setFiltroStatus('todos')" class="btn-chip active"
+                            data-status="todos">Todos</button>
+                        <button onclick="setFiltroStatus('pendente')" class="btn-chip"
+                            data-status="pendente">Pendentes</button>
+                        <button onclick="setFiltroStatus('duplicado')" class="btn-chip"
+                            data-status="duplicado">Duplicados</button>
+                        <button onclick="setFiltroStatus('fechado')" class="btn-chip"
+                            data-status="fechado">Fechados</button>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2" id="filterPeriodoChips">
+                        <button onclick="setFiltroPeriodo('todos')" class="btn-chip active" data-periodo="todos">Todo o
+                            período</button>
+                        <button onclick="setFiltroPeriodo('hoje')" class="btn-chip" data-periodo="hoje">Hoje</button>
+                        <button onclick="setFiltroPeriodo('7dias')" class="btn-chip" data-periodo="7dias">Últimos 7
+                            dias</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Chamados -->
+            <div id="listaChamadosContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+            <!-- Empty State -->
+            <div id="emptyStateChamados" class="hidden text-center py-16 glass rounded-3xl">
+                <svg class="w-12 h-12 mx-auto text-gray-400 mb-4 opacity-40" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                    </path>
+                </svg>
+                <p class="text-sm font-semibold opacity-70">Nenhum chamado encontrado</p>
+                <p class="text-xs opacity-40 mt-1">Tente ajustar os filtros ou os termos de pesquisa.</p>
+            </div>
+        </section>
+
+        <!-- MAIN VIEW (RELATÓRIOS TÉCNICOS) -->
+        <main id="mainView" class="hidden-view max-w-6xl mx-auto px-6 mt-24 pb-20">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <button onclick="navigate('home')" class="text-xs font-bold opacity-50 hover:opacity-100 mb-3">←
+                        Voltar para a Home</button>
+                    <h2 class="text-2xl font-semibold">Relatórios Técnicos</h2>
+                </div>
+            </div>
             <!-- ÁREA DO CONVERSOR -->
             <div id="converterExpand" class="hidden mb-8 overflow-hidden">
                 <div class="glass rounded-[32px] p-8 grid grid-cols-1 md:grid-cols-4 gap-4 border-blue-500/20">
@@ -94,7 +287,8 @@
                     </div>
                     <div class="bg-gray-500/5 p-4 rounded-2xl text-center opacity-60">
                         <p class="text-[9px] font-black opacity-50 mb-2 uppercase">Word para PDF</p><span
-                            class="text-xs">Em breve</span>
+                            class="text-xs">Em
+                            breve</span>
                     </div>
                     <div class="bg-gray-500/5 p-4 rounded-2xl text-center opacity-60">
                         <p class="text-[9px] font-black opacity-50 mb-2 uppercase">Excel para PDF</p><span
@@ -172,10 +366,49 @@
                         class="bg-black text-white px-4 rounded-xl text-sm font-bold">ADICIONAR</button></div>
                 <div id="provList" class="space-y-2 max-h-60 overflow-y-auto"></div>
             </div>
-            <button onclick="navigate('main')"
+            <button onclick="navigate('home')"
                 class="mt-8 w-full py-4 bg-black text-white dark:bg-white dark:text-black rounded-2xl font-bold">Salvar
-                e Voltar</button>
+                e Voltar para a Home</button>
         </section>
+    </div>
+
+    <!-- MODAL DE HISTÓRICO DA LOJA -->
+    <div id="modalHistoricoLoja"
+        class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4">
+        <div
+            class="glass p-6 md:p-8 rounded-[32px] max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-black/10 dark:border-white/10">
+            <div class="flex justify-between items-start pb-4 border-b border-black/5 dark:border-white/5">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-40">Histórico de
+                        Operação</span>
+                    <h3 class="text-2xl font-semibold mt-1" id="modalLojaTitulo">Loja --</h3>
+                </div>
+                <button onclick="fecharModalHistorico()"
+                    class="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center font-bold text-sm hover:opacity-80">×</button>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 my-4">
+                <div class="p-3 glass rounded-2xl text-center">
+                    <span class="text-[9px] font-bold uppercase opacity-40">Total</span>
+                    <p class="text-lg font-bold" id="modalLojaTotal">0</p>
+                </div>
+                <div class="p-3 glass rounded-2xl text-center">
+                    <span class="text-[9px] font-bold uppercase text-amber-500">Pendentes</span>
+                    <p class="text-lg font-bold text-amber-500" id="modalLojaPendentes">0</p>
+                </div>
+                <div class="p-3 glass rounded-2xl text-center">
+                    <span class="text-[9px] font-bold uppercase text-emerald-500">Fechados</span>
+                    <p class="text-lg font-bold text-emerald-500" id="modalLojaFechados">0</p>
+                </div>
+            </div>
+
+            <div id="modalLojaListaChamados" class="overflow-y-auto space-y-3 pr-2 flex-1 my-2"></div>
+
+            <button onclick="fecharModalHistorico()"
+                class="mt-4 w-full py-3.5 bg-black text-white dark:bg-white dark:text-black rounded-2xl font-bold text-xs">
+                Fechar Histórico
+            </button>
+        </div>
     </div>
 
     <!-- MODAL LOGOS -->
@@ -194,8 +427,66 @@
                 Alterações</button>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js" defer></script>
+
+    <!-- MODAL DE LINHA DO TEMPO E DETALHES DO CHAMADO -->
+<div id="modalDetalhesChamado" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div class="glass bg-slate-900 border border-white/10 text-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+        
+        <!-- Header -->
+        <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/20">
+            <div>
+                <span id="modalChamadoLoja" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">Loja --</span>
+                <h3 class="text-lg font-bold mt-1">Chamado #<span id="modalChamadoId">--</span></h3>
+            </div>
+            <button onclick="fecharModalDetalhesChamado()" class="text-white/40 hover:text-white text-xl font-bold">×</button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 overflow-y-auto space-y-5 flex-1">
+            <div class="bg-black/20 p-4 rounded-2xl border border-white/5">
+                <span class="text-[9px] font-bold opacity-40 uppercase tracking-wider block mb-1">Descrição do Problema</span>
+                <p id="modalChamadoDesc" class="text-xs leading-relaxed opacity-80">--</p>
+            </div>
+
+            <!-- Seção de Observações / Notas Internas -->
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-wider opacity-60 mb-3">Observação Interna</h4>
+                <div id="modalComentariosLista" class="space-y-2 max-h-40 overflow-y-auto p-1">
+                    <!-- Comentários via JS -->
+                </div>
+                <div class="flex gap-2 mt-3">
+                    <input id="inputNovoComentario" type="text" placeholder="Escrever nota interna..." class="flex-1 bg-black/20 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500">
+                    <button onclick="adicionarComentarioModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">Enviar</button>
+                </div>
+            </div>
+        </div>
+
+<!-- FOOTER DO MODAL COM REVERSÃO (index.html) -->
+<div class="p-4 bg-black/30 border-t border-white/10 flex justify-between items-center">
+    <!-- Indicador de Status Atual -->
+    <span id="modalStatusBadge" class="text-[10px] font-bold px-3 py-1 rounded-full border">
+        --
+    </span>
+
+    <div class="flex gap-2">
+        <button onclick="fecharModalDetalhesChamado()" class="px-4 py-2 text-xs font-bold opacity-60 hover:opacity-100">
+            Cancelar
+        </button>
+        
+        <!-- Botão para Reverter (Aparece se já estiver "Fechar Chamado") -->
+        <button id="btnReverterChamado" onclick="reverterStatusChamado()" class="hidden bg-amber-600/20 text-amber-400 border border-amber-500/30 hover:bg-amber-600 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+            ↩ Reverter para Pendente
+        </button>
+
+        <!-- Botão para Fechar (Aparece se não estiver fechado) -->
+        <button id="btnFecharChamado" onclick="encerrarChamadoAtivo()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+            ✓ Fechar Chamado
+        </button>
+    </div>
+</div>
 
 </body>
 
