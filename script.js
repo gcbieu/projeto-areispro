@@ -312,63 +312,104 @@ function toggleMenu() { document.getElementById('userMenu').classList.toggle('hi
 function toggleConverter() { document.getElementById('converterExpand').classList.toggle('hidden'); }
 function triggerConverter(id) { document.getElementById(id).click(); }
 
-//conversão de PDF para DOCX usando a API ConvertAPI
+//conversão de PDF para DOCX usando a API local do Stirling PDF
 async function handleConversion(input, type) {
-    const file = input.files[0];
-    if (!file) return;
+    const file = input.files?.[0];
 
-    const btn = input.parentElement;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = "<p class='text-[9px] font-black animate-pulse text-blue-600'>CONVERTENDO...</p>";
+    if (!file) {
+        alert("Selecione um arquivo PDF.");
+        return;
+    }
 
-    const token = "aUYWeDM6Dl6zkkyRu8j1HqNlKcWVfGYI";
-    const formData = new FormData();
-    formData.append("File", file);
+    if (type !== "pdfToWord") {
+        alert("Este tipo de conversão ainda não está disponível.");
+        input.value = "";
+        return;
+    }
+
+    if (
+        file.type !== "application/pdf" &&
+        !file.name.toLowerCase().endsWith(".pdf")
+    ) {
+        alert("Selecione um arquivo no formato PDF.");
+        input.value = "";
+        return;
+    }
+
+    const progress = document.getElementById("convProgress");
 
     try {
-        const response = await fetch(`https://v2.convertapi.com/convert/pdf/to/docx?Token=${token}`, {
-            method: "POST",
-            body: formData
-        });
+        progress?.classList.remove("hidden");
 
-        if (!response.ok) throw new Error("Erro na conversão");
+        const formData = new FormData();
+        formData.append("fileInput", file, file.name);
+        formData.append("outputFormat", "docx");
 
-        const result = await response.json();
+        const response = await fetch(
+            "http://localhost:8080/api/v1/convert/pdf/word",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
 
-        if (result.Files && result.Files[0]) {
-            const fileData = result.Files[0];
+        if (!response.ok) {
+            let errorText = "";
 
-            if (!fileData.FileData) {
-                throw new Error("API não retornou FileData");
+            try {
+                errorText = await response.text();
+            } catch (error) {
+                errorText = "";
             }
 
-            const base64 = fileData.FileData;
+            console.error(
+                "Erro retornado pelo Stirling PDF:",
+                response.status,
+                response.statusText,
+                errorText
+            );
 
-            const blob = await fetch(`data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${base64}`)
-                .then(res => res.blob());
-
-            const url = window.URL.createObjectURL(blob);
-
-            const link = document.createElement('a');
-            link.href = url;
-
-            const nomeBase = file.name.toLowerCase().replace(".pdf", "");
-            link.download = `${nomeBase}.docx`;
-
-            document.body.appendChild(link);
-            link.click();
-
-            setTimeout(() => {
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(url);
-            }, 100);
+            throw new Error(
+                `Erro ${response.status}: ${
+                    errorText ||
+                    response.statusText ||
+                    "O Stirling PDF rejeitou o arquivo enviado."
+                }`
+            );
         }
 
+        const blob = await response.blob();
+
+        if (!blob.size) {
+            throw new Error("A API retornou um arquivo vazio.");
+        }
+
+        const downloadUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = downloadUrl;
+        link.download =
+            file.name.replace(/\.pdf$/i, "") + ".docx";
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+
+        alert("PDF convertido para Word com sucesso.");
     } catch (error) {
-        console.error("Erro:", error);
-        alert("Erro ao processar o download fiel.");
+        console.error("Erro ao converter PDF:", error);
+
+        const mensagem =
+            error instanceof TypeError
+                ? "Não foi possível conectar ao Stirling PDF. Confirme se o Docker está aberto e se http://localhost:8080 está funcionando."
+                : error.message;
+
+        alert(mensagem);
     } finally {
-        btn.innerHTML = originalText;
+        progress?.classList.add("hidden");
+        input.value = "";
     }
 }
 

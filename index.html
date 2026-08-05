@@ -350,7 +350,7 @@
             <div class="glass rounded-3xl p-8 mb-6">
                 <h3 class="text-xl font-bold mb-6">Lojas</h3>
                 <div class="flex gap-2 mb-6"><input id="newStore" type="text"
-                        class="flex-1 p-3 input-ios text-sm uppercase" placeholder="Nome da Loja"><button
+                        class="flex-1 p-3 input-ios text-sm uppercase" placeholder="Nº - lOJA - PA..."><button
                         onclick="addStore()"
                         class="bg-black text-white px-4 rounded-xl text-sm font-bold">ADICIONAR</button></div>
                 <div id="storeList" class="space-y-2 max-h-60 overflow-y-auto"></div>
@@ -455,7 +455,7 @@
                     <!-- Comentários via JS -->
                 </div>
                 <div class="flex gap-2 mt-3">
-                    <input id="inputNovoComentario" type="text" placeholder="Escrever nota interna..." class="flex-1 bg-black/20 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500">
+                    <input id="inputNovoComentario" type="text" placeholder="Escrever observação interna..." class="flex-1 bg-black/20 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500">
                     <button onclick="adicionarComentarioModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">Enviar</button>
                 </div>
             </div>
@@ -482,9 +482,8 @@
         <button id="btnFecharChamado" onclick="encerrarChamadoAtivo()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
             ✓ Fechar Chamado
         </button>
-    </div>
 </div>
-<script src="script.js" defer></script>
+</div>
 </body>
 
 </html>
