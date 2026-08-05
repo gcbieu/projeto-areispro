@@ -59,14 +59,12 @@
                         </svg>
                     </button>
 
-                    <div id="reportActions" class="hidden items-center gap-3">
-                        <button onclick="gerarRelatorio()"
-                            class="flex items-center gap-2 px-5 py-2.5 bg-black text-white dark:bg-white dark:text-black rounded-full text-[10px] font-bold">GERAR
-                            PDF</button>
+                    <button onclick="gerarRelatorio()"
+                        class="flex items-center gap-2 px-5 py-2.5 bg-black text-white dark:bg-white dark:text-black rounded-full text-[10px] font-bold">GERAR
+                        PDF</button>
 
-                        <button onclick="toggleConverter()"
-                            class="flex items-center gap-2 px-5 py-2.5 bg-blue-500/10 text-blue-600 rounded-full text-[10px] font-bold">CONVERSOR</button>
-                    </div>
+                    <button onclick="toggleConverter()"
+                        class="flex items-center gap-2 px-5 py-2.5 bg-blue-500/10 text-blue-600 rounded-full text-[10px] font-bold">CONVERSOR</button>
 
                     <button onclick="toggleMenu()"
                         class="w-9 h-9 rounded-full bg-gray-200 border border-gray-300 overflow-hidden shadow-sm">
@@ -75,8 +73,6 @@
                     </button>
 
                     <div id="userMenu" class="hidden absolute right-4 top-16 w-52 glass rounded-2xl py-2 shadow-2xl">
-                        <button onclick="navigate('home')"
-                            class="w-full text-left px-4 py-3 text-sm hover:bg-black/5">Início</button>
                         <button onclick="navigate('config')"
                             class="w-full text-left px-4 py-3 text-sm hover:bg-black/5">Configurações</button>
                         <button onclick="location.reload()"
@@ -85,6 +81,7 @@
                 </div>
             </div>
         </nav>
+
 
         <!-- HOME DA PLATAFORMA -->
         <section id="homeView" class="max-w-6xl mx-auto px-6 mt-28 pb-20">
@@ -487,7 +484,7 @@
         </button>
     </div>
 </div>
-
+<script src="script.js" defer></script>
 </body>
 
 </html>
