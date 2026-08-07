@@ -17,15 +17,28 @@ let fotosObrigatorias = { fachada: null, marquise: null };
 // ==========================================
 // ASSINATURA DO GERENTE
 // ==========================================
-let assinaturaCanvas;
-let assinaturaCtx;
+
+let assinaturaCanvas = null;
+let assinaturaCtx = null;
 let assinando = false;
 let assinaturaRealizada = false;
+let previewPdfUrl = null;
+
+
+// ==========================================
+// INICIALIZA O CAMPO DE ASSINATURA
+// ==========================================
 
 function iniciarCanvasAssinatura() {
+
     assinaturaCanvas = document.getElementById("assinaturaCanvas");
 
-    if (!assinaturaCanvas) return;
+    // O canvas pode ainda não existir na tela.
+    // Isso NÃO deve impedir o relatório de funcionar.
+    if (!assinaturaCanvas) {
+        assinaturaCtx = null;
+        return;
+    }
 
     assinaturaCtx = assinaturaCanvas.getContext("2d");
 
@@ -34,27 +47,35 @@ function iniciarCanvasAssinatura() {
     assinaturaCtx.lineCap = "round";
     assinaturaCtx.lineJoin = "round";
 
+
     function obterPosicao(event) {
+
         const rect = assinaturaCanvas.getBoundingClientRect();
 
-        const ponto = event.touches
-            ? event.touches[0]
-            : event;
+        const ponto =
+            event.touches && event.touches.length
+                ? event.touches[0]
+                : event;
 
         return {
-            x: (ponto.clientX - rect.left) *
+
+            x:
+                (ponto.clientX - rect.left) *
                 (assinaturaCanvas.width / rect.width),
 
-            y: (ponto.clientY - rect.top) *
+            y:
+                (ponto.clientY - rect.top) *
                 (assinaturaCanvas.height / rect.height)
+
         };
     }
 
+
     function iniciar(event) {
+
         event.preventDefault();
 
         assinando = true;
-        assinaturaRealizada = true;
 
         const pos = obterPosicao(event);
 
@@ -62,7 +83,9 @@ function iniciarCanvasAssinatura() {
         assinaturaCtx.moveTo(pos.x, pos.y);
     }
 
+
     function desenhar(event) {
+
         if (!assinando) return;
 
         event.preventDefault();
@@ -71,9 +94,15 @@ function iniciarCanvasAssinatura() {
 
         assinaturaCtx.lineTo(pos.x, pos.y);
         assinaturaCtx.stroke();
+
+        // Só considera que existe assinatura
+        // quando realmente houve desenho.
+        assinaturaRealizada = true;
     }
 
+
     function finalizar() {
+
         assinando = false;
 
         if (assinaturaCtx) {
@@ -81,38 +110,326 @@ function iniciarCanvasAssinatura() {
         }
     }
 
-    // Mouse
-    assinaturaCanvas.addEventListener("mousedown", iniciar);
-    assinaturaCanvas.addEventListener("mousemove", desenhar);
-    assinaturaCanvas.addEventListener("mouseup", finalizar);
-    assinaturaCanvas.addEventListener("mouseleave", finalizar);
 
-    // Celular / Tablet
-    assinaturaCanvas.addEventListener("touchstart", iniciar, {
-        passive: false
-    });
+    // ======================================
+    // MOUSE
+    // ======================================
 
-    assinaturaCanvas.addEventListener("touchmove", desenhar, {
-        passive: false
-    });
-
-    assinaturaCanvas.addEventListener("touchend", finalizar);
-}
-document.addEventListener("DOMContentLoaded", () => {
-    iniciarCanvasAssinatura();
-});
-
-function limparAssinatura() {
-    if (!assinaturaCanvas || !assinaturaCtx) return;
-
-    assinaturaCtx.clearRect(
-        0,
-        0,
-        assinaturaCanvas.width,
-        assinaturaCanvas.height
+    assinaturaCanvas.addEventListener(
+        "mousedown",
+        iniciar
     );
 
+    assinaturaCanvas.addEventListener(
+        "mousemove",
+        desenhar
+    );
+
+    assinaturaCanvas.addEventListener(
+        "mouseup",
+        finalizar
+    );
+
+    assinaturaCanvas.addEventListener(
+        "mouseleave",
+        finalizar
+    );
+
+
+    // ======================================
+    // CELULAR / TABLET
+    // ======================================
+
+    assinaturaCanvas.addEventListener(
+        "touchstart",
+        iniciar,
+        {
+            passive: false
+        }
+    );
+
+    assinaturaCanvas.addEventListener(
+        "touchmove",
+        desenhar,
+        {
+            passive: false
+        }
+    );
+
+    assinaturaCanvas.addEventListener(
+        "touchend",
+        finalizar
+    );
+}
+
+
+// ==========================================
+// CARREGAMENTO INICIAL
+// ==========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        iniciarCanvasAssinatura();
+
+    }
+);
+
+
+// ==========================================
+// LIMPAR ASSINATURA
+// ==========================================
+
+function limparAssinatura() {
+
+    if (
+        assinaturaCanvas &&
+        assinaturaCtx
+    ) {
+
+        assinaturaCtx.clearRect(
+            0,
+            0,
+            assinaturaCanvas.width,
+            assinaturaCanvas.height
+        );
+    }
+
+    // Sempre volta para "sem assinatura"
     assinaturaRealizada = false;
+    assinando = false;
+}
+
+
+// ==========================================
+// PREVIEW / APROVAÇÃO DO RELATÓRIO
+// ==========================================
+
+async function abrirPreviewRelatorio() {
+
+    try {
+
+        const modal =
+            document.getElementById(
+                "modalPreviewRelatorio"
+            );
+
+        const frame =
+            document.getElementById(
+                "previewRelatorioFrame"
+            );
+
+
+        if (!modal || !frame) {
+
+            console.error(
+                "Modal de preview não encontrado."
+            );
+
+            return;
+        }
+
+
+        // ======================================
+        // PRIMEIRO ABRE O MODAL
+        // ======================================
+
+        modal.classList.remove("hidden");
+
+
+        // ======================================
+        // DEPOIS GARANTE O CANVAS
+        // ======================================
+
+        if (!assinaturaCanvas) {
+
+            iniciarCanvasAssinatura();
+
+        }
+
+
+        // ======================================
+        // CARREGAMENTO VISUAL
+        // ======================================
+
+        frame.removeAttribute("src");
+
+        frame.srcdoc = `
+            <html>
+                <body style="
+                    margin:0;
+                    height:100vh;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-family:Arial,sans-serif;
+                    color:#777;
+                ">
+                    Gerando pré-visualização...
+                </body>
+            </html>
+        `;
+
+
+        // ======================================
+        // GERA PDF SOMENTE PARA PREVIEW
+        // ======================================
+
+        const blob =
+            await gerarRelatorio("preview");
+
+
+        if (!blob) {
+
+            throw new Error(
+                "Não foi possível gerar a prévia."
+            );
+
+        }
+
+
+        // Remove preview anterior
+        if (previewPdfUrl) {
+
+            URL.revokeObjectURL(
+                previewPdfUrl
+            );
+
+        }
+
+
+        previewPdfUrl =
+            URL.createObjectURL(blob);
+
+
+        frame.removeAttribute("srcdoc");
+
+        frame.src =
+            previewPdfUrl;
+
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao abrir preview:",
+            error
+        );
+
+
+        alert(
+            "Não foi possível gerar a pré-visualização do relatório."
+        );
+
+
+        fecharPreviewRelatorio();
+    }
+}
+
+
+// ==========================================
+// FECHAR PREVIEW
+// ==========================================
+
+function fecharPreviewRelatorio() {
+
+    const modal =
+        document.getElementById(
+            "modalPreviewRelatorio"
+        );
+
+    const frame =
+        document.getElementById(
+            "previewRelatorioFrame"
+        );
+
+
+    if (modal) {
+
+        modal.classList.add("hidden");
+
+    }
+
+
+    if (frame) {
+
+        frame.removeAttribute("src");
+        frame.removeAttribute("srcdoc");
+
+    }
+
+
+    if (previewPdfUrl) {
+
+        URL.revokeObjectURL(
+            previewPdfUrl
+        );
+
+        previewPdfUrl = null;
+
+    }
+}
+
+
+// ==========================================
+// GERAR PDF FINAL
+// ==========================================
+
+async function gerarPDFFinal() {
+
+    const botao =
+        document.getElementById(
+            "btnGerarPdfFinal"
+        );
+
+
+    try {
+
+        if (botao) {
+
+            botao.disabled = true;
+
+            botao.innerText =
+                "GERANDO...";
+
+            botao.style.opacity =
+                "0.6";
+        }
+
+
+        // ======================================
+        // ASSINATURA É OPCIONAL
+        // ======================================
+
+        await gerarRelatorio("final");
+
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao gerar PDF final:",
+            error
+        );
+
+
+        alert(
+            "Erro ao gerar o PDF final."
+        );
+
+
+    } finally {
+
+        if (botao) {
+
+            botao.disabled = false;
+
+            botao.innerText =
+                "GERAR PDF FINAL";
+
+            botao.style.opacity =
+                "1";
+        }
+    }
 }
 
 // FUNÇÃO PARA BUSCAR AS LOJAS NO SUPABASE
@@ -551,7 +868,7 @@ function calcularSimilaridade(textoA, textoB) {
 }
 
 // --- GERAÇÃO DE PDF ---
-async function gerarRelatorio() {
+async function gerarRelatorio(modo = "final") {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'cm', format: 'a4', compress: true });
 
@@ -728,7 +1045,7 @@ async function gerarRelatorio() {
 
                 // 1. CALCULA A LEGENDA PRIMEIRO
                 doc.setFontSize(10);
-                const legendaTexto = `Figura ${fCount++} - ${f.desc || 'Averiguação técnica.'}`;
+                const legendaTexto = `Figura ${fCount++} - ${f.desc || ' '}`;
                 const legendaFormatada = doc.splitTextToSize(legendaTexto, 8.2);
 
                 // Calcula a altura do texto (quantidade de linhas * entrelinha de ~0.45cm)
@@ -790,54 +1107,115 @@ async function gerarRelatorio() {
         renderGal(anexo.fotosDepois, "RELATÓRIO FOTOGRÁFICO - DEPOIS");
     }
 
-    // ==============================
-// PÁGINA FINAL - ASSINATURA
-// ==============================
-doc.addPage();
+// ==========================================
+// PÁGINA FINAL - ASSINATURA DO GERENTE
+// ==========================================
 
-header();
+if (modo === "final") {
 
-// Verifica se realmente houve assinatura
-if (assinaturaRealizada && assinaturaCanvas) {
+    // A página existe SEMPRE
+    doc.addPage();
 
-    // Converte o desenho do canvas para imagem PNG
-    const assinaturaImagem = assinaturaCanvas.toDataURL("image/png");
+    header();
 
-    // Coloca a assinatura no PDF
-    doc.addImage(
-        assinaturaImagem,
-        "PNG",
-        6.5,   // posição X
-        10.5,  // posição Y
-        8,     // largura
-        2.7    // altura
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+
+    doc.text(
+        " ",
+        10.5,
+        6,
+        { align: "center" }
+    );
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+
+    doc.text(
+        "Relatório revisado pelo responsável da loja.",
+        10.5,
+        7,
+        { align: "center" }
+    );
+
+
+    // ======================================
+    // ASSINATURA - SOMENTE SE FOI DESENHADA
+    // ======================================
+
+    if (assinaturaRealizada && assinaturaCanvas) {
+
+        const assinaturaImagem =
+            assinaturaCanvas.toDataURL("image/png");
+
+        doc.addImage(
+            assinaturaImagem,
+            "PNG",
+            5.5,
+            10,
+            10,
+            3.3
+        );
+    }
+
+
+    // ======================================
+    // LINHA PARA ASSINATURA
+    // ======================================
+
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.02);
+
+    doc.line(
+        6,
+        14,
+        15,
+        14
+    );
+
+
+    // ======================================
+    // IDENTIFICAÇÃO
+    // ======================================
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+
+    doc.text(
+        "Assinatura do Responsável",
+        10.5,
+        14.7,
+        { align: "center" }
+    );
+
+    // ======================================
+    // DATA
+    // ======================================
+
+    doc.setFontSize(8);
+
+    doc.text(
+        `Data: ${new Date().toLocaleDateString("pt-BR")}`,
+        10.5,
+        15.5,
+        { align: "center" }
     );
 }
 
-// Linha abaixo da assinatura
-doc.setDrawColor(0);
-doc.setLineWidth(0.02);
-doc.line(6.5, 14, 14.5, 14);
+// ==========================================
+// PREVIEW OU DOWNLOAD
+// ==========================================
 
-// Texto
-doc.setFont("helvetica", "normal");
-doc.setFontSize(10);
-doc.text(
-    "Assinatura do Gerente",
-    10.5,
-    14.7,
-    { align: "center" }
-);
+if (modo === "preview") {
 
-// Data
-doc.setFontSize(9);
-doc.text(
-    `Data: ${new Date().toLocaleDateString("pt-BR")}`,
-    10.5,
-    15.5,
-    { align: "center" }
-);
+    // Retorna o PDF para ser mostrado dentro do AREISPRO.
+    // Não baixa arquivo.
+    return doc.output("blob");
 
+}
+
+
+// Caso seja modo FINAL, baixa normalmente
 doc.save(
     `AREISPRO_${lNome.split(' ')[0] || 'RELATORIO'}.pdf`
 );

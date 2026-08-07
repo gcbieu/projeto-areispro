@@ -59,9 +59,10 @@
                         </svg>
                     </button>
 
-                    <button onclick="gerarRelatorio()"
-                        class="flex items-center gap-2 px-5 py-2.5 bg-black text-white dark:bg-white dark:text-black rounded-full text-[10px] font-bold">GERAR
-                        PDF</button>
+                    <button onclick="abrirPreviewRelatorio()"
+                        class="flex items-center gap-2 px-5 py-2.5 bg-black text-white dark:bg-white dark:text-black rounded-full text-[10px] font-bold">
+                        GERAR RELATÓRIO
+                    </button>
 
                     <button onclick="toggleConverter()"
                         class="flex items-center gap-2 px-5 py-2.5 bg-blue-500/10 text-blue-600 rounded-full text-[10px] font-bold">CONVERSOR</button>
@@ -317,30 +318,6 @@
                         class="w-full py-4 bg-gray-500/10 rounded-2xl text-[10px] font-bold">CONFIGURAR LOGOS
                         CAPA</button>
 
-                        <!-- ASSINATURA DO GERENTE -->
-<section class="glass rounded-3xl p-6 shadow-sm">
-    <h3 class="text-[10px] font-bold opacity-40 uppercase tracking-widest mb-4">
-        Assinatura do Gerente
-    </h3>
-
-    <p class="text-[10px] opacity-40 mb-3">
-        Assine usando o mouse, touchpad ou tela sensível ao toque.
-    </p>
-
-    <canvas
-        id="assinaturaCanvas"
-        width="600"
-        height="200"
-        class="w-full bg-white rounded-2xl border border-gray-300 touch-none cursor-crosshair">
-    </canvas>
-
-    <button
-        type="button"
-        onclick="limparAssinatura()"
-        class="mt-3 w-full py-3 bg-gray-500/10 rounded-xl text-[10px] font-bold">
-        LIMPAR ASSINATURA
-    </button>
-</section>
                 </div>
 
                 <div class="lg:col-span-8 space-y-8">
@@ -450,65 +427,190 @@
         </div>
     </div>
 
+    <!-- ==========================================
+     MODAL DE REVISÃO DO RELATÓRIO
+=========================================== -->
+<div id="modalPreviewRelatorio"
+    class="hidden fixed inset-0 z-[200] bg-black/70 backdrop-blur-md p-3 md:p-6 overflow-y-auto">
+
+    <div class="max-w-6xl mx-auto bg-white dark:bg-[#1c1c1e] rounded-[28px] shadow-2xl overflow-hidden">
+
+        <!-- CABEÇALHO -->
+        <div class="sticky top-0 z-10 flex items-center justify-between px-5 md:px-7 py-4
+                    bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-xl
+                    border-b border-black/10 dark:border-white/10">
+
+            <div>
+                <p class="text-[9px] font-bold uppercase tracking-[0.25em] opacity-40">
+                    AREISPRO
+                </p>
+
+                <h2 class="text-lg md:text-xl font-semibold">
+                    Revisão do Relatório
+                </h2>
+            </div>
+
+            <button
+                type="button"
+                onclick="fecharPreviewRelatorio()"
+                class="w-9 h-9 rounded-full bg-black/5 dark:bg-white/10
+                       flex items-center justify-center font-bold">
+                ×
+            </button>
+        </div>
+
+        <div class="p-4 md:p-7">
+
+            <!-- AVISO -->
+            <div class="mb-5 p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+                <p class="text-xs font-semibold text-blue-600">
+                    Confira todas as páginas antes de finalizar o relatório.
+                </p>
+
+            </div>
+
+            <!-- PREVIEW DO PDF -->
+            <div class="rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-gray-100">
+                <iframe
+                    id="previewRelatorioFrame"
+                    class="w-full h-[65vh] bg-gray-200"
+                    title="Pré-visualização do relatório">
+                </iframe>
+            </div>
+
+            <!-- ASSINATURA -->
+            <div class="mt-7 glass rounded-3xl p-5 md:p-7">
+
+                <div class="flex justify-between items-start gap-4 mb-4">
+                    <div>
+                        <h3 class="text-sm font-semibold">
+                            Assinatura do Gerente
+                        </h3>
+
+                        <p class="text-[10px] opacity-50 mt-1">
+                            Assinatura do gerente somente após revisão do relatório.
+                        </p>
+                    </div>
+
+                    <span class="text-[9px] font-bold uppercase px-3 py-1 rounded-full bg-gray-500/10 opacity-60">
+                        Obrigatório
+                    </span>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-300 overflow-hidden">
+                    <canvas
+                        id="assinaturaCanvas"
+                        width="900"
+                        height="260"
+                        class="block w-full h-[180px] bg-white touch-none cursor-crosshair">
+                    </canvas>
+                </div>
+
+                <div class="flex justify-end mt-3">
+                    <button
+                        type="button"
+                        onclick="limparAssinatura()"
+                        class="px-4 py-2.5 bg-gray-500/10 rounded-xl text-[10px] font-bold">
+                        LIMPAR ASSINATURA
+                    </button>
+                </div>
+            </div>
+
+            <!-- BOTÕES -->
+            <div class="flex flex-col md:flex-row md:justify-between gap-3 mt-7">
+
+                <button
+                    type="button"
+                    onclick="fecharPreviewRelatorio()"
+                    class="px-6 py-4 rounded-2xl bg-gray-500/10 text-xs font-bold">
+                    VOLTAR E EDITAR
+                </button>
+
+                <button
+                    id="btnGerarPdfFinal"
+                    type="button"
+                    onclick="gerarPDFFinal()"
+                    class="px-8 py-4 rounded-2xl bg-black text-white
+                           dark:bg-white dark:text-black text-xs font-bold shadow-lg">
+                    GERAR PDF FINAL
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js" defer></script>
 
     <!-- MODAL DE LINHA DO TEMPO E DETALHES DO CHAMADO -->
-<div id="modalDetalhesChamado" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-    <div class="glass bg-slate-900 border border-white/10 text-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-        
-        <!-- Header -->
-        <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/20">
-            <div>
-                <span id="modalChamadoLoja" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">Loja --</span>
-                <h3 class="text-lg font-bold mt-1">Chamado #<span id="modalChamadoId">--</span></h3>
-            </div>
-            <button onclick="fecharModalDetalhesChamado()" class="text-white/40 hover:text-white text-xl font-bold">×</button>
-        </div>
+    <div id="modalDetalhesChamado"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div
+            class="glass bg-slate-900 border border-white/10 text-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
 
-        <!-- Body -->
-        <div class="p-6 overflow-y-auto space-y-5 flex-1">
-            <div class="bg-black/20 p-4 rounded-2xl border border-white/5">
-                <span class="text-[9px] font-bold opacity-40 uppercase tracking-wider block mb-1">Descrição do Problema</span>
-                <p id="modalChamadoDesc" class="text-xs leading-relaxed opacity-80">--</p>
-            </div>
-
-            <!-- Seção de Observações / Notas Internas -->
-            <div>
-                <h4 class="text-xs font-bold uppercase tracking-wider opacity-60 mb-3">Observação Interna</h4>
-                <div id="modalComentariosLista" class="space-y-2 max-h-40 overflow-y-auto p-1">
-                    <!-- Comentários via JS -->
+            <!-- Header -->
+            <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/20">
+                <div>
+                    <span id="modalChamadoLoja"
+                        class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">Loja
+                        --</span>
+                    <h3 class="text-lg font-bold mt-1">Chamado #<span id="modalChamadoId">--</span></h3>
                 </div>
-                <div class="flex gap-2 mt-3">
-                    <input id="inputNovoComentario" type="text" placeholder="Escrever observação interna..." class="flex-1 bg-black/20 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500">
-                    <button onclick="adicionarComentarioModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">Enviar</button>
+                <button onclick="fecharModalDetalhesChamado()"
+                    class="text-white/40 hover:text-white text-xl font-bold">×</button>
+            </div>
+
+            <!-- Body -->
+            <div class="p-6 overflow-y-auto space-y-5 flex-1">
+                <div class="bg-black/20 p-4 rounded-2xl border border-white/5">
+                    <span class="text-[9px] font-bold opacity-40 uppercase tracking-wider block mb-1">Descrição do
+                        Problema</span>
+                    <p id="modalChamadoDesc" class="text-xs leading-relaxed opacity-80">--</p>
+                </div>
+
+                <!-- Seção de Observações / Notas Internas -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider opacity-60 mb-3">Observação Interna</h4>
+                    <div id="modalComentariosLista" class="space-y-2 max-h-40 overflow-y-auto p-1">
+                        <!-- Comentários via JS -->
+                    </div>
+                    <div class="flex gap-2 mt-3">
+                        <input id="inputNovoComentario" type="text" placeholder="Escrever observação interna..."
+                            class="flex-1 bg-black/20 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500">
+                        <button onclick="adicionarComentarioModal()"
+                            class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">Enviar</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-<!-- FOOTER DO MODAL COM REVERSÃO (index.html) -->
-<div class="p-4 bg-black/30 border-t border-white/10 flex justify-between items-center">
-    <!-- Indicador de Status Atual -->
-    <span id="modalStatusBadge" class="text-[10px] font-bold px-3 py-1 rounded-full border">
-        --
-    </span>
+            <!-- FOOTER DO MODAL COM REVERSÃO (index.html) -->
+            <div class="p-4 bg-black/30 border-t border-white/10 flex justify-between items-center">
+                <!-- Indicador de Status Atual -->
+                <span id="modalStatusBadge" class="text-[10px] font-bold px-3 py-1 rounded-full border">
+                    --
+                </span>
 
-    <div class="flex gap-2">
-        <button onclick="fecharModalDetalhesChamado()" class="px-4 py-2 text-xs font-bold opacity-60 hover:opacity-100">
-            Cancelar
-        </button>
-        
-        <!-- Botão para Reverter (Aparece se já estiver "Fechar Chamado") -->
-        <button id="btnReverterChamado" onclick="reverterStatusChamado()" class="hidden bg-amber-600/20 text-amber-400 border border-amber-500/30 hover:bg-amber-600 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition">
-            ↩ Reverter para Pendente
-        </button>
+                <div class="flex gap-2">
+                    <button onclick="fecharModalDetalhesChamado()"
+                        class="px-4 py-2 text-xs font-bold opacity-60 hover:opacity-100">
+                        Cancelar
+                    </button>
 
-        <!-- Botão para Fechar (Aparece se não estiver fechado) -->
-        <button id="btnFecharChamado" onclick="encerrarChamadoAtivo()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
-            ✓ Fechar Chamado
-        </button>
-</div>
-</div>
+                    <!-- Botão para Reverter (Aparece se já estiver "Fechar Chamado") -->
+                    <button id="btnReverterChamado" onclick="reverterStatusChamado()"
+                        class="hidden bg-amber-600/20 text-amber-400 border border-amber-500/30 hover:bg-amber-600 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                        ↩ Reverter para Pendente
+                    </button>
+
+                    <!-- Botão para Fechar (Aparece se não estiver fechado) -->
+                    <button id="btnFecharChamado" onclick="encerrarChamadoAtivo()"
+                        class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                        ✓ Fechar Chamado
+                    </button>
+                </div>
+            </div>
 </body>
 
 </html>
