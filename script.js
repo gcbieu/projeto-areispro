@@ -14,6 +14,107 @@ let anexos = [{ id: Date.now(), titulo: "ANEXO 1", obs: "", fotosAntes: [], foto
 let logos = { prestador: null, americanas: "https://ujwfggunvzsonnsjuvpl.supabase.co/storage/v1/object/public/logos-prestadores/americanas.png" };
 let fotosObrigatorias = { fachada: null, marquise: null };
 
+// ==========================================
+// ASSINATURA DO GERENTE
+// ==========================================
+let assinaturaCanvas;
+let assinaturaCtx;
+let assinando = false;
+let assinaturaRealizada = false;
+
+function iniciarCanvasAssinatura() {
+    assinaturaCanvas = document.getElementById("assinaturaCanvas");
+
+    if (!assinaturaCanvas) return;
+
+    assinaturaCtx = assinaturaCanvas.getContext("2d");
+
+    assinaturaCtx.strokeStyle = "#000000";
+    assinaturaCtx.lineWidth = 4;
+    assinaturaCtx.lineCap = "round";
+    assinaturaCtx.lineJoin = "round";
+
+    function obterPosicao(event) {
+        const rect = assinaturaCanvas.getBoundingClientRect();
+
+        const ponto = event.touches
+            ? event.touches[0]
+            : event;
+
+        return {
+            x: (ponto.clientX - rect.left) *
+                (assinaturaCanvas.width / rect.width),
+
+            y: (ponto.clientY - rect.top) *
+                (assinaturaCanvas.height / rect.height)
+        };
+    }
+
+    function iniciar(event) {
+        event.preventDefault();
+
+        assinando = true;
+        assinaturaRealizada = true;
+
+        const pos = obterPosicao(event);
+
+        assinaturaCtx.beginPath();
+        assinaturaCtx.moveTo(pos.x, pos.y);
+    }
+
+    function desenhar(event) {
+        if (!assinando) return;
+
+        event.preventDefault();
+
+        const pos = obterPosicao(event);
+
+        assinaturaCtx.lineTo(pos.x, pos.y);
+        assinaturaCtx.stroke();
+    }
+
+    function finalizar() {
+        assinando = false;
+
+        if (assinaturaCtx) {
+            assinaturaCtx.closePath();
+        }
+    }
+
+    // Mouse
+    assinaturaCanvas.addEventListener("mousedown", iniciar);
+    assinaturaCanvas.addEventListener("mousemove", desenhar);
+    assinaturaCanvas.addEventListener("mouseup", finalizar);
+    assinaturaCanvas.addEventListener("mouseleave", finalizar);
+
+    // Celular / Tablet
+    assinaturaCanvas.addEventListener("touchstart", iniciar, {
+        passive: false
+    });
+
+    assinaturaCanvas.addEventListener("touchmove", desenhar, {
+        passive: false
+    });
+
+    assinaturaCanvas.addEventListener("touchend", finalizar);
+}
+document.addEventListener("DOMContentLoaded", () => {
+    iniciarCanvasAssinatura();
+});
+
+function limparAssinatura() {
+    if (!assinaturaCanvas || !assinaturaCtx) return;
+
+    assinaturaCtx.clearRect(
+        0,
+        0,
+        assinaturaCanvas.width,
+        assinaturaCanvas.height
+    );
+
+    assinaturaRealizada = false;
+}
+
 // FUNÇÃO PARA BUSCAR AS LOJAS NO SUPABASE
 async function carregarLojas() {
     try {
@@ -689,7 +790,57 @@ async function gerarRelatorio() {
         renderGal(anexo.fotosDepois, "RELATÓRIO FOTOGRÁFICO - DEPOIS");
     }
 
-    doc.save(`AREISPRO_${lNome.split(' ')[0] || 'RELATORIO'}.pdf`);
+    // ==============================
+// PÁGINA FINAL - ASSINATURA
+// ==============================
+doc.addPage();
+
+header();
+
+// Verifica se realmente houve assinatura
+if (assinaturaRealizada && assinaturaCanvas) {
+
+    // Converte o desenho do canvas para imagem PNG
+    const assinaturaImagem = assinaturaCanvas.toDataURL("image/png");
+
+    // Coloca a assinatura no PDF
+    doc.addImage(
+        assinaturaImagem,
+        "PNG",
+        6.5,   // posição X
+        10.5,  // posição Y
+        8,     // largura
+        2.7    // altura
+    );
+}
+
+// Linha abaixo da assinatura
+doc.setDrawColor(0);
+doc.setLineWidth(0.02);
+doc.line(6.5, 14, 14.5, 14);
+
+// Texto
+doc.setFont("helvetica", "normal");
+doc.setFontSize(10);
+doc.text(
+    "Assinatura do Gerente",
+    10.5,
+    14.7,
+    { align: "center" }
+);
+
+// Data
+doc.setFontSize(9);
+doc.text(
+    `Data: ${new Date().toLocaleDateString("pt-BR")}`,
+    10.5,
+    15.5,
+    { align: "center" }
+);
+
+doc.save(
+    `AREISPRO_${lNome.split(' ')[0] || 'RELATORIO'}.pdf`
+);
 }
 
 // ANIMAÇÃO DE TEXTO
