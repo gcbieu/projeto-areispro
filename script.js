@@ -211,70 +211,54 @@ async function abrirPreviewRelatorio() {
     try {
 
         const modal =
-            document.getElementById(
-                "modalPreviewRelatorio"
-            );
+            document.getElementById("modalPreviewRelatorio");
 
-        const frame =
-            document.getElementById(
-                "previewRelatorioFrame"
-            );
+        const paginasContainer =
+            document.getElementById("previewRelatorioPaginas");
 
 
-        if (!modal || !frame) {
+        if (!modal || !paginasContainer) {
 
             console.error(
-                "Modal de preview não encontrado."
+                "Modal ou container do preview não encontrado."
             );
 
             return;
         }
 
 
-        // ======================================
-        // PRIMEIRO ABRE O MODAL
-        // ======================================
+        // ==========================================
+        // ABRE O MODAL
+        // ==========================================
 
         modal.classList.remove("hidden");
 
 
-        // ======================================
-        // DEPOIS GARANTE O CANVAS
-        // ======================================
-
+        // Inicializa assinatura se necessário
         if (!assinaturaCanvas) {
-
             iniciarCanvasAssinatura();
-
         }
 
 
-        // ======================================
-        // CARREGAMENTO VISUAL
-        // ======================================
+        // ==========================================
+        // MOSTRA CARREGAMENTO
+        // ==========================================
 
-        frame.removeAttribute("src");
-
-        frame.srcdoc = `
-            <html>
-                <body style="
-                    margin:0;
-                    height:100vh;
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    font-family:Arial,sans-serif;
-                    color:#777;
-                ">
-                    Gerando pré-visualização...
-                </body>
-            </html>
+        paginasContainer.innerHTML = `
+            <div style="
+                padding:40px;
+                text-align:center;
+                color:#777;
+                font-family:Arial,sans-serif;
+            ">
+                Gerando pré-visualização...
+            </div>
         `;
 
 
-        // ======================================
-        // GERA PDF SOMENTE PARA PREVIEW
-        // ======================================
+        // ==========================================
+        // GERA O PDF EM MEMÓRIA
+        // ==========================================
 
         const blob =
             await gerarRelatorio("preview");
@@ -289,24 +273,203 @@ async function abrirPreviewRelatorio() {
         }
 
 
-        // Remove preview anterior
-        if (previewPdfUrl) {
+        // ==========================================
+        // CONVERTE BLOB PARA ARRAYBUFFER
+        // ==========================================
 
-            URL.revokeObjectURL(
-                previewPdfUrl
+        const arrayBuffer =
+            await blob.arrayBuffer();
+
+
+        // ==========================================
+        // CARREGA COM PDF.JS
+        // ==========================================
+
+        const pdf =
+            await pdfjsLib
+                .getDocument({
+                    data: arrayBuffer
+                })
+                .promise;
+
+
+        console.log(
+            `PDF carregado: ${pdf.numPages} página(s)`
+        );
+
+
+        // Limpa mensagem de carregamento
+        paginasContainer.innerHTML = "";
+
+
+        // ==========================================
+        // DESENHA TODAS AS PÁGINAS
+        // ==========================================
+
+        for (
+            let numeroPagina = 1;
+            numeroPagina <= pdf.numPages;
+            numeroPagina++
+        ) {
+
+            const pagina =
+                await pdf.getPage(numeroPagina);
+
+
+            // Tamanho original
+            const viewportOriginal =
+                pagina.getViewport({
+                    scale: 1
+                });
+
+
+            // ======================================
+            // CALCULA LARGURA RESPONSIVA
+            // ======================================
+
+            const larguraDisponivel =
+                Math.min(
+                    paginasContainer.clientWidth - 16,
+                    900
+                );
+
+
+            const escala =
+                larguraDisponivel /
+                viewportOriginal.width;
+
+
+            const viewport =
+                pagina.getViewport({
+                    scale: escala
+                });
+
+
+            // ======================================
+            // BLOCO DA PÁGINA
+            // ======================================
+
+            const paginaWrapper =
+                document.createElement("div");
+
+
+            paginaWrapper.style.width =
+                "100%";
+
+            paginaWrapper.style.maxWidth =
+                `${viewport.width}px`;
+
+            paginaWrapper.style.background =
+                "#ffffff";
+
+            paginaWrapper.style.borderRadius =
+                "8px";
+
+            paginaWrapper.style.overflow =
+                "hidden";
+
+            paginaWrapper.style.boxShadow =
+                "0 2px 10px rgba(0,0,0,0.12)";
+
+
+            // ======================================
+            // CANVAS DO PDF
+            // ======================================
+
+            const canvas =
+                document.createElement("canvas");
+
+
+            const context =
+                canvas.getContext("2d");
+
+
+            // Melhora nitidez em celular
+            const pixelRatio =
+                window.devicePixelRatio || 1;
+
+
+            canvas.width =
+                Math.floor(
+                    viewport.width * pixelRatio
+                );
+
+
+            canvas.height =
+                Math.floor(
+                    viewport.height * pixelRatio
+                );
+
+
+            canvas.style.width =
+                `${viewport.width}px`;
+
+
+            canvas.style.height =
+                `${viewport.height}px`;
+
+
+            // ======================================
+            // NÚMERO DA PÁGINA
+            // ======================================
+
+            const indicador =
+                document.createElement("div");
+
+
+            indicador.innerText =
+                `Página ${numeroPagina} de ${pdf.numPages}`;
+
+
+            indicador.style.fontSize =
+                "10px";
+
+            indicador.style.textAlign =
+                "center";
+
+            indicador.style.padding =
+                "7px";
+
+            indicador.style.color =
+                "#666";
+
+            indicador.style.background =
+                "#f5f5f5";
+
+
+            paginaWrapper.appendChild(canvas);
+
+            paginaWrapper.appendChild(indicador);
+
+            paginasContainer.appendChild(
+                paginaWrapper
             );
 
+
+            // ======================================
+            // RENDERIZA A PÁGINA
+            // ======================================
+
+            await pagina.render({
+
+                canvasContext: context,
+
+                viewport: viewport,
+
+                transform:
+                    pixelRatio !== 1
+                        ? [
+                            pixelRatio,
+                            0,
+                            0,
+                            pixelRatio,
+                            0,
+                            0
+                        ]
+                        : null
+
+            }).promise;
         }
-
-
-        previewPdfUrl =
-            URL.createObjectURL(blob);
-
-
-        frame.removeAttribute("srcdoc");
-
-        frame.src =
-            previewPdfUrl;
 
 
     } catch (error) {
@@ -317,15 +480,32 @@ async function abrirPreviewRelatorio() {
         );
 
 
+        const paginasContainer =
+            document.getElementById(
+                "previewRelatorioPaginas"
+            );
+
+
+        if (paginasContainer) {
+
+            paginasContainer.innerHTML = `
+                <div style="
+                    padding:40px;
+                    text-align:center;
+                    color:#b91c1c;
+                ">
+                    Não foi possível carregar
+                    a pré-visualização.
+                </div>
+            `;
+        }
+
+
         alert(
             "Não foi possível gerar a pré-visualização do relatório."
         );
-
-
-        fecharPreviewRelatorio();
     }
 }
-
 
 // ==========================================
 // FECHAR PREVIEW
@@ -338,9 +518,9 @@ function fecharPreviewRelatorio() {
             "modalPreviewRelatorio"
         );
 
-    const frame =
+    const paginasContainer =
         document.getElementById(
-            "previewRelatorioFrame"
+            "previewRelatorioPaginas"
         );
 
 
@@ -351,10 +531,9 @@ function fecharPreviewRelatorio() {
     }
 
 
-    if (frame) {
+    if (paginasContainer) {
 
-        frame.removeAttribute("src");
-        frame.removeAttribute("srcdoc");
+        paginasContainer.innerHTML = "";
 
     }
 

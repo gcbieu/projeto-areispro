@@ -471,11 +471,17 @@
 
             <!-- PREVIEW DO PDF -->
             <div class="rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-gray-100">
-                <iframe
-                    id="previewRelatorioFrame"
-                    class="w-full h-[65vh] bg-gray-200"
-                    title="Pré-visualização do relatório">
-                </iframe>
+<div
+    id="previewRelatorioContainer"
+    class="w-full bg-gray-200 p-2 md:p-4 overflow-y-auto"
+    style="max-height: 65vh;">
+    
+    <div
+        id="previewRelatorioPaginas"
+        class="flex flex-col items-center gap-4">
+    </div>
+
+</div>
             </div>
 
             <!-- ASSINATURA -->
