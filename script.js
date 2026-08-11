@@ -3871,70 +3871,60 @@ const osChecklistPadrao = [
                 numero: "1.1",
                 pergunta:
                     "Equipamento de combate a incêndio e rotas de fuga estão desobstruídos?",
-                peso: 2
             },
 
             {
                 numero: "1.2",
                 pergunta:
                     "Há demarcação visível de incêndio no piso? (Apenas para casos em que efetivamente NÃO existe a demarcação)",
-                peso: 1
             },
 
             {
                 numero: "1.3",
                 pergunta:
                     "Recargas de extintores estão dentro da validade?",
-                peso: 2
             },
 
             {
                 numero: "1.4",
                 pergunta:
                     "Testes de mangueiras estão dentro da validade?",
-                peso: 2
             },
 
             {
                 numero: "1.5",
                 pergunta:
                     "Bomba de incêndio está operando normalmente?",
-                peso: 3
             },
 
             {
                 numero: "1.6",
                 pergunta:
                     "Central de Alarme em funcionamento?",
-                peso: 2
             },
 
             {
                 numero: "1.7",
                 pergunta:
                     "Existe sinalização de emergência nas paredes (indicação de saída e de equipamentos de incêndio)?",
-                peso: 1
             },
 
             {
                 numero: "1.8",
                 pergunta:
                     "Associados sabem como proceder caso ocorra um princípio de incêndio?",
-                peso: 2
             },
 
             {
                 numero: "1.9",
                 pergunta:
                     "Possui AVCB dentro da validade?",
-                peso: 3
             },
 
             {
                 numero: "1.10",
                 pergunta:
                     "As mangueiras são do tipo 2?",
-                peso: 1
             }
 
         ]
@@ -3958,21 +3948,18 @@ const osChecklistPadrao = [
                 numero: "2.1",
                 pergunta:
                     "Instalações estão desprovidas de improvisação (adaptadores, extensões e multiplicadores de tomada)?",
-                peso: 3
             },
 
             {
                 numero: "2.2",
                 pergunta:
                     "Cabos elétricos encontram-se protegidos (dentro de calhas e eletrodutos)?",
-                peso: 3
             },
 
             {
                 numero: "2.3",
                 pergunta:
                     "Quadros de energia estão sinalizados, desobstruídos e em perfeito estado de conservação?",
-                peso: 3
             }
 
         ]
@@ -3996,119 +3983,102 @@ const osChecklistPadrao = [
                 numero: "3.1",
                 pergunta:
                     "Escadas e rampas possuem antiderrapantes?",
-                peso: 2
             },
 
             {
                 numero: "3.2",
                 pergunta:
                     "As escadas possuem corrimãos? (Escadas internas com menos de 1,20 m de largura precisam de corrimão em apenas um lado. Já escadas externas de uso coletivo devem ter corrimão dos dois lados, independentemente da largura.)",
-                peso: 2
             },
 
             {
                 numero: "3.3",
                 pergunta:
                     "As paredes não possuem infiltrações, rachaduras ou danos estruturais?",
-                peso: 1
             },
 
             {
                 numero: "3.4",
                 pergunta:
                     "Corredores e vias de passagem estão desobstruídos?",
-                peso: 1
             },
 
             {
                 numero: "3.5",
                 pergunta:
                     "Ambientes estão limpos e higienizados?",
-                peso: 1
             },
 
             {
                 numero: "3.6",
                 pergunta:
                     "Ambientes foram dedetizados?",
-                peso: 1
             },
 
             {
                 numero: "3.7",
                 pergunta:
                     "Elevador(es) estão em bom estado de uso (limpeza, iluminação, organização e de uso)?",
-                peso: 2
             },
 
             {
                 numero: "3.8",
                 pergunta:
                     "Caixas possuem cadeiras com encosto para lombar e são ajustáveis?",
-                peso: 1
             },
 
             {
                 numero: "3.9",
                 pergunta:
                     "Caixas possuem apoio para os pés?",
-                peso: 1
             },
 
             {
                 numero: "3.10",
                 pergunta:
                     "As mercadorias estão armazenadas a uma distância superior a 50 cm das estruturas laterais (paredes) do prédio?",
-                peso: 1
             },
 
             {
                 numero: "3.11",
                 pergunta:
                     "As mercadorias estão armazenadas sem contato direto com fios elétricos, painéis elétricos, tomadas e/ou assemelhados?",
-                peso: 2
             },
 
             {
                 numero: "3.12",
                 pergunta:
                     "Arranjo físico do estoque está adequado para armazenamento de mercadorias?",
-                peso: 1
             },
 
             {
                 numero: "3.13",
                 pergunta:
                     "A temperatura ambiente está adequada - conforto térmico?",
-                peso: 1
             },
 
             {
                 numero: "3.14",
                 pergunta:
                     "A iluminação do ambiente está adequada?",
-                peso: 1
             },
 
             {
                 numero: "3.15",
                 pergunta:
                     "O estoque está organizado?",
-                peso: 2
             },
 
             {
                 numero: "3.16",
                 pergunta:
                     "Os PDVs e equipamento do Checkout estão em perfeito estado de conservação?",
-                peso: 2
             },
 
             {
                 numero: "3.17",
                 pergunta:
                     "Monitores dos Checkouts têm regulagem de altura ou suporte de regulagem?",
-                peso: 1
             }
 
         ]
@@ -4132,35 +4102,30 @@ const osChecklistPadrao = [
                 numero: "4.1",
                 pergunta:
                     "Os utensílios para abertura de caixas (estiletes do tipo bico de pato ou retrátil) estão em boas condições de uso?",
-                peso: 1
             },
 
             {
                 numero: "4.2",
                 pergunta:
                     "Prensas possuem sistemas de segurança em devido funcionamento?",
-                peso: 3
             },
 
             {
                 numero: "4.3",
                 pergunta:
                     "As escadas móveis são adequadas?",
-                peso: 2
             },
 
             {
                 numero: "4.4",
                 pergunta:
                     "Associados da área de manutenção utilizam adequadamente os EPI’s necessários às suas atividades?",
-                peso: 3
             },
 
             {
                 numero: "4.5",
                 pergunta:
                     "Roltainers e carrinhos de cargas estão em bom estado de conservação?",
-                peso: 2
             }
 
         ]
@@ -4184,119 +4149,102 @@ const osChecklistPadrao = [
                 numero: "5.1",
                 pergunta:
                     "Há quantidade de instalações sanitárias suficientes para o número de associados?",
-                peso: 1
             },
 
             {
                 numero: "5.2",
                 pergunta:
                     "As instalações hidráulicas, mictórios, vasos sanitários e chuveiros estão em boas condições de uso?",
-                peso: 2
             },
 
             {
                 numero: "5.3",
                 pergunta:
                     "Há segregação dos sanitários por sexo?",
-                peso: 1
             },
 
             {
                 numero: "5.4",
                 pergunta:
                     "Há disponibilidade adequada de sabão, papel toalha e papel higiênico nos sanitários?",
-                peso: 1
             },
 
             {
                 numero: "5.5",
                 pergunta:
                     "Lixeiras possuem tampas?",
-                peso: 1
             },
 
             {
                 numero: "5.6",
                 pergunta:
                     "Apresentam boas condições de higiene, limpeza e organização?",
-                peso: 1
             },
 
             {
                 numero: "5.7",
                 pergunta:
                     "Produtos de limpeza são armazenados em locais adequados?",
-                peso: 1
             },
 
             {
                 numero: "5.8",
                 pergunta:
                     "Ambientes possuem iluminação adequada?",
-                peso: 1
             },
 
             {
                 numero: "5.9",
                 pergunta:
                     "Ralos e caneletas possuem tampas e estão em bom estado de conservação?",
-                peso: 1
             },
 
             {
                 numero: "5.10",
                 pergunta:
                     "Armários estão em boas condições de uso?",
-                peso: 1
             },
 
             {
                 numero: "5.11",
                 pergunta:
                     "Os pertences dos associados encontram-se dentro dos armários?",
-                peso: 1
             },
 
             {
                 numero: "5.12",
                 pergunta:
                     "Ambientes não apresentam infiltrações?",
-                peso: 1
             },
 
             {
                 numero: "5.13",
                 pergunta:
                     "As cadeiras e/ou bancos estão em boas condições de uso?",
-                peso: 1
             },
 
             {
                 numero: "5.14",
                 pergunta:
                     "As cabines para banho estão providas com porta que impeçam o devassamento?",
-                peso: 1
             },
 
             {
                 numero: "5.15",
                 pergunta:
                     "Chuveiros dispõem de água quente e fria?",
-                peso: 1
             },
 
             {
                 numero: "5.16",
                 pergunta:
                     "Nas cabines têm suportes para sabonetes e toalhas?",
-                peso: 1
             },
 
             {
                 numero: "5.17",
                 pergunta:
                     "As cabines possuem dimensões de acordo com o código de obra local ou, na ausência desse, no mínimo 0,80m (oitenta centímetros) por 0,80m (oitenta centímetros)?",
-                peso: 1
             }
 
         ]
@@ -4320,70 +4268,60 @@ const osChecklistPadrao = [
                 numero: "6.1",
                 pergunta:
                     "O espaço está adequado para comportar a quantidade de funcionários da loja?",
-                peso: 2
             },
 
             {
                 numero: "6.2",
                 pergunta:
                     "Há local para lavagem de utensílios usados na refeição?",
-                peso: 2
             },
 
             {
                 numero: "6.3",
                 pergunta:
                     "Possui iluminação adequada?",
-                peso: 1
             },
 
             {
                 numero: "6.4",
                 pergunta:
                     "Local é arejado e apresenta boas condições de conservação, limpeza e higiene?",
-                peso: 2
             },
 
             {
                 numero: "6.5",
                 pergunta:
                     "Possui mesas e cadeiras em quantidades suficientes e em bom estado de conservação?",
-                peso: 1
             },
 
             {
                 numero: "6.6",
                 pergunta:
                     "Há meios para conservação e aquecimento das refeições?",
-                peso: 2
             },
 
             {
                 numero: "6.7",
                 pergunta:
                     "Há copos descartáveis disponíveis no local?",
-                peso: 1
             },
 
             {
                 numero: "6.8",
                 pergunta:
                     "Existem bebedouros em quantidades suficientes (1 p/ cada grupo de 50) e estão higienizados?",
-                peso: 2
             },
 
             {
                 numero: "6.9",
                 pergunta:
                     "A troca de filtros dos bebedouros obedece o prazo máximo de 6 meses?",
-                peso: 2
             },
 
             {
                 numero: "6.10",
                 pergunta:
                     "Lixeiras estão em boas condições e possuem tampas?",
-                peso: 1
             }
 
         ]
@@ -4406,28 +4344,24 @@ const osChecklistPadrao = [
                 numero: "7.1",
                 pergunta:
                     "Foi realizado Diálogo de Segurança com a equipe da loja no dia da visita?",
-                peso: 1
             },
 
             {
                 numero: "7.2",
                 pergunta:
                     "A loja não possui registro de acidentes típicos ocorridos neste ano?",
-                peso: 1
             },
 
             {
                 numero: "7.3",
                 pergunta:
                     "Não há histórico de ações de órgãos públicos (como Sindicato, MPT, Vigilância Sanitária) passadas ou em andamento na loja?",
-                peso: 1
             },
 
             {
                 numero: "7.4",
                 pergunta:
                     "No mural da loja está disponível o Fluxo de comunicação de acidentes e a Rota de segurança?",
-                peso: 1
             }
 
         ]
