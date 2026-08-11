@@ -115,6 +115,38 @@
                     <span class="module-link">Acessar →</span>
                 </button>
 
+                                <!-- ORDENS DE SERVIÇO -->
+                <button onclick="navigate('os')" class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
+
+                    <div class="module-icon">OS</div>
+
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mt-8">
+                        Operações
+                    </p>
+
+                    <h3 class="text-2xl font-semibold mt-3">
+                        Ordens de Serviço
+                    </h3>
+
+                    <p class="text-sm opacity-50 mt-3 leading-relaxed">
+                        Consulte chamados, gere ordens de serviço e acompanhe a execução de manutenções prediais.
+                    </p>
+
+                    <span class="module-link">Acessar →</span>
+                </button>
+
+
+                <!-- FATURAMENTO -->
+                <button onclick="navigate('faturamento')" class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
+                    <div class="module-icon">F</div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mt-8">Financeiro</p>
+                    <h3 class="text-2xl font-semibold mt-3">Faturamento</h3>
+                    <p class="text-sm opacity-50 mt-3 leading-relaxed">
+                        Verbas, MCC/CCL, parcelas, lotes, e-mail e exportação mensal.
+                    </p>
+                    <span class="module-link">Acessar →</span>
+                </button>
+
                 <!-- RELATÓRIOS -->
                 <button onclick="navigate('main')" class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
 
@@ -130,26 +162,6 @@
 
                     <p class="text-sm opacity-50 mt-3 leading-relaxed">
                         Crie relatórios fotográficos, organize anexos e gere arquivos em PDF.
-                    </p>
-
-                    <span class="module-link">Acessar →</span>
-                </button>
-
-                <!-- ORDENS DE SERVIÇO -->
-                <button onclick="navigate('os')" class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
-
-                    <div class="module-icon">OS</div>
-
-                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mt-8">
-                        Operações
-                    </p>
-
-                    <h3 class="text-2xl font-semibold mt-3">
-                        Ordens de Serviço
-                    </h3>
-
-                    <p class="text-sm opacity-50 mt-3 leading-relaxed">
-                        Consulte chamados, gere ordens de serviço e acompanhe a execução de manutenções prediais.
                     </p>
 
                     <span class="module-link">Acessar →</span>
@@ -939,7 +951,8 @@
                 <p class="text-sm font-semibold opacity-70">Nenhum chamado encontrado</p>
                 <p class="text-xs opacity-40 mt-1">Tente ajustar os filtros ou os termos de pesquisa.</p>
             </div>
-</section>
+
+        </section>
 
             <!-- =========================================================
      LOJAS E PRESTADORES
@@ -961,7 +974,7 @@
         </h2>
 
         <p class="text-xs opacity-50 mt-1">
-            Cadastros operacionais do AREISPRO
+            Cadastros operacional.
         </p>
 
     </div>
@@ -1219,14 +1232,18 @@
             </p>
 
             <h3 class="text-2xl font-semibold mt-3">
-                Em desenvolvimento...            </h3>
+                Em breve
+            </h3>
+
+            <p class="text-sm opacity-50 mt-3">
+                Em desenvolvimento...
+            </p>
 
         </div>
 
     </div>
 
 </section>
-        </section>
 
         <!-- MAIN VIEW (RELATÓRIOS TÉCNICOS) -->
         <main id="mainView" class="hidden-view max-w-6xl mx-auto px-6 mt-24 pb-20">
@@ -1678,6 +1695,121 @@
         </div>
     </div>
 
+
+
+    <!-- =========================================================
+         MÓDULO FATURAMENTO
+    ========================================================== -->
+    <section id="faturamentoView" class="hidden-view max-w-7xl mx-auto px-4 md:px-6 mt-28 pb-24">
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-8">
+            <div>
+                <button onclick="navigate('home')" class="text-xs font-bold opacity-50 hover:opacity-100 mb-3">← Voltar para a Home</button>
+                <p class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">AREISPRO · Financeiro</p>
+                <h2 class="text-3xl md:text-5xl font-light tracking-tight mt-2">Faturamento</h2>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="fatNovoAvulso()" class="px-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 text-xs font-bold">+ Adicionar Serviço</button>
+                <button onclick="fatAbrirNovoLote()" class="px-5 py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold shadow-lg">Faturar</button>
+            </div>
+        </div>
+
+        <div class="glass rounded-[28px] p-4 md:p-5 mb-5 flex flex-col md:flex-row md:items-center gap-3 justify-between">
+            <div class="flex flex-wrap items-center gap-2">
+                <label class="text-[10px] font-bold uppercase tracking-wider opacity-50">Mês</label>
+                <select id="fatMesFiltro" onchange="fatTrocarMes()" class="px-4 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-sm font-semibold outline-none"></select>
+                <select id="fatTipoFiltro" onchange="fatRender()" class="px-4 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-sm font-semibold outline-none">
+                    <option value="TODOS">MCC + CCL</option><option value="MCC">MCC</option><option value="CCL">CCL</option>
+                </select>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="fatExportarMes()" class="px-4 py-3 rounded-2xl bg-emerald-500/10 text-emerald-600 text-xs font-bold">Exportar Planilha</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
+            <div class="glass rounded-2xl p-4"><p class="text-[9px] font-bold uppercase opacity-40">Disponível</p><p id="fatKpiDisponivel" class="text-xl font-semibold mt-2">R$ 0,00</p></div>
+            <div class="glass rounded-2xl p-4"><p class="text-[9px] font-bold uppercase opacity-40">Faturado MCC</p><p id="fatKpiMcc" class="text-xl font-semibold mt-2">R$ 0,00</p></div>
+            <div class="glass rounded-2xl p-4"><p class="text-[9px] font-bold uppercase opacity-40">Faturado CCL</p><p id="fatKpiCcl" class="text-xl font-semibold mt-2">R$ 0,00</p></div>
+            <div class="glass rounded-2xl p-4"><p class="text-[9px] font-bold uppercase opacity-40">Total no mês</p><p id="fatKpiTotal" class="text-xl font-semibold mt-2">R$ 0,00</p></div>
+            <div class="glass rounded-2xl p-4 col-span-2 lg:col-span-1"><p class="text-[9px] font-bold uppercase opacity-40">Pendências</p><p id="fatKpiPendencias" class="text-xl font-semibold mt-2">0</p></div>
+        </div>
+
+        <div class="glass rounded-[28px] overflow-hidden mb-6">
+            <div class="p-5 border-b border-black/5 dark:border-white/5 flex items-center justify-between gap-3">
+                <div><h3 class="font-semibold">Carteira do mês</h3><p id="fatResumoMes" class="text-xs opacity-45 mt-1">Carregando...</p></div>
+                <input id="fatBusca" oninput="fatRender()" placeholder="Buscar ID, loja, serviço..." class="w-56 max-w-full px-4 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-xs outline-none">
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[1180px] text-xs">
+                    <thead class="bg-black/[0.03] dark:bg-white/[0.03] text-left uppercase tracking-wider text-[9px] opacity-60">
+                        <tr><th class="p-4">ID</th><th class="p-4">Serviço</th><th class="p-4">Loja</th><th class="p-4">Tipo</th><th class="p-4">Parcela</th><th class="p-4">Relatório</th><th class="p-4">Fornecedor</th><th class="p-4 text-right">Valor</th><th class="p-4">Situação</th><th class="p-4"></th></tr>
+                    </thead>
+                    <tbody id="fatTabelaBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="glass rounded-[28px] overflow-hidden">
+            <div class="p-5 border-b border-black/5 dark:border-white/5"><h3 class="font-semibold">Lotes faturados</h3><p class="text-xs opacity-45 mt-1">Fechamentos realizados no mês selecionado.</p></div>
+            <div id="fatLotesLista" class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-3"></div>
+        </div>
+    </section>
+
+    <!-- MODAL EDIÇÃO DO SERVIÇO -->
+    <div id="fatServicoModal" class="hidden fixed inset-0 z-[500] bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+      <div class="glass bg-white dark:bg-slate-950 max-w-4xl mx-auto my-8 rounded-[30px] p-6 md:p-8 shadow-2xl">
+        <div class="flex justify-between gap-4 mb-6"><div><p class="text-[10px] uppercase font-bold opacity-40 tracking-wider">Faturamento</p><h3 id="fatServicoTitulo" class="text-2xl font-semibold mt-1">Preparar serviço</h3></div><button onclick="fatFecharServicoModal()" class="text-2xl opacity-40">×</button></div>
+        <input type="hidden" id="fatServicoId">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <label class="text-xs">ID / Chamado<input id="fatCampoChamado" class="fat-input" placeholder="Opcional para avulso"></label>
+          <label class="text-xs">Loja<input id="fatCampoLoja" class="fat-input"></label>
+          <label class="text-xs">Serviço<input id="fatCampoServico" class="fat-input"></label>
+          <label class="text-xs">Tipo<select id="fatCampoTipo" class="fat-input"><option>MCC</option><option>CCL</option></select></label>
+          <label class="text-xs">Fornecedor<input id="fatCampoFornecedor" class="fat-input" placeholder="JService, SRP, EMC..."></label>
+          <label class="text-xs">CNPJ<input id="fatCampoCnpj" class="fat-input"></label>
+          <label class="text-xs">COD<input id="fatCampoCod" class="fat-input"></label>
+          <label class="text-xs">Valor total<input id="fatCampoValor" type="number" min="0" step="0.01" class="fat-input"></label>
+          <label class="text-xs">Valor material<input id="fatCampoMaterial" type="number" min="0" step="0.01" class="fat-input"></label>
+          <label class="text-xs">NF<input id="fatCampoNf" class="fat-input"></label>
+          <label class="text-xs">Conta contábil<input id="fatCampoConta" class="fat-input"></label>
+          <label class="text-xs">Status do faturamento<input id="fatCampoStatus" class="fat-input" placeholder="Manual"></label>
+          <label class="text-xs md:col-span-3">Link do relatório<input id="fatCampoRelatorio" class="fat-input" placeholder="Preenchido automaticamente quando existir"></label>
+          <label class="text-xs md:col-span-3">Descrição técnica<textarea id="fatCampoDescricao" rows="4" class="fat-input resize-y"></textarea></label>
+        </div>
+        <div class="mt-5 p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]">
+          <label class="flex gap-3 items-center text-sm font-semibold"><input id="fatCampoParcelado" type="checkbox" onchange="fatAlternarParcelamento()"> Parcelar este serviço</label>
+          <div id="fatParcelamentoBox" class="hidden mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <label class="text-xs">Quantidade de parcelas<input id="fatCampoQtdParcelas" type="number" min="2" max="36" value="2" class="fat-input"></label>
+            <label class="text-xs">Primeira competência<input id="fatCampoPrimeiraCompetencia" type="month" class="fat-input"></label>
+            <p class="md:col-span-2 text-[11px] opacity-50">As próximas parcelas serão criadas mês a mês. Elas ficam em stand-by e só serão faturadas quando alguém incluí-las em uma verba.</p>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-6"><button onclick="fatFecharServicoModal()" class="px-5 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-xs font-bold">Cancelar</button><button onclick="fatSalvarServico()" class="px-6 py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold">Salvar</button></div>
+      </div>
+    </div>
+
+    <!-- MODAL NOVO LOTE -->
+    <div id="fatLoteModal" class="hidden fixed inset-0 z-[510] bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+      <div class="glass bg-white dark:bg-slate-950 max-w-5xl mx-auto my-8 rounded-[30px] p-6 md:p-8 shadow-2xl">
+        <div class="flex justify-between gap-4 mb-6"><div><p class="text-[10px] uppercase font-bold opacity-40 tracking-wider">Passo a passo</p><h3 class="text-2xl font-semibold mt-1">Novo faturamento</h3></div><button onclick="fatFecharLoteModal()" class="text-2xl opacity-40">×</button></div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <label class="text-xs">1. Faturar como<select id="fatLoteTipo" onchange="fatRenderSelecionaveis()" class="fat-input"><option value="MCC">MCC</option><option value="CCL">CCL</option></select></label>
+          <label class="text-xs">2. Valor da verba<input id="fatLoteVerba" oninput="fatAtualizarResumoLote()" type="number" min="0" step="0.01" class="fat-input" placeholder="0,00"></label>
+          <label class="text-xs">Competência<input id="fatLoteCompetencia" type="month" onchange="fatRenderSelecionaveis()" class="fat-input"></label>
+        </div>
+        <div class="rounded-2xl border border-black/10 dark:border-white/10 overflow-hidden">
+          <div class="p-4 bg-black/[0.03] dark:bg-white/[0.03] flex justify-between"><strong class="text-xs">3. Escolha os serviços</strong><span id="fatLoteContador" class="text-xs opacity-50">0 selecionados</span></div>
+          <div id="fatSelecionaveis" class="max-h-[46vh] overflow-y-auto divide-y divide-black/5 dark:divide-white/5"></div>
+        </div>
+        <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]"><p class="text-[9px] uppercase font-bold opacity-40">Verba</p><p id="fatResumoVerba" class="text-xl font-semibold mt-1">R$ 0,00</p></div>
+          <div class="p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]"><p class="text-[9px] uppercase font-bold opacity-40">Selecionado</p><p id="fatResumoSelecionado" class="text-xl font-semibold mt-1">R$ 0,00</p></div>
+          <div class="p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]"><p class="text-[9px] uppercase font-bold opacity-40">Diferença</p><p id="fatResumoDiferenca" class="text-xl font-semibold mt-1">R$ 0,00</p></div>
+        </div>
+        <p id="fatLoteAviso" class="mt-3 text-xs font-semibold opacity-70"></p>
+        <div class="flex justify-end gap-2 mt-6"><button onclick="fatFecharLoteModal()" class="px-5 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-xs font-bold">Cancelar</button><button onclick="fatConfirmarLote()" class="px-6 py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold">Confirmar faturamento</button></div>
+      </div>
+    </div>
 
     <!-- =========================================================
          MÓDULO CONVERSOR DE ARQUIVOS

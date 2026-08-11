@@ -1091,6 +1091,7 @@ function navigate(view) {
         os: "osView",
         converter: "converterView",
         cadastros: "cadastrosView",
+        faturamento: "faturamentoView",
 
         lojas: "lojasView",
         prestadores: "prestadoresView",
@@ -1119,6 +1120,10 @@ function navigate(view) {
 if (view === "cadastros") {
     abrirAbaCadastros("lojas");
     carregarLojasPrestadores();
+}
+
+if (view === "faturamento") {
+    initFaturamentoModule();
 }
 
     window.scrollTo({
@@ -11788,7 +11793,7 @@ function copiarTabelaLojasFallback(
 
 
     alert(
-        "Tabela copiada. Agora é só colar no e-mail."
+        "Tabela copiada."
     );
 
 }
@@ -11864,3 +11869,540 @@ document.addEventListener(
 
     }
 );
+// ============================================================================
+// MÓDULO DE FATURAMENTO — AREISPRO
+// ============================================================================
+
+const fatState = {
+    mes: null,
+    servicos: [],
+    parcelas: [],
+    lotes: [],
+    itensLote: [],
+    regras: [],
+    lojas: [],
+    inicializado: false,
+    loteSelecao: new Set()
+};
+
+function fatNorm(v = '') {
+    return String(v ?? '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function fatMoney(v) {
+    return Number(v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function fatMonthStart(value) {
+    const raw = String(value || '').slice(0, 7);
+    return raw ? `${raw}-01` : null;
+}
+
+function fatMonthKey(date = new Date()) {
+    const d = date instanceof Date ? date : new Date(date);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function fatAddMonths(yyyyMm, offset) {
+    const [y, m] = yyyyMm.split('-').map(Number);
+    const d = new Date(y, m - 1 + offset, 1);
+    return fatMonthKey(d);
+}
+
+function fatNomeMes(yyyyMm) {
+    const [y, m] = yyyyMm.split('-').map(Number);
+    const d = new Date(y, m - 1, 1);
+    const nome = d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+    return nome.charAt(0).toUpperCase() + nome.slice(1);
+}
+
+function fatMesEhPassado(yyyyMm) {
+    return yyyyMm < fatMonthKey(new Date());
+}
+
+function fatGet(obj, ...keys) {
+    for (const k of keys) {
+        if (obj && obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') return obj[k];
+    }
+    return '';
+}
+
+function fatClassificarServico(nome) {
+    const n = fatNorm(nome);
+    const regras = (fatState.regras || []).filter(r => r.ativo !== false);
+    const exata = regras.find(r => n === fatNorm(r.servico_normalizado) || n === fatNorm(r.servico_nome));
+    if (exata) return exata.tipo_padrao;
+    const parcial = regras
+        .filter(r => n.includes(fatNorm(r.servico_normalizado)) || fatNorm(r.servico_normalizado).includes(n))
+        .sort((a,b) => fatNorm(b.servico_normalizado).length - fatNorm(a.servico_normalizado).length)[0];
+    return parcial?.tipo_padrao || null;
+}
+
+async function initFaturamentoModule() {
+    fatMontarMeses();
+    if (!fatState.mes) fatState.mes = fatMonthKey(new Date());
+    const select = document.getElementById('fatMesFiltro');
+    if (select) select.value = fatState.mes;
+
+    await fatCarregarTudo();
+    await fatSincronizarChamados(false);
+    await fatCarregarTudo();
+    fatRender();
+    fatState.inicializado = true;
+}
+
+function fatMontarMeses() {
+    const sel = document.getElementById('fatMesFiltro');
+    if (!sel || sel.options.length) return;
+    const atual = fatMonthKey(new Date());
+    const meses = [];
+    for (let i = -24; i <= 12; i++) meses.push(fatAddMonths(atual, i));
+    sel.innerHTML = meses.reverse().map(m => `<option value="${m}">${fatNomeMes(m)}</option>`).join('');
+    sel.value = atual;
+    fatState.mes = atual;
+}
+
+async function fatCarregarTudo() {
+    const [serv, parc, lot, itens, regras, lojas] = await Promise.all([
+        supabaseClient.from('faturamento_servicos').select('*').order('criado_em', { ascending: false }),
+        supabaseClient.from('faturamento_parcelas').select('*').order('competencia', { ascending: true }),
+        supabaseClient.from('faturamento_lotes').select('*').order('criado_em', { ascending: false }),
+        supabaseClient.from('faturamento_lote_itens').select('*'),
+        supabaseClient.from('faturamento_regras').select('*').eq('ativo', true),
+        supabaseClient.from('lojas_enderecos_temp').select('*')
+    ]);
+
+    for (const r of [serv, parc, lot, itens, regras]) {
+        if (r.error) console.warn('Faturamento: consulta parcial:', r.error.message);
+    }
+    fatState.servicos = serv.data || [];
+    fatState.parcelas = parc.data || [];
+    fatState.lotes = lot.data || [];
+    fatState.itensLote = itens.data || [];
+    fatState.regras = regras.data || [];
+    fatState.lojas = lojas.data || [];
+}
+
+async function fatSincronizarChamados(mostrarMensagem = false) {
+    let chamados = Array.isArray(window.chamadosAlbetan) ? window.chamadosAlbetan : [];
+
+    if (!chamados.length) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('chamados_historico')
+                .select('payload_json')
+                .eq('is_atual', true);
+            if (!error) chamados = (data || []).map(x => x.payload_json || {});
+        } catch (_) {}
+    }
+
+    const existentes = new Set(
+        (fatState.servicos || [])
+            .filter(s => s.chamado_id)
+            .map(s => String(s.chamado_id).trim())
+    );
+
+    const novos = [];
+    for (const c of chamados) {
+        const id = String(fatGet(c, 'ID', 'id', 'Número do Chamado', 'numero_chamado')).trim();
+        if (!id || existentes.has(id)) continue;
+
+        const interno = fatNorm(fatGet(c, 'Status interno', 'status_interno'));
+        const status = fatNorm(fatGet(c, 'Status', 'status', 'STATUS'));
+        const fechado = interno.includes('fechado') || status.includes('fechar chamado') || status.includes('fechado') || Boolean(fatGet(c, 'Encerrado em', 'data_encerramento_iso'));
+        if (!fechado) continue;
+
+        const servico = String(fatGet(c, 'Serviço', 'Servico', 'servico', 'Tipo de Serviço', 'Categoria') || 'SERVIÇO').trim();
+        const tipo = fatClassificarServico(servico);
+        novos.push({
+            chamado_id: id,
+            origem: 'chamado',
+            servico,
+            relatorio_url: String(fatGet(c, 'Link Relatório', 'link_relatorio', 'Relatório', 'relatorio_url') || ''),
+            loja: String(fatGet(c, 'Loja', 'loja') || '').trim(),
+            fornecedor: String(fatGet(c, 'Prestador', 'prestador', 'Fornecedor', 'fornecedor') || '').trim(),
+            descricao_servico: String(fatGet(c, 'Descrição', 'descricao') || '').trim(),
+            tipo_padrao: tipo,
+            tipo_faturamento: tipo,
+            payload_origem: c
+        });
+    }
+
+    if (novos.length) {
+        const { data: criados, error } = await supabaseClient.from('faturamento_servicos').insert(novos).select('id');
+        if (error) {
+            console.error('Erro ao sincronizar chamados no faturamento:', error);
+            if (mostrarMensagem) alert('Não foi possível sincronizar os chamados. Execute primeiro o SQL do módulo de faturamento.');
+            return;
+        }
+        // A parcela zero é só um marcador de carteira: deixa o chamado visível para ser preparado.
+        // Ao informar o valor e salvar, ela é substituída pela parcela real (ou pelas parcelas futuras).
+        if (criados?.length) {
+            await supabaseClient.from('faturamento_parcelas').insert(criados.map(x => ({
+                servico_id: x.id, numero_parcela: 1, total_parcelas: 1,
+                competencia: `${fatState.mes || fatMonthKey(new Date())}-01`, valor: 0, situacao: 'disponivel'
+            })));
+        }
+        if (mostrarMensagem) alert(`${novos.length} chamado(s) concluído(s) entraram na carteira de faturamento.`);
+    } else if (mostrarMensagem) {
+        alert('Nenhum chamado concluído novo para sincronizar.');
+    }
+}
+
+function fatTrocarMes() {
+    fatState.mes = document.getElementById('fatMesFiltro')?.value || fatMonthKey(new Date());
+    fatRender();
+}
+
+function fatServicoPorId(id) {
+    return fatState.servicos.find(s => s.id === id);
+}
+
+function fatParcelasVisiveis() {
+    const mes = fatState.mes || fatMonthKey(new Date());
+    const tipo = document.getElementById('fatTipoFiltro')?.value || 'TODOS';
+    const busca = fatNorm(document.getElementById('fatBusca')?.value || '');
+    const passado = fatMesEhPassado(mes);
+
+    return fatState.parcelas.filter(p => {
+        const s = fatServicoPorId(p.servico_id);
+        if (!s) return false;
+        const competencia = String(p.competencia || '').slice(0, 7);
+        const lote = p.lote_id ? fatState.lotes.find(l => l.id === p.lote_id) : null;
+        const mesFaturado = lote ? String(lote.competencia || '').slice(0, 7) : '';
+
+        // Mês passado é fotografia: somente o que foi efetivamente faturado nele.
+        if (passado) {
+            if (p.situacao !== 'faturada' || mesFaturado !== mes) return false;
+        } else {
+            // Mês atual/futuro: parcelas vencidas/atuais ainda não faturadas + faturadas no mês.
+            const disponivel = p.situacao !== 'faturada' && p.situacao !== 'cancelada' && competencia <= mes;
+            const faturadaMes = p.situacao === 'faturada' && mesFaturado === mes;
+            if (!disponivel && !faturadaMes) return false;
+        }
+
+        const st = s.tipo_faturamento || s.tipo_padrao || '';
+        if (tipo !== 'TODOS' && st !== tipo) return false;
+        if (busca) {
+            const hay = fatNorm([s.chamado_id, s.loja, s.servico, s.fornecedor, s.descricao_servico].join(' '));
+            if (!hay.includes(busca)) return false;
+        }
+        return true;
+    });
+}
+
+function fatPendenciasServico(s) {
+    const p = [];
+    if (!s.valor_total || Number(s.valor_total) <= 0) p.push('valor');
+    if (!s.descricao_servico) p.push('descrição');
+    if (!s.tipo_faturamento) p.push('MCC/CCL');
+    if (!s.relatorio_url && s.origem === 'chamado') p.push('relatório');
+    if (!s.loja) p.push('loja');
+    return p;
+}
+
+function fatRender() {
+    const tbody = document.getElementById('fatTabelaBody');
+    if (!tbody) return;
+    const rows = fatParcelasVisiveis();
+    const mes = fatState.mes || fatMonthKey(new Date());
+
+    tbody.innerHTML = rows.length ? rows.map(p => {
+        const s = fatServicoPorId(p.servico_id) || {};
+        const pend = fatPendenciasServico(s);
+        const tipo = s.tipo_faturamento || s.tipo_padrao || '--';
+        const status = p.situacao === 'faturada' ? 'Faturado' : (pend.length ? `Pendente: ${pend.join(', ')}` : (String(p.competencia).slice(0,7) > fatMonthKey(new Date()) ? 'Stand-by' : 'Disponível'));
+        return `<tr class="border-t border-black/5 dark:border-white/5 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]">
+            <td class="p-4 font-semibold">${s.chamado_id || 'AVULSO'}</td>
+            <td class="p-4 max-w-[220px]">${s.servico || '--'}</td>
+            <td class="p-4">${s.loja || '--'}</td>
+            <td class="p-4"><span class="px-2 py-1 rounded-full text-[10px] font-bold ${tipo === 'MCC' ? 'bg-blue-500/10 text-blue-600' : 'bg-violet-500/10 text-violet-600'}">${tipo}</span></td>
+            <td class="p-4">${p.numero_parcela}/${p.total_parcelas}<br><span class="opacity-40">${String(p.competencia).slice(0,7)}</span></td>
+            <td class="p-4">${s.relatorio_url ? `<a class="text-blue-600 font-bold" href="${s.relatorio_url}" target="_blank">Abrir ↗</a>` : '<span class="opacity-35">—</span>'}</td>
+            <td class="p-4">${s.fornecedor || '--'}</td>
+            <td class="p-4 text-right font-semibold">${fatMoney(p.valor)}</td>
+            <td class="p-4"><span class="text-[10px] font-semibold ${p.situacao === 'faturada' ? 'text-emerald-600' : pend.length ? 'text-amber-600' : ''}">${status}</span></td>
+            <td class="p-4 text-right"><button onclick="fatEditarServico('${s.id}')" class="px-3 py-2 rounded-xl bg-black/5 dark:bg-white/5 font-bold">Editar</button></td>
+        </tr>`;
+    }).join('') : `<tr><td colspan="10" class="p-10 text-center opacity-40">Nenhum item para ${fatNomeMes(mes)}.</td></tr>`;
+
+    fatRenderKPIs();
+    fatRenderLotes();
+}
+
+function fatRenderKPIs() {
+    const mes = fatState.mes || fatMonthKey(new Date());
+    const lotesMes = fatState.lotes.filter(l => String(l.competencia).slice(0,7) === mes && l.status === 'fechado');
+    const mcc = lotesMes.filter(l => l.tipo === 'MCC').reduce((a,l)=>a+Number(l.total_selecionado||0),0);
+    const ccl = lotesMes.filter(l => l.tipo === 'CCL').reduce((a,l)=>a+Number(l.total_selecionado||0),0);
+    const disponiveis = fatState.parcelas.filter(p => {
+        if (p.situacao === 'faturada' || p.situacao === 'cancelada') return false;
+        if (String(p.competencia).slice(0,7) > mes) return false;
+        const s = fatServicoPorId(p.servico_id);
+        return s && !fatPendenciasServico(s).length;
+    });
+    const disp = disponiveis.reduce((a,p)=>a+Number(p.valor||0),0);
+    const pend = fatState.servicos.filter(s => fatPendenciasServico(s).length).length;
+
+    const set = (id, value) => { const el=document.getElementById(id); if(el) el.textContent=value; };
+    set('fatKpiDisponivel', fatMoney(disp)); set('fatKpiMcc', fatMoney(mcc)); set('fatKpiCcl', fatMoney(ccl)); set('fatKpiTotal', fatMoney(mcc+ccl)); set('fatKpiPendencias', String(pend));
+    set('fatResumoMes', `${fatNomeMes(mes)} · ${fatParcelasVisiveis().length} item(ns) exibido(s)`);
+}
+
+function fatRenderLotes() {
+    const box = document.getElementById('fatLotesLista');
+    if (!box) return;
+    const mes = fatState.mes || fatMonthKey(new Date());
+    const lotes = fatState.lotes.filter(l => String(l.competencia).slice(0,7) === mes && l.status !== 'cancelado');
+    box.innerHTML = lotes.length ? lotes.map(l => `
+      <div class="rounded-2xl border border-black/10 dark:border-white/10 p-4">
+        <div class="flex items-start justify-between gap-3"><div><span class="text-[10px] font-bold px-2 py-1 rounded-full bg-black/5 dark:bg-white/5">${l.tipo}</span><p class="font-semibold mt-3">${fatMoney(l.total_selecionado)}</p><p class="text-[10px] opacity-45 mt-1">Verba ${fatMoney(l.verba)} · ${new Date(l.criado_em).toLocaleString('pt-BR')}</p></div>
+        <div class="flex gap-1"><button onclick="fatCopiarEmail('${l.id}')" class="px-3 py-2 rounded-xl bg-blue-500/10 text-blue-600 text-[10px] font-bold">Copiar e-mail</button><button onclick="fatExportarLote('${l.id}')" class="px-3 py-2 rounded-xl bg-emerald-500/10 text-emerald-600 text-[10px] font-bold">Excel</button></div></div>
+      </div>`).join('') : '<p class="col-span-full p-5 text-sm opacity-40">Nenhum lote fechado neste mês.</p>';
+}
+
+function fatNovoAvulso() {
+    fatAbrirServicoModal({ origem: 'avulso', tipo_faturamento: 'CCL', tipo_padrao: 'CCL', loja: '', servico: '' });
+}
+
+function fatEditarServico(id) {
+    const s = fatServicoPorId(id);
+    if (s) fatAbrirServicoModal(s);
+}
+
+function fatAbrirServicoModal(s) {
+    const set = (id,v='') => { const e=document.getElementById(id); if(e)e.value=v ?? ''; };
+    set('fatServicoId', s.id || ''); set('fatCampoChamado', s.chamado_id || ''); set('fatCampoLoja', s.loja || ''); set('fatCampoServico', s.servico || '');
+    set('fatCampoTipo', s.tipo_faturamento || s.tipo_padrao || 'CCL'); set('fatCampoFornecedor', s.fornecedor || ''); set('fatCampoCnpj', s.cnpj || ''); set('fatCampoCod', s.cod || '');
+    set('fatCampoValor', s.valor_total || ''); set('fatCampoMaterial', s.valor_material || 0); set('fatCampoNf', s.nf || ''); set('fatCampoConta', s.conta_contabil || ''); set('fatCampoStatus', s.status_faturamento || ''); set('fatCampoRelatorio', s.relatorio_url || ''); set('fatCampoDescricao', s.descricao_servico || '');
+    const cb=document.getElementById('fatCampoParcelado'); if(cb) cb.checked=Boolean(s.parcelado);
+    set('fatCampoQtdParcelas', s.qtd_parcelas || 2);
+    set('fatCampoPrimeiraCompetencia', fatState.mes || fatMonthKey(new Date()));
+    fatAlternarParcelamento();
+    const title=document.getElementById('fatServicoTitulo'); if(title) title.textContent=s.id ? `Preparar ${s.chamado_id ? 'chamado #'+s.chamado_id : 'serviço avulso'}` : 'Novo serviço';
+    document.getElementById('fatServicoModal')?.classList.remove('hidden');
+}
+
+function fatFecharServicoModal() { document.getElementById('fatServicoModal')?.classList.add('hidden'); }
+function fatAlternarParcelamento() { document.getElementById('fatParcelamentoBox')?.classList.toggle('hidden', !document.getElementById('fatCampoParcelado')?.checked); }
+
+async function fatSalvarServico() {
+    const get = id => document.getElementById(id)?.value?.trim() || '';
+    const id = get('fatServicoId');
+    const valor = Number(get('fatCampoValor') || 0);
+    const parcelado = Boolean(document.getElementById('fatCampoParcelado')?.checked);
+    const qtd = parcelado ? Math.max(2, Number(get('fatCampoQtdParcelas') || 2)) : 1;
+    const competenciaInicial = get('fatCampoPrimeiraCompetencia') || fatState.mes || fatMonthKey(new Date());
+    const servicoNome = get('fatCampoServico');
+    const autoTipo = fatClassificarServico(servicoNome);
+    const tipoEscolhido = get('fatCampoTipo') || autoTipo || 'CCL';
+
+    if (!get('fatCampoLoja') || !servicoNome) return alert('Informe Loja e Serviço.');
+    if (valor <= 0) return alert('Informe o valor total do serviço.');
+
+    const payload = {
+        chamado_id: get('fatCampoChamado') || null,
+        origem: get('fatCampoChamado') ? 'chamado' : 'avulso',
+        loja: get('fatCampoLoja'), servico: servicoNome, relatorio_url: get('fatCampoRelatorio') || null,
+        tipo_padrao: autoTipo || tipoEscolhido, tipo_faturamento: tipoEscolhido,
+        classificacao_manual: Boolean(autoTipo && autoTipo !== tipoEscolhido),
+        fornecedor: get('fatCampoFornecedor') || null, cnpj: get('fatCampoCnpj') || null, cod: get('fatCampoCod') || null,
+        valor_total: valor, valor_material: Number(get('fatCampoMaterial') || 0), descricao_servico: get('fatCampoDescricao') || null,
+        nf: get('fatCampoNf') || null, conta_contabil: get('fatCampoConta') || null, status_faturamento: get('fatCampoStatus') || null,
+        parcelado, qtd_parcelas: qtd
+    };
+
+    let servicoId = id;
+    if (id) {
+        const { error } = await supabaseClient.from('faturamento_servicos').update(payload).eq('id', id);
+        if (error) return alert(`Erro ao salvar serviço: ${error.message}`);
+    } else {
+        const { data, error } = await supabaseClient.from('faturamento_servicos').insert([payload]).select('id').single();
+        if (error) return alert(`Erro ao criar serviço: ${error.message}`);
+        servicoId = data.id;
+    }
+
+    const existentes = fatState.parcelas.filter(p => p.servico_id === servicoId);
+    if (existentes.some(p => p.situacao === 'faturada')) {
+        // Não reestrutura parcelas já faturadas.
+        if (!existentes.length) return;
+    } else {
+        await supabaseClient.from('faturamento_parcelas').delete().eq('servico_id', servicoId);
+        const base = Math.floor((valor / qtd) * 100) / 100;
+        const parcelas = [];
+        let acumulado = 0;
+        for (let i = 0; i < qtd; i++) {
+            const v = i === qtd - 1 ? Number((valor - acumulado).toFixed(2)) : base;
+            acumulado += v;
+            const comp = fatAddMonths(competenciaInicial, i);
+            parcelas.push({ servico_id: servicoId, numero_parcela: i+1, total_parcelas: qtd, competencia: `${comp}-01`, valor: v, situacao: comp <= fatMonthKey(new Date()) ? 'disponivel' : 'standby' });
+        }
+        const { error } = await supabaseClient.from('faturamento_parcelas').insert(parcelas);
+        if (error) return alert(`Serviço salvo, mas houve erro ao criar parcelas: ${error.message}`);
+    }
+
+    await supabaseClient.from('faturamento_historico').insert([{ servico_id: servicoId, evento: id ? 'servico_atualizado' : 'servico_criado', detalhes: { parcelado, qtd, competenciaInicial }, autor: 'AREISPRO' }]);
+    fatFecharServicoModal();
+    await fatCarregarTudo();
+    fatRender();
+}
+
+function fatAbrirNovoLote() {
+    const mes = fatState.mes || fatMonthKey(new Date());
+    if (fatMesEhPassado(mes)) return alert('Para segurança, novos lotes só podem ser criados no mês atual ou futuro.');
+    fatState.loteSelecao.clear();
+    const comp=document.getElementById('fatLoteCompetencia'); if(comp) comp.value=mes;
+    const verba=document.getElementById('fatLoteVerba'); if(verba) verba.value='';
+    const tipoFiltro=document.getElementById('fatTipoFiltro')?.value; const tipo=document.getElementById('fatLoteTipo'); if(tipo && ['MCC','CCL'].includes(tipoFiltro)) tipo.value=tipoFiltro;
+    fatRenderSelecionaveis(); fatAtualizarResumoLote();
+    document.getElementById('fatLoteModal')?.classList.remove('hidden');
+}
+
+function fatFecharLoteModal(){ document.getElementById('fatLoteModal')?.classList.add('hidden'); fatState.loteSelecao.clear(); }
+
+function fatParcelasElegiveis(tipo, mes) {
+    return fatState.parcelas.filter(p => {
+        if (p.situacao === 'faturada' || p.situacao === 'cancelada') return false;
+        if (String(p.competencia).slice(0,7) > mes) return false;
+        const s = fatServicoPorId(p.servico_id);
+        return s && (s.tipo_faturamento || s.tipo_padrao) === tipo && !fatPendenciasServico(s).length;
+    });
+}
+
+function fatRenderSelecionaveis() {
+    const tipo=document.getElementById('fatLoteTipo')?.value || 'MCC';
+    const mes=document.getElementById('fatLoteCompetencia')?.value || fatState.mes || fatMonthKey(new Date());
+    const box=document.getElementById('fatSelecionaveis'); if(!box)return;
+    const itens=fatParcelasElegiveis(tipo,mes);
+    box.innerHTML=itens.length?itens.map(p=>{const s=fatServicoPorId(p.servico_id)||{};return `<label class="flex items-center gap-3 p-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] cursor-pointer"><input type="checkbox" data-fat-parcela="${p.id}" onchange="fatToggleParcela('${p.id}', this.checked)" ${fatState.loteSelecao.has(p.id)?'checked':''}><div class="flex-1 min-w-0"><p class="text-xs font-semibold">${s.chamado_id || 'AVULSO'} · Loja ${s.loja} · ${s.servico}</p><p class="text-[10px] opacity-45 mt-1">Parcela ${p.numero_parcela}/${p.total_parcelas} · ${s.fornecedor || 'Fornecedor não informado'}</p></div><strong class="text-xs">${fatMoney(p.valor)}</strong></label>`}).join(''):'<p class="p-8 text-center text-xs opacity-40">Nenhum serviço pronto para este tipo/competência.</p>';
+    fatAtualizarResumoLote();
+}
+
+function fatToggleParcela(id, checked) {
+    const verba=Number(document.getElementById('fatLoteVerba')?.value || 0);
+    if (checked) {
+        const p=fatState.parcelas.find(x=>x.id===id);
+        const atual=[...fatState.loteSelecao].reduce((a,pid)=>a+Number(fatState.parcelas.find(x=>x.id===pid)?.valor||0),0);
+        if (verba > 0 && atual + Number(p?.valor||0) > verba + 0.0001) {
+            document.querySelector(`[data-fat-parcela="${id}"]`).checked=false;
+            alert(`Este serviço ultrapassa a verba em ${fatMoney(atual + Number(p?.valor||0) - verba)}.`);
+            return;
+        }
+        fatState.loteSelecao.add(id);
+    } else fatState.loteSelecao.delete(id);
+    fatAtualizarResumoLote();
+}
+
+function fatAtualizarResumoLote() {
+    const verba=Number(document.getElementById('fatLoteVerba')?.value || 0);
+    const total=[...fatState.loteSelecao].reduce((a,id)=>a+Number(fatState.parcelas.find(p=>p.id===id)?.valor||0),0);
+    const dif=verba-total;
+    const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+    set('fatResumoVerba',fatMoney(verba)); set('fatResumoSelecionado',fatMoney(total)); set('fatResumoDiferenca',fatMoney(dif)); set('fatLoteContador',`${fatState.loteSelecao.size} selecionado(s)`);
+    const aviso=document.getElementById('fatLoteAviso');
+    if(aviso){
+        if(!verba) aviso.textContent='Digite o valor da verba para validar o fechamento.';
+        else if(total < verba) aviso.textContent=`Atenção: ainda faltam ${fatMoney(verba-total)} para atingir a verba.`;
+        else if(Math.abs(total-verba)<0.005) aviso.textContent='Verba fechada ✓';
+        else aviso.textContent='Valor acima da verba — remova itens.';
+    }
+}
+
+async function fatConfirmarLote() {
+    const tipo=document.getElementById('fatLoteTipo')?.value || 'MCC';
+    const competencia=document.getElementById('fatLoteCompetencia')?.value || fatState.mes;
+    const verba=Number(document.getElementById('fatLoteVerba')?.value || 0);
+    const parcelas=[...fatState.loteSelecao].map(id=>fatState.parcelas.find(p=>p.id===id)).filter(Boolean);
+    const total=parcelas.reduce((a,p)=>a+Number(p.valor||0),0);
+    if(verba<=0) return alert('Digite o valor da verba.');
+    if(!parcelas.length) return alert('Selecione pelo menos um serviço.');
+    if(total>verba+0.0001) return alert('O total selecionado ultrapassa a verba.');
+    if(total<verba && !confirm(`O lote ficará ${fatMoney(verba-total)} abaixo da verba. Deseja faturar mesmo assim?`)) return;
+
+    const {data:lote,error:loteError}=await supabaseClient.from('faturamento_lotes').insert([{tipo,competencia:`${competencia}-01`,verba,total_selecionado:total,status:'fechado',criado_por:'AREISPRO',fechado_em:new Date().toISOString()}]).select('*').single();
+    if(loteError) return alert(`Erro ao criar lote: ${loteError.message}`);
+
+    const itens=parcelas.map(p=>{const s=fatServicoPorId(p.servico_id)||{};return {lote_id:lote.id,parcela_id:p.id,servico_id:p.servico_id,valor:Number(p.valor||0),snapshot:{...s,parcela:{...p},tipo_faturado:tipo,competencia_faturamento:competencia}}});
+    const {error:itemError}=await supabaseClient.from('faturamento_lote_itens').insert(itens);
+    if(itemError) return alert(`Lote criado, mas erro ao registrar itens: ${itemError.message}`);
+
+    const ids=parcelas.map(p=>p.id);
+    const {error:parcError}=await supabaseClient.from('faturamento_parcelas').update({situacao:'faturada',lote_id:lote.id,faturado_em:new Date().toISOString()}).in('id',ids);
+    if(parcError) return alert(`Itens registrados, mas erro ao fechar parcelas: ${parcError.message}`);
+
+    await supabaseClient.from('faturamento_historico').insert(parcelas.map(p=>({servico_id:p.servico_id,lote_id:lote.id,evento:'parcela_faturada',detalhes:{parcela_id:p.id,valor:p.valor,tipo,competencia},autor:'AREISPRO'})));
+    fatFecharLoteModal();
+    await fatCarregarTudo(); fatRender();
+    if(confirm('Faturamento confirmado. Deseja copiar o corpo do e-mail agora?')) fatCopiarEmail(lote.id);
+}
+
+function fatItensDoLote(loteId) {
+    return fatState.itensLote.filter(i=>i.lote_id===loteId);
+}
+
+function fatLojaCadastro(codigo) {
+    const c=String(codigo||'').trim();
+    const endereco = (fatState.lojas||[]).find(l=>String(l.LOJA ?? l.loja ?? '').trim()===c) || {};
+    const base = (db?.lojas||[]).find(l=>String(l.LOJA ?? l.loja ?? '').trim()===c) || {};
+    return {...base, ...endereco};
+}
+
+function fatLinhasSnapshot(itens) {
+    return itens.map(i=>{
+        const snap=i.snapshot||{};
+        const p=snap.parcela||{};
+        return {
+            ID:snap.chamado_id||'', SERVIÇOS:snap.servico||'', RELATÓRIO:snap.relatorio_url||'', COD:snap.cod||'', CNPJ:snap.cnpj||'', FORNECEDOR:snap.fornecedor||'', LOJA:snap.loja||'',
+            'VALOR R$':Number(i.valor||p.valor||0), 'VALOR MATERIAL':Number(snap.valor_material||0), 'DESCRIÇÕES DE SERVIÇOS':snap.descricao_servico||'', NF:snap.nf||'', 'CONTA CONTÁBIL':snap.conta_contabil||'', STATUS:snap.status_faturamento||''
+        };
+    });
+}
+
+async function fatCopiarEmail(loteId) {
+    const lote=fatState.lotes.find(l=>l.id===loteId); const itens=fatItensDoLote(loteId); if(!lote||!itens.length)return alert('Lote sem itens.');
+    const linhas=fatLinhasSnapshot(itens);
+    const lojas=[...new Set(linhas.map(x=>String(x.LOJA)).filter(Boolean))].map(codigo=>fatLojaCadastro(codigo));
+
+    const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    const intro=`Prezados,<br><br>Segue abaixo relação de serviços para faturamento <b>${lote.tipo}</b> referente a <b>${fatNomeMes(String(lote.competencia).slice(0,7))}</b>.<br><br>`;
+    const tabela=`<table style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:12px"><thead><tr>${['CNPJ','FORNECEDOR','LOJA','VALOR R$','DESCRIÇÕES DE SERVIÇOS','NF'].map(h=>`<th style="border:1px solid #999;padding:6px;background:#eee">${h}</th>`).join('')}</tr></thead><tbody>${linhas.map(r=>`<tr><td style="border:1px solid #999;padding:6px">${esc(r.CNPJ)}</td><td style="border:1px solid #999;padding:6px">${esc(r.FORNECEDOR)}</td><td style="border:1px solid #999;padding:6px">${esc(r.LOJA)}</td><td style="border:1px solid #999;padding:6px">${esc(fatMoney(r['VALOR R$']))}</td><td style="border:1px solid #999;padding:6px">${esc(r['DESCRIÇÕES DE SERVIÇOS'])}</td><td style="border:1px solid #999;padding:6px">${esc(r.NF)}</td></tr>`).join('')}</tbody></table>`;
+    const dados=`<br><br><b>Dados para faturamento</b><br><br><table style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:12px"><thead><tr>${['LOJA','UF','CNPJ AMERICANAS','LOGRADOURO','MUNICÍPIO','CEP'].map(h=>`<th style="border:1px solid #999;padding:6px;background:#eee">${h}</th>`).join('')}</tr></thead><tbody>${lojas.map(l=>`<tr><td style="border:1px solid #999;padding:6px">${esc(l.LOJA??l.loja??'')}</td><td style="border:1px solid #999;padding:6px">${esc(l.UF??l.uf??'')}</td><td style="border:1px solid #999;padding:6px">${esc(l.CNPJ??l.cnpj??l['CNPJ AMERICANAS']??'')}</td><td style="border:1px solid #999;padding:6px">${esc(l.LOGRADOURO??l.logradouro??l['ENDEREÇO']??l.ENDERECO??l.endereco??'')}</td><td style="border:1px solid #999;padding:6px">${esc(l.MUNICIPIO??l.municipio??l.CIDADE??l.cidade??'')}</td><td style="border:1px solid #999;padding:6px">${esc(l.CEP??l.cep??'')}</td></tr>`).join('')}</tbody></table>`;
+    const html=intro+tabela+dados;
+    const texto=`Prezados,\n\nSegue relação de serviços para faturamento ${lote.tipo} - ${fatNomeMes(String(lote.competencia).slice(0,7))}.\n\n`+linhas.map(r=>`${r.LOJA}\t${fatMoney(r['VALOR R$'])}\t${r['DESCRIÇÕES DE SERVIÇOS']}`).join('\n');
+    try {
+        if (navigator.clipboard && window.ClipboardItem) {
+            await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([texto],{type:'text/plain'})})]);
+        } else await navigator.clipboard.writeText(texto);
+        alert('Corpo do e-mail copiado. É só colar no Gmail ou Outlook.');
+    } catch(e) { console.error(e); alert('Não foi possível copiar automaticamente. Verifique a permissão da área de transferência.'); }
+}
+
+function fatCriarSheet(rows) {
+    const headers=['ID','SERVIÇOS','RELATÓRIO','COD','CNPJ','FORNECEDOR','LOJA','VALOR R$','VALOR MATERIAL','DESCRIÇÕES DE SERVIÇOS','NF','CONTA CONTÁBIL','STATUS'];
+    const ws=XLSX.utils.json_to_sheet(rows,{header:headers});
+    ws['!cols']=[{wch:14},{wch:24},{wch:36},{wch:12},{wch:20},{wch:18},{wch:10},{wch:14},{wch:16},{wch:50},{wch:16},{wch:20},{wch:30}];
+    for(let r=2;r<=rows.length+1;r++){ if(ws[`H${r}`])ws[`H${r}`].z='R$ #,##0.00'; if(ws[`I${r}`])ws[`I${r}`].z='R$ #,##0.00'; }
+    return ws;
+}
+
+function fatExportarLote(loteId) {
+    const lote=fatState.lotes.find(l=>l.id===loteId); const rows=fatLinhasSnapshot(fatItensDoLote(loteId)); if(!lote||!rows.length)return alert('Lote sem itens.');
+    const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,fatCriarSheet(rows),`${lote.tipo} ${String(lote.competencia).slice(0,7)}`.slice(0,31));
+    XLSX.writeFile(wb,`AREISPRO_FATURAMENTO_${lote.tipo}_${String(lote.competencia).slice(0,7)}.xlsx`);
+}
+
+function fatExportarMes() {
+    const mes=fatState.mes||fatMonthKey(new Date());
+    const lotes=fatState.lotes.filter(l=>String(l.competencia).slice(0,7)===mes&&l.status==='fechado');
+    const itens=lotes.flatMap(l=>fatItensDoLote(l.id));
+    const rows=fatLinhasSnapshot(itens);
+    const mcc=rows.filter((r,idx)=>{const snap=itens[idx]?.snapshot||{};return (snap.tipo_faturado||snap.tipo_faturamento||snap.tipo_padrao)==='MCC'});
+    const ccl=rows.filter((r,idx)=>{const snap=itens[idx]?.snapshot||{};return (snap.tipo_faturado||snap.tipo_faturamento||snap.tipo_padrao)==='CCL'});
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,fatCriarSheet(mcc),`MCC ${mes}`.slice(0,31));
+    XLSX.utils.book_append_sheet(wb,fatCriarSheet(ccl),`CCL ${mes}`.slice(0,31));
+    XLSX.writeFile(wb,`AREISPRO_FATURAMENTO_COMPLETO_${mes}.xlsx`);
+}
+

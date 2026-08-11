@@ -150,3 +150,16 @@
     color: #ffffff;
     box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
 }
+/* Faturamento */
+.fat-input {
+    display:block;
+    width:100%;
+    margin-top:.4rem;
+    padding:.75rem .9rem;
+    border-radius:1rem;
+    background:rgba(0,0,0,.045);
+    border:1px solid rgba(0,0,0,.08);
+    outline:none;
+}
+.dark .fat-input { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.10); }
+.fat-input:focus { border-color:rgba(59,130,246,.65); }
