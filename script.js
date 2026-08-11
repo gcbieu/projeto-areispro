@@ -3331,7 +3331,7 @@ async function encerrarChamadoAtivo() {
             .from('chamados_comentarios')
             .insert([{
                 chamado_id: idAtivo,
-                autor: 'Gabriel',
+                autor: 'ADM',
                 texto: 'Status alterado para "Fechar Chamado".'
             }]);
     } catch (err) {
