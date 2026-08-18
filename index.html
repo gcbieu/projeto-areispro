@@ -115,7 +115,7 @@
                     <span class="module-link">Acessar →</span>
                 </button>
 
-                                <!-- ORDENS DE SERVIÇO -->
+                <!-- ORDENS DE SERVIÇO -->
                 <button onclick="navigate('os')" class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
 
                     <div class="module-icon">OS</div>
@@ -155,8 +155,9 @@
                     <span class="module-link">Acessar →</span>
                 </button>
 
-                                <!-- FATURAMENTO -->
-                <button onclick="navigate('faturamento')" class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
+                <!-- FATURAMENTO -->
+                <button onclick="navigate('faturamento')"
+                    class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
                     <div class="module-icon">F</div>
                     <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mt-8">Financeiro</p>
                     <h3 class="text-2xl font-semibold mt-3">Faturamento</h3>
@@ -411,18 +412,31 @@
 
                 </div>
 
-
                 <!-- CLASSIFICAÇÃO -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
 
+                <div class="
+    grid
+    grid-cols-1
+    md:grid-cols-2
+    xl:grid-cols-4
+    gap-4
+    mb-8
+">
+
+                    <!-- TIPO DE MANUTENÇÃO -->
                     <div>
 
                         <label class="text-xs font-semibold opacity-60">
                             Tipo de manutenção
                         </label>
 
-                        <select id="osTipo"
-                            class="w-full mt-2 px-4 py-4 rounded-2xl bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10">
+                        <select id="osTipo" class="
+                w-full mt-2
+                px-4 py-4
+                rounded-2xl
+                bg-white dark:bg-zinc-900
+                border border-black/10 dark:border-white/10
+            ">
 
                             <option value="">Selecione</option>
                             <option value="Preventiva">Preventiva</option>
@@ -436,61 +450,44 @@
                     </div>
 
 
+                    <!-- SERVIÇO -->
                     <div>
 
                         <label class="text-xs font-semibold opacity-60">
                             Serviço
                         </label>
 
-                        <select id="osServico" onchange="osFiltrarPrestadoresPorServico()"
-                            class="w-full mt-2 px-4 py-4 rounded-2xl bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10">
+                        <select id="osServico" onchange="osFiltrarPrestadoresPorServico()" class="
+                w-full mt-2
+                px-4 py-4
+                rounded-2xl
+                bg-white dark:bg-zinc-900
+                border border-black/10 dark:border-white/10
+            ">
 
-                            <option value="">Selecione o serviço</option>
-
-                            <option value="AR CONDICIONADO">Ar Condicionado</option>
-                            <option value="CONSTRUÇÃO CIVIL">Construção Civil</option>
-                            <option value="INSTALAÇÃO PREDIAL">Instalação Predial</option>
-                            <option value="INSTALAÇÃO ELÉTRICA">Instalação Elétrica</option>
-                            <option value="CONTROLE DE PRAGAS">Controle de Pragas</option>
-                            <option value="LIMPEZA HIGIENIZAÇÃO DE RESERVATÓRIOS">
-                                Limpeza / Higienização de Reservatórios
+                            <option value="">
+                                Carregando serviços...
                             </option>
-                            <option value="ANALISE QUALIDADE DA ÁGUA">
-                                Análise da Qualidade da Água
-                            </option>
-                            <option value="ANALISE E QUALIDADE DO AR INTERIOR">
-                                Qualidade do Ar Interior
-                            </option>
-                            <option value="ELEVADOR">Elevador</option>
-                            <option value="ESCADA ROLANTE">Escada Rolante</option>
-                            <option value="NO BREAK">No Break</option>
-                            <option value="BEBEDOURO">Bebedouro</option>
-                            <option value="EQUIPAMENTOS DE REFRIGERACAO">
-                                Equipamentos de Refrigeração
-                            </option>
-                            <option value="MATERIAIS ELÉTRICOS">
-                                Materiais Elétricos
-                            </option>
-                            <option value="MATERIAIS HIDRÁULICOS">
-                                Materiais Hidráulicos
-                            </option>
-                            <option value="SOM">Som</option>
-                            <option value="PREDIAL">Predial</option>
-                            <option value="SUBESTAÇÃO">Subestação</option>
-                            <option value="GERADOR">Gerador</option>
 
                         </select>
+
                     </div>
 
 
+                    <!-- PRIORIDADE -->
                     <div>
 
                         <label class="text-xs font-semibold opacity-60">
                             Prioridade
                         </label>
 
-                        <select id="osPrioridade"
-                            class="w-full mt-2 px-4 py-4 rounded-2xl bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10">
+                        <select id="osPrioridade" class="
+                w-full mt-2
+                px-4 py-4
+                rounded-2xl
+                bg-white dark:bg-zinc-900
+                border border-black/10 dark:border-white/10
+            ">
 
                             <option value="">Selecione</option>
                             <option>Baixa</option>
@@ -502,302 +499,351 @@
 
                     </div>
 
+
+                    <!-- PRESTADOR -->
+                    <div>
+
+                        <label class="text-xs font-semibold opacity-60">
+                            Prestador
+                        </label>
+
+                        <select id="osPrestador" class="
+                w-full mt-2
+                px-4 py-4
+                rounded-2xl
+                bg-white dark:bg-zinc-900
+                border border-black/10 dark:border-white/10
+            ">
+
+                            <option value="">
+                                Selecione primeiro o serviço
+                            </option>
+
+                        </select>
+
+                        <p id="osPrestadorAjuda" class="text-[9px] opacity-40 mt-2">
+                            Filtrado pelo serviço.
+                        </p>
+
+                    </div>
+
                 </div>
 
 
                 <!-- ESCOLHA DE FLUXO -->
 
-                <p class="text-[10px] uppercase font-bold tracking-[0.25em] opacity-40 mb-4">
-                    Como deseja utilizar esta OS?
-                </p>
+                <div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                    <button onclick="osIniciarExecucaoInterna()"
-                        class="p-6 rounded-[24px] text-left border border-black/10 dark:border-white/10 hover:border-blue-500 transition-all">
-
-                        <p class="text-lg font-semibold">
-                            Executar OS
-                        </p>
-
-                        <p class="text-xs opacity-50 mt-2">
-                            Realizar inspeção, execução, materiais, evidências
-                            e encerramento pelo próprio sistema.
-                        </p>
-
-                    </button>
+                    <p class="
+        text-[10px]
+        uppercase
+        font-bold
+        tracking-[0.25em]
+        opacity-40
+        mb-4
+    ">
+                        Como deseja utilizar esta OS?
+                    </p>
 
 
-                    <button onclick="osGerarParaEnvio()"
-                        class="p-6 rounded-[24px] text-left border border-black/10 dark:border-white/10 hover:border-blue-500 transition-all">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                        <p class="text-lg font-semibold">
-                            Gerar OS para envio
-                        </p>
+                        <button onclick="osIniciarExecucaoInterna()" class="
+                p-6
+                rounded-[24px]
+                text-left
+                border
+                border-black/10 dark:border-white/10
+                hover:border-blue-500
+                transition-all
+            ">
 
-                        <p class="text-xs opacity-50 mt-2">
-                            Gerar um PDF parcialmente preenchido para envio
-                            a um prestador ou responsável externo.
-                        </p>
+                            <p class="text-lg font-semibold">
+                                Executar OS
+                            </p>
 
-                    </button>
+                            <p class="text-xs opacity-50 mt-2">
+                                Realizar inspeção, execução, materiais, evidências
+                                e encerramento pelo próprio sistema.
+                            </p>
+
+                        </button>
+
+
+                        <button onclick="osGerarParaEnvio()" class="
+                p-6
+                rounded-[24px]
+                text-left
+                border
+                border-black/10 dark:border-white/10
+                hover:border-blue-500
+                transition-all
+            ">
+
+                            <p class="text-lg font-semibold">
+                                Gerar OS para envio
+                            </p>
+
+                            <p class="text-xs opacity-50 mt-2">
+                                Gerar um PDF parcialmente preenchido para envio
+                                a um prestador ou responsável externo.
+                            </p>
+
+                        </button>
+
+                    </div>
 
                 </div>
-
-            </div>
-
-
-
-            <!-- =====================================================================================
+                <!-- =====================================================================================
                                   EXECUÇÃO DA OS NO AREIS
     ====================================================================================== -->
 
-            <div id="osExecucaoArea" class="hidden mt-6 glass rounded-[32px] p-6 md:p-8">
+                <div id="osExecucaoArea" class="hidden mt-6 glass rounded-[32px] p-6 md:p-8">
 
 
-                <!-- INDICADOR DE ETAPAS -->
+                    <!-- INDICADOR DE ETAPAS -->
 
-                <div class="overflow-x-auto mb-8">
+                    <div class="overflow-x-auto mb-8">
 
-                    <div class="flex min-w-[700px] gap-2">
+                        <div class="flex min-w-[700px] gap-2">
 
-                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-blue-600 text-white text-xs"
-                            data-step="1">
-                            1. Identificação
-                        </button>
+                            <button class="os-step-indicator flex-1 p-3 rounded-xl bg-blue-600 text-white text-xs"
+                                data-step="1">
+                                1. Identificação
+                            </button>
 
-                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
-                            data-step="2">
-                            2. Inspeção
-                        </button>
+                            <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
+                                data-step="2">
+                                2. Inspeção
+                            </button>
 
-                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
-                            data-step="3">
-                            3. Execução
-                        </button>
+                            <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
+                                data-step="3">
+                                3. Execução
+                            </button>
 
-                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
-                            data-step="4">
-                            4. Materiais
-                        </button>
+                            <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
+                                data-step="4">
+                                4. Materiais
+                            </button>
 
-                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
-                            data-step="5">
-                            5. Evidências
-                        </button>
+                            <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
+                                data-step="5">
+                                5. Evidências
+                            </button>
 
-                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
-                            data-step="6">
-                            6. Encerramento
-                        </button>
+                            <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
+                                data-step="6">
+                                6. Encerramento
+                            </button>
+
+                        </div>
 
                     </div>
 
-                </div>
 
 
+                    <!-- ETAPA 1 -->
 
-                <!-- ETAPA 1 -->
+                    <div class="os-etapa" data-etapa="1">
 
-                <div class="os-etapa" data-etapa="1">
-
-                    <h3 class="text-xl font-semibold mb-5">
-                        Identificação e diagnóstico
-                    </h3>
-
-                    <label class="text-xs opacity-60">
-                        Diagnóstico inicial
-                    </label>
-
-                    <textarea id="osDiagnostico"
-                        class="w-full mt-2 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[140px]"
-                        placeholder="Informe a condição encontrada no local..."></textarea>
-
-                </div>
-
-
-
-                <!-- ETAPA 2 -->
-
-                <div class="os-etapa hidden" data-etapa="2">
-
-                    <h3 class="text-xl font-semibold mb-5">
-                        Checklist de inspeção
-                    </h3>
-
-                    <div id="osChecklist" class="space-y-3">
-                    </div>
-
-                </div>
-
-
-
-                <!-- ETAPA 3 -->
-
-                <div class="os-etapa hidden" data-etapa="3">
-
-                    <h3 class="text-xl font-semibold mb-5">
-                        Execução
-                    </h3>
-
-                    <label class="text-xs opacity-60">
-                        Serviço a executar
-                    </label>
-
-                    <textarea id="osServicoExecutar"
-                        class="w-full mt-2 mb-5 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[100px]"></textarea>
-
-
-                    <label class="text-xs opacity-60">
-                        Serviço executado
-                    </label>
-
-                    <textarea id="osServicoExecutado"
-                        class="w-full mt-2 mb-5 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[120px]"></textarea>
-
-
-                    <label class="text-xs opacity-60">
-                        Pendências
-                    </label>
-
-                    <textarea id="osPendencias"
-                        class="w-full mt-2 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[100px]"></textarea>
-
-                </div>
-
-
-
-                <!-- ETAPA 4 -->
-
-                <div class="os-etapa hidden" data-etapa="4">
-
-                    <div class="flex justify-between items-center mb-5">
-
-                        <h3 class="text-xl font-semibold">
-                            Materiais utilizados
+                        <h3 class="text-xl font-semibold mb-5">
+                            Identificação e diagnóstico
                         </h3>
 
-                        <button onclick="osAdicionarMaterial()"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold">
-                            + Adicionar
+                        <label class="text-xs opacity-60">
+                            Diagnóstico inicial
+                        </label>
+
+                        <textarea id="osDiagnostico"
+                            class="w-full mt-2 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[140px]"
+                            placeholder="Informe a condição encontrada no local..."></textarea>
+
+                    </div>
+
+
+
+                    <!-- ETAPA 2 -->
+
+                    <div class="os-etapa hidden" data-etapa="2">
+
+                        <h3 class="text-xl font-semibold mb-5">
+                            Checklist de inspeção
+                        </h3>
+
+                        <div id="osChecklist" class="space-y-3">
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ETAPA 3 -->
+
+                    <div class="os-etapa hidden" data-etapa="3">
+
+                        <h3 class="text-xl font-semibold mb-5">
+                            Execução
+                        </h3>
+
+                        <label class="text-xs opacity-60">
+                            Serviço a executar
+                        </label>
+
+                        <textarea id="osServicoExecutar"
+                            class="w-full mt-2 mb-5 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[100px]"></textarea>
+
+
+                        <label class="text-xs opacity-60">
+                            Serviço executado
+                        </label>
+
+                        <textarea id="osServicoExecutado"
+                            class="w-full mt-2 mb-5 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[120px]"></textarea>
+
+
+                        <label class="text-xs opacity-60">
+                            Pendências
+                        </label>
+
+                        <textarea id="osPendencias"
+                            class="w-full mt-2 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[100px]"></textarea>
+
+                    </div>
+
+
+
+                    <!-- ETAPA 4 -->
+
+                    <div class="os-etapa hidden" data-etapa="4">
+
+                        <div class="flex justify-between items-center mb-5">
+
+                            <h3 class="text-xl font-semibold">
+                                Materiais utilizados
+                            </h3>
+
+                            <button onclick="osAdicionarMaterial()"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold">
+                                + Adicionar
+                            </button>
+
+                        </div>
+
+                        <div id="osListaMateriais" class="space-y-3">
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ETAPA 5 -->
+
+                    <div class="os-etapa hidden" data-etapa="5">
+
+                        <h3 class="text-xl font-semibold mb-5">
+                            Evidências fotográficas
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <div class="p-5 rounded-2xl bg-black/5 dark:bg-white/5">
+
+                                <p class="text-xs font-bold mb-4">
+                                    ANTES
+                                </p>
+
+                                <input type="file" multiple accept="image/*" onchange="osAdicionarFotos(this,'antes')">
+
+                                <div id="osFotosAntes" class="grid grid-cols-2 gap-3 mt-4">
+                                </div>
+
+                            </div>
+
+
+                            <div class="p-5 rounded-2xl bg-black/5 dark:bg-white/5">
+
+                                <p class="text-xs font-bold mb-4">
+                                    DEPOIS
+                                </p>
+
+                                <input type="file" multiple accept="image/*" onchange="osAdicionarFotos(this,'depois')">
+
+                                <div id="osFotosDepois" class="grid grid-cols-2 gap-3 mt-4">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ETAPA 6 -->
+
+                    <div class="os-etapa hidden" data-etapa="6">
+
+                        <h3 class="text-xl font-semibold mb-5">
+                            Encerramento
+                        </h3>
+
+
+                        <label class="text-xs opacity-60">
+                            Resultado
+                        </label>
+
+                        <select id="osResultado" class="w-full mt-2 mb-5 p-4 rounded-2xl bg-white dark:bg-zinc-900">
+
+                            <option>Serviço concluído</option>
+                            <option>Parcialmente concluído</option>
+                            <option>Pendente</option>
+                            <option>Não executado</option>
+
+                        </select>
+
+
+                        <label class="text-xs opacity-60">
+                            Condição final
+                        </label>
+
+                        <select id="osCondicaoFinal" class="w-full mt-2 mb-5 p-4 rounded-2xl bg-white dark:bg-zinc-900">
+
+                            <option>Liberado para uso</option>
+                            <option>Liberado com ressalvas</option>
+                            <option>Interditado</option>
+
+                        </select>
+
+
+                        <label class="text-xs opacity-60">
+                            Observações finais
+                        </label>
+
+                        <textarea id="osObservacoesFinais"
+                            class="w-full mt-2 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[120px]"></textarea>
+
+                    </div>
+
+
+
+                    <!-- NAVEGAÇÃO -->
+
+                    <div class="flex justify-between mt-8 pt-6 border-t border-black/10 dark:border-white/10">
+
+                        <button id="osBtnAnterior" onclick="osEtapaAnterior()"
+                            class="px-5 py-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs font-semibold">
+                            ← Anterior
+                        </button>
+
+                        <button id="osBtnProximo" onclick="osProximaEtapa()"
+                            class="px-5 py-3 rounded-xl bg-blue-600 text-white text-xs font-semibold">
+                            Salvar e continuar →
                         </button>
 
                     </div>
 
-                    <div id="osListaMateriais" class="space-y-3">
-                    </div>
-
                 </div>
-
-
-
-                <!-- ETAPA 5 -->
-
-                <div class="os-etapa hidden" data-etapa="5">
-
-                    <h3 class="text-xl font-semibold mb-5">
-                        Evidências fotográficas
-                    </h3>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                        <div class="p-5 rounded-2xl bg-black/5 dark:bg-white/5">
-
-                            <p class="text-xs font-bold mb-4">
-                                ANTES
-                            </p>
-
-                            <input type="file" multiple accept="image/*" onchange="osAdicionarFotos(this,'antes')">
-
-                            <div id="osFotosAntes" class="grid grid-cols-2 gap-3 mt-4">
-                            </div>
-
-                        </div>
-
-
-                        <div class="p-5 rounded-2xl bg-black/5 dark:bg-white/5">
-
-                            <p class="text-xs font-bold mb-4">
-                                DEPOIS
-                            </p>
-
-                            <input type="file" multiple accept="image/*" onchange="osAdicionarFotos(this,'depois')">
-
-                            <div id="osFotosDepois" class="grid grid-cols-2 gap-3 mt-4">
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- ETAPA 6 -->
-
-                <div class="os-etapa hidden" data-etapa="6">
-
-                    <h3 class="text-xl font-semibold mb-5">
-                        Encerramento
-                    </h3>
-
-
-                    <label class="text-xs opacity-60">
-                        Resultado
-                    </label>
-
-                    <select id="osResultado" class="w-full mt-2 mb-5 p-4 rounded-2xl bg-white dark:bg-zinc-900">
-
-                        <option>Serviço concluído</option>
-                        <option>Parcialmente concluído</option>
-                        <option>Pendente</option>
-                        <option>Não executado</option>
-
-                    </select>
-
-
-                    <label class="text-xs opacity-60">
-                        Condição final
-                    </label>
-
-                    <select id="osCondicaoFinal" class="w-full mt-2 mb-5 p-4 rounded-2xl bg-white dark:bg-zinc-900">
-
-                        <option>Liberado para uso</option>
-                        <option>Liberado com ressalvas</option>
-                        <option>Interditado</option>
-
-                    </select>
-
-
-                    <label class="text-xs opacity-60">
-                        Observações finais
-                    </label>
-
-                    <textarea id="osObservacoesFinais"
-                        class="w-full mt-2 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[120px]"></textarea>
-
-                </div>
-
-
-
-                <!-- NAVEGAÇÃO -->
-
-                <div class="flex justify-between mt-8 pt-6 border-t border-black/10 dark:border-white/10">
-
-                    <button id="osBtnAnterior" onclick="osEtapaAnterior()"
-                        class="px-5 py-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs font-semibold">
-                        ← Anterior
-                    </button>
-
-                    <button id="osBtnProximo" onclick="osProximaEtapa()"
-                        class="px-5 py-3 rounded-xl bg-blue-600 text-white text-xs font-semibold">
-                        Salvar e continuar →
-                    </button>
-
-                </div>
-
-            </div>
 
         </section>
 
@@ -953,99 +999,112 @@
 
         </section>
 
-            <!-- =========================================================
+        <!-- =========================================================
      LOJAS E PRESTADORES
 ========================================================= -->
 
-<section id="cadastrosView"
-    class="hidden-view max-w-7xl mx-auto px-4 md:px-6 mt-28 pb-20">
+        <section id="cadastrosView" class="hidden-view max-w-7xl mx-auto px-4 md:px-6 mt-28 pb-20">
 
-    <!-- CABEÇALHO -->
-    <div class="mb-8">
+            <!-- CABEÇALHO -->
+            <div class="mb-8">
 
-        <button onclick="navigate('home')"
-            class="text-xs font-bold opacity-50 hover:opacity-100 mb-3">
-            ← Voltar para a Home
-        </button>
+                <button onclick="navigate('home')" class="text-xs font-bold opacity-50 hover:opacity-100 mb-3">
+                    ← Voltar para a Home
+                </button>
 
-        <h2 class="text-3xl font-light tracking-tight">
-            Lojas e Prestadores
-        </h2>
+                <h2 class="text-3xl font-light tracking-tight">
+                    Lojas e Prestadores
+                </h2>
 
-        <p class="text-xs opacity-50 mt-1">
-            Cadastros operacional.
-        </p>
-
-    </div>
-
-
-    <!-- ABAS -->
-    <div class="flex gap-2 mb-6">
-
-        <button id="btnAbaLojas"
-            onclick="abrirAbaCadastros('lojas')"
-            class="px-5 py-3 rounded-2xl bg-black text-white
-                   dark:bg-white dark:text-black
-                   text-xs font-bold">
-            LOJAS
-        </button>
-
-        <button id="btnAbaPrestadores"
-            onclick="abrirAbaCadastros('prestadores')"
-            class="px-5 py-3 rounded-2xl bg-black/5 dark:bg-white/5
-                   text-xs font-bold opacity-60">
-            PRESTADORES
-        </button>
-
-    </div>
-
-
-    <!-- =====================================================
-         ABA LOJAS
-    ====================================================== -->
-
-    <div id="cadastrosAbaLojas">
-
-        <!-- BARRA DE AÇÕES -->
-        <div class="flex flex-col md:flex-row md:items-center
-                    justify-between gap-4 mb-4">
-
-            <div>
-
-                <p class="text-sm font-semibold">
-                    Cadastro de Lojas
-                </p>
-
-                <p id="contadorLojasSelecionadas"
-                    class="text-[10px] opacity-50 mt-1">
-                    Nenhuma loja selecionada
+                <p class="text-xs opacity-50 mt-1">
+                    Cadastros operacional.
                 </p>
 
             </div>
 
 
-            <button onclick="copiarLojasSelecionadas()"
-                class="
-                    px-5 py-3
-                    bg-black
-                    hover:bg-zinc-800
-                    text-white
-                    dark:bg-white
-                    dark:hover:bg-zinc-200
-                    dark:text-black
-                    rounded-2xl
-                    text-xs
-                    font-bold
-                    transition-all
-                ">
-                COPIAR SELEÇÃO
-            </button>
+            <!-- ABAS -->
+            <div class="flex gap-2 mb-6">
+            
+                <button id="btnAbaLojas" onclick="abrirAbaCadastros('lojas')" class="px-5 py-3 rounded-2xl bg-black text-white
+                   dark:bg-white dark:text-black
+                   text-xs font-bold">
+                    LOJAS
+                </button>
+                
+                <button id="btnAbaPrestadores" onclick="abrirAbaCadastros('prestadores')" class="px-5 py-3 rounded-2xl bg-black/5 dark:bg-white/5
+                   text-xs font-bold opacity-60">
+                    PRESTADORES
+                </button>
 
-        </div>
+                <button id="btnAbaServicos" onclick="abrirAbaCadastros('servicos')" class="px-5 py-3 rounded-2xl bg-black/5 dark:bg-white/5
+           text-xs font-bold opacity-60">
+                    TIPOS DE SERVIÇO
+                </button>
+
+            </div>
 
 
-        <!-- TABELA -->
-        <div class="
+            <!-- =====================================================
+         ABA LOJAS
+    ====================================================== -->
+
+            <div id="cadastrosAbaLojas">
+
+                <!-- BARRA DE AÇÕES -->
+                <div class="flex flex-col md:flex-row md:items-center
+                    justify-between gap-4 mb-4">
+
+                    <div>
+
+                        <p class="text-sm font-semibold">
+                            Cadastro de Lojas
+                        </p>
+
+                        <p id="contadorLojasSelecionadas" class="text-[10px] opacity-50 mt-1">
+                            Nenhuma loja selecionada
+                        </p>
+
+                    </div>
+
+
+                    <div class="flex items-center gap-3">
+
+                        <button onclick="abrirModalLoja()" class="
+            px-5 py-3
+            bg-blue-600
+            hover:bg-blue-700
+            text-white
+            rounded-2xl
+            text-xs
+            font-bold
+            transition-all
+        ">
+                            + NOVA LOJA
+                        </button>
+
+                        <button onclick="copiarLojasSelecionadas()" class="
+            px-5 py-3
+            bg-black
+            hover:bg-zinc-800
+            text-white
+            dark:bg-white
+            dark:hover:bg-zinc-200
+            dark:text-black
+            rounded-2xl
+            text-xs
+            font-bold
+            transition-all
+        ">
+                            COPIAR SELEÇÃO
+                        </button>
+
+                    </div>
+                </div>
+
+
+                <!-- TABELA -->
+                <div class="
             overflow-x-auto
             border
             border-black/20
@@ -1054,25 +1113,22 @@
             dark:bg-zinc-950
         ">
 
-            <table class="w-full min-w-[1000px] border-collapse text-xs">
+                    <table class="w-full min-w-[1000px] border-collapse text-xs">
 
-                <thead>
+                        <thead>
 
-                    <tr style="background:#a6a6a6; color:#000;">
+                            <tr style="background:#a6a6a6; color:#000;">
 
-                        <!-- LOJA COM FILTRO -->
-                        <th class="relative border border-black/30 px-3 py-4 text-left min-w-[100px]">
+                                <!-- LOJA COM FILTRO -->
+                                <th class="relative border border-black/30 px-3 py-4 text-left min-w-[100px]">
 
-                            <div class="flex items-center justify-between gap-2">
+                                    <div class="flex items-center justify-between gap-2">
 
-                                <span class="font-bold">
-                                    LOJA
-                                </span>
+                                        <span class="font-bold">
+                                            LOJA
+                                        </span>
 
-                                <button
-                                    type="button"
-                                    onclick="toggleFiltroLojas(event)"
-                                    class="
+                                        <button type="button" onclick="toggleFiltroLojas(event)" class="
                                         w-6 h-6
                                         bg-white
                                         border
@@ -1083,15 +1139,14 @@
                                         justify-center
                                         text-[10px]
                                     ">
-                                    ▼
-                                </button>
+                                            ▼
+                                        </button>
 
-                            </div>
+                                    </div>
 
 
-                            <!-- FILTRO ESTILO EXCEL -->
-                            <div id="filtroLojasDropdown"
-                                class="
+                                    <!-- FILTRO ESTILO EXCEL -->
+                                    <div id="filtroLojasDropdown" class="
                                     hidden
                                     absolute
                                     top-full
@@ -1106,14 +1161,10 @@
                                     text-left
                                 ">
 
-                                <div class="p-3 border-b border-gray-300">
+                                        <div class="p-3 border-b border-gray-300">
 
-                                    <input
-                                        id="filtroLojaPesquisa"
-                                        type="text"
-                                        placeholder="Pesquisar loja..."
-                                        oninput="renderizarOpcoesFiltroLojas()"
-                                        class="
+                                            <input id="filtroLojaPesquisa" type="text" placeholder="Pesquisar loja..."
+                                                oninput="renderizarOpcoesFiltroLojas()" class="
                                             w-full
                                             px-3
                                             py-2
@@ -1121,128 +1172,247 @@
                                             border-gray-300
                                             text-xs
                                             outline-none
-                                        "
-                                    >
+                                        ">
 
-                                </div>
-
-
-                                <div class="p-3 border-b border-gray-300">
-
-                                    <label class="flex items-center gap-2 cursor-pointer">
-
-                                        <input
-                                            id="filtroSelecionarTodas"
-                                            type="checkbox"
-                                            onchange="marcarTodasLojasFiltro(this.checked)"
-                                        >
-
-                                        <span class="text-xs font-semibold">
-                                            Selecionar tudo
-                                        </span>
-
-                                    </label>
-
-                                </div>
+                                        </div>
 
 
-                                <div id="filtroLojasOpcoes"
-                                    class="max-h-64 overflow-y-auto p-2">
+                                        <div class="p-3 border-b border-gray-300">
 
-                                </div>
+                                            <label class="flex items-center gap-2 cursor-pointer">
 
+                                                <input id="filtroSelecionarTodas" type="checkbox"
+                                                    onchange="marcarTodasLojasFiltro(this.checked)">
 
-                                <div class="flex justify-end gap-2 p-3 border-t border-gray-300">
+                                                <span class="text-xs font-semibold">
+                                                    Selecionar tudo
+                                                </span>
 
-                                    <button
-                                        type="button"
-                                        onclick="limparFiltroLojas()"
-                                        class="px-3 py-2 text-xs border border-gray-300">
-                                        Limpar
-                                    </button>
+                                            </label>
 
-                                    <button
-                                        type="button"
-                                        onclick="aplicarFiltroLojas()"
-                                        class="px-4 py-2 text-xs bg-black text-white">
-                                        OK
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </th>
+                                        </div>
 
 
-                        <th class="border border-black/30 px-3 py-4 text-center min-w-[210px]">
-                            NOME
-                        </th>
+                                        <div id="filtroLojasOpcoes" class="max-h-64 overflow-y-auto p-2">
 
-                        <th class="border border-black/30 px-3 py-4 text-center min-w-[70px]">
-                            UF
-                        </th>
-
-                        <th class="border border-black/30 px-3 py-4 text-center min-w-[380px]">
-                            ENDEREÇO
-                        </th>
-
-                        <th class="border border-black/30 px-3 py-4 text-center min-w-[180px]">
-                            CIDADE
-                        </th>
-
-                        <th class="border border-black/30 px-3 py-4 text-center min-w-[130px]">
-                            CEP
-                        </th>
-
-                    </tr>
-
-                </thead>
+                                        </div>
 
 
-                <tbody id="tabelaLojasBody">
+                                        <div class="flex justify-end gap-2 p-3 border-t border-gray-300">
 
-                </tbody>
+                                            <button type="button" onclick="limparFiltroLojas()"
+                                                class="px-3 py-2 text-xs border border-gray-300">
+                                                Limpar
+                                            </button>
 
-            </table>
+                                            <button type="button" onclick="aplicarFiltroLojas()"
+                                                class="px-4 py-2 text-xs bg-black text-white">
+                                                OK
+                                            </button>
 
-        </div>
+                                        </div>
 
-    </div>
+                                    </div>
+
+                                </th>
 
 
-    <!-- =====================================================
-         ABA PRESTADORES
-    ====================================================== -->
+                                <th class="border border-black/30 px-3 py-4 text-center min-w-[210px]">
+                                    NOME
+                                </th>
 
-    <div id="cadastrosAbaPrestadores"
-        class="hidden">
+                                <th class="border border-black/30 px-3 py-4 text-center min-w-[70px]">
+                                    UF
+                                </th>
 
-        <div class="
-            glass
-            rounded-[32px]
-            p-10
-            md:p-16
-            text-center
-        ">
+                                <th class="border border-black/30 px-3 py-4 text-center min-w-[380px]">
+                                    ENDEREÇO
+                                </th>
 
-            <p class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">
-                Prestadores
-            </p>
+                                <th class="border border-black/30 px-3 py-4 text-center min-w-[180px]">
+                                    CIDADE
+                                </th>
 
-            <h3 class="text-2xl font-semibold mt-3">
-                Em breve
-            </h3>
+                                <th class="border border-black/30 px-3 py-4 text-center min-w-[130px]">
+                                    CEP
+                                </th>
 
-            <p class="text-sm opacity-50 mt-3">
-                Em desenvolvimento...
-            </p>
+                                <th class="
+                                border
+                                border-black/25
+                                px-3 py-3
+                                text-center
+                            ">
+                                    AÇÕES
+                                </th>
+                            </tr>
 
-        </div>
+                        </thead>
 
-    </div>
 
-</section>
+                        <tbody id="tabelaLojasBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- =====================================================
+     ABA PRESTADORES
+====================================================== -->
+
+            <div id="cadastrosAbaPrestadores" class="hidden">
+
+                <!-- CABEÇALHO DA ABA -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+
+                    <div>
+                        <p class="text-sm font-semibold">
+                            Cadastro de Prestadores
+                        </p>
+
+                        <p id="contadorPrestadores" class="text-[10px] opacity-50 mt-1">
+                            Carregando prestadores...
+                        </p>
+                    </div>
+
+                    <button onclick="abrirModalPrestador()" class="
+                px-5 py-3
+                bg-black text-white
+                dark:bg-white dark:text-black
+                rounded-2xl
+                text-xs font-bold
+                hover:opacity-80
+                transition
+            ">
+                        + NOVO PRESTADOR
+                    </button>
+
+                </div>
+
+
+                <!-- BUSCA -->
+                <div class="glass rounded-[24px] p-4 mb-5">
+
+                    <input id="buscaPrestadores" type="text" oninput="renderizarPrestadores()"
+                        placeholder="Pesquisar por nome, CNPJ, código ou serviço..." class="
+                w-full
+                px-4 py-3
+                rounded-2xl
+                bg-black/5 dark:bg-white/5
+                border border-black/10 dark:border-white/10
+                outline-none
+                text-sm
+            ">
+
+                </div>
+
+
+                <!-- LISTAGEM -->
+                <div id="listaPrestadores" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+
+                    <div class="glass rounded-[28px] p-6 text-sm opacity-50">
+                        Carregando...
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- =====================================================
+     ABA TIPOS DE SERVIÇO
+====================================================== -->
+
+            <div id="cadastrosAbaServicos" class="hidden">
+
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+
+                    <div>
+                        <p class="text-sm font-semibold">
+                            Tipos de Serviço
+                        </p>
+
+                        <p id="contadorTiposServico" class="text-[10px] opacity-50 mt-1">
+                            Carregando...
+                        </p>
+                    </div>
+
+                    <button onclick="abrirModalTipoServico()" class="
+                px-5 py-3
+                bg-blue-600
+                hover:bg-blue-700
+                text-white
+                rounded-2xl
+                text-xs
+                font-bold
+                transition-all
+            ">
+                        + NOVO SERVIÇO
+                    </button>
+
+                </div>
+
+
+                <div class="glass rounded-[24px] p-4 mb-5">
+
+                    <input id="buscaTiposServico" type="text" oninput="renderizarTiposServico()"
+                        placeholder="Pesquisar serviço..." class="
+                w-full
+                px-4 py-3
+                rounded-2xl
+                bg-black/5 dark:bg-white/5
+                border border-black/10 dark:border-white/10
+                outline-none
+                text-sm
+            ">
+
+                </div>
+
+
+                <div class="
+        overflow-x-auto
+        border
+        border-black/10
+        dark:border-white/10
+        rounded-[24px]
+    ">
+
+                    <table class="w-full min-w-[700px] text-xs">
+
+                        <thead class="bg-black/[0.03] dark:bg-white/[0.03]">
+
+                            <tr>
+
+                                <th class="px-4 py-4 text-left">
+                                    SERVIÇO
+                                </th>
+
+                                <th class="px-4 py-4 text-center">
+                                    CONTA CONTÁBIL
+                                </th>
+
+                                <th class="px-4 py-4 text-center">
+                                    STATUS
+                                </th>
+
+                                <th class="px-4 py-4 text-center">
+                                    AÇÕES
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tabelaTiposServicoBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </section>
 
         <!-- MAIN VIEW (RELATÓRIOS TÉCNICOS) -->
         <main id="mainView" class="hidden-view max-w-6xl mx-auto px-6 mt-24 pb-20">
@@ -1326,87 +1496,1897 @@
             </div>
         </main>
 
-        <!-- VIEW CONFIGURAÇÕES -->
-        <section id="configView" class="hidden-view max-w-2xl mx-auto px-6 mt-24 pb-20">
-            <div class="glass rounded-3xl p-8 mb-6">
-                <h3 class="text-xl font-bold mb-6">Lojas</h3>
-                <div class="flex gap-2 mb-6"><input id="newStore" type="text"
-                        class="flex-1 p-3 input-ios text-sm uppercase" placeholder="Nº - lOJA - PA..."><button
-                        onclick="addStore()"
-                        class="bg-black text-white px-4 rounded-xl text-sm font-bold">ADICIONAR</button></div>
-                <div id="storeList" class="space-y-2 max-h-60 overflow-y-auto"></div>
-            </div>
-            <div class="glass rounded-3xl p-8">
-                <h3 class="text-xl font-bold mb-6">Fornecedores</h3>
-                <div class="flex gap-2 mb-6"><input id="newProv" type="text"
-                        class="flex-1 p-3 input-ios text-sm uppercase" placeholder="Nome da Empresa"><button
-                        onclick="addProv()"
-                        class="bg-black text-white px-4 rounded-xl text-sm font-bold">ADICIONAR</button></div>
-                <div id="provList" class="space-y-2 max-h-60 overflow-y-auto"></div>
-            </div>
-            <button onclick="navigate('home')"
-                class="mt-8 w-full py-4 bg-black text-white dark:bg-white dark:text-black rounded-2xl font-bold">Salvar
-                e Voltar para a Home</button>
-        </section>
-    </div>
+<!-- =========================================================
+     DETALHES DO PRESTADOR
+========================================================= -->
 
-    <!-- MODAL DE HISTÓRICO DA LOJA -->
-    <div id="modalHistoricoLoja"
-        class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4">
+<section
+    id="prestadorDetalhesView"
+    class="
+        hidden-view
+        max-w-7xl
+        mx-auto
+        px-6
+        mt-28
+        pb-20
+    "
+>
+<!-- =========================================================
+     MODAL - DOCUMENTO DO PRESTADOR
+========================================================= -->
+
+<div
+    id="modalDocumentoPrestador"
+    class="
+        hidden
+        fixed
+        inset-0
+        z-[150]
+        bg-black/60
+        backdrop-blur-sm
+        flex
+        items-center
+        justify-center
+        p-4
+    "
+>
+
+    <div
+        class="
+            glass
+            w-full
+            max-w-2xl
+            max-h-[90vh]
+            overflow-y-auto
+            rounded-[32px]
+            p-6
+            md:p-8
+            shadow-2xl
+        "
+    >
+
+        <!-- CABEÇALHO -->
         <div
-            class="glass p-6 md:p-8 rounded-[32px] max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-black/10 dark:border-white/10">
-            <div class="flex justify-between items-start pb-4 border-b border-black/5 dark:border-white/5">
-                <div>
-                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-40">Histórico de
-                        Operação</span>
-                    <h3 class="text-2xl font-semibold mt-1" id="modalLojaTitulo">Loja --</h3>
-                </div>
-                <button onclick="fecharModalHistorico()"
-                    class="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center font-bold text-sm hover:opacity-80">×</button>
+            class="
+                flex
+                items-start
+                justify-between
+                gap-4
+                mb-7
+            "
+        >
+
+            <div>
+
+                <p
+                    class="
+                        text-[10px]
+                        font-bold
+                        uppercase
+                        tracking-[0.3em]
+                        opacity-40
+                    "
+                >
+                    Documentos
+                </p>
+
+                <h3 class="text-2xl font-semibold mt-2">
+                    Adicionar documento
+                </h3>
+
+                <p
+                    id="documentoPrestadorNome"
+                    class="
+                        text-xs
+                        opacity-45
+                        mt-2
+                    "
+                >
+                </p>
+
             </div>
 
-            <div class="grid grid-cols-3 gap-3 my-4">
-                <div class="p-3 glass rounded-2xl text-center">
-                    <span class="text-[9px] font-bold uppercase opacity-40">Total</span>
-                    <p class="text-lg font-bold" id="modalLojaTotal">0</p>
-                </div>
-                <div class="p-3 glass rounded-2xl text-center">
-                    <span class="text-[9px] font-bold uppercase text-amber-500">Pendentes</span>
-                    <p class="text-lg font-bold text-amber-500" id="modalLojaPendentes">0</p>
-                </div>
-                <div class="p-3 glass rounded-2xl text-center">
-                    <span class="text-[9px] font-bold uppercase text-emerald-500">Fechados</span>
-                    <p class="text-lg font-bold text-emerald-500" id="modalLojaFechados">0</p>
-                </div>
-            </div>
 
-            <div id="modalLojaListaChamados" class="overflow-y-auto space-y-3 pr-2 flex-1 my-2"></div>
-
-            <button onclick="fecharModalHistorico()"
-                class="mt-4 w-full py-3.5 bg-black text-white dark:bg-white dark:text-black rounded-2xl font-bold text-xs">
-                Fechar Histórico
+            <button
+                type="button"
+                onclick="fecharModalDocumentoPrestador()"
+                class="
+                    w-10
+                    h-10
+                    rounded-full
+                    bg-black/5
+                    dark:bg-white/10
+                    text-lg
+                    hover:opacity-60
+                "
+            >
+                ×
             </button>
-        </div>
-    </div>
 
-    <!-- MODAL LOGOS -->
-    <div id="modalLogos"
-        class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100]">
-        <div class="glass p-8 rounded-[32px] max-w-sm w-full mx-4 shadow-2xl">
-            <h2 class="text-lg font-bold mb-6">Configuração de Logos</h2>
-            <div class="space-y-6">
-                <div><label class="text-[9px] font-black opacity-40 block mb-2 uppercase">Logo Prestador</label><input
-                        type="file" onchange="saveLogo(this, 'prestador')" class="text-xs"></div>
-                <div><label class="text-[9px] font-black opacity-40 block mb-2 uppercase">Logo Cliente</label><input
-                        type="file" onchange="saveLogo(this, 'americanas')" class="text-xs"></div>
+        </div>
+
+
+        <!-- FORMULÁRIO -->
+        <div
+            class="
+                grid
+                grid-cols-1
+                md:grid-cols-2
+                gap-5
+            "
+        >
+
+            <!-- LOJA -->
+            <div class="md:col-span-2">
+
+                <label class="text-xs font-semibold opacity-60">
+                    Loja *
+                </label>
+
+                <select
+                    id="documentoPrestadorLoja"
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                        outline-none
+                    "
+                >
+                    <option value="">
+                        Selecione a loja
+                    </option>
+                </select>
+
             </div>
-            <button onclick="document.getElementById('modalLogos').classList.add('hidden')"
-                class="mt-10 w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-sm">Salvar
-                Alterações</button>
+
+
+            <!-- TIPO DE DOCUMENTO -->
+            <div>
+
+                <label class="text-xs font-semibold opacity-60">
+                    Documento *
+                </label>
+
+                <select
+                    id="documentoPrestadorTipo"
+                    onchange="atualizarCamposDocumentoPrestador()"
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                        outline-none
+                    "
+                >
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="NOTA_FISCAL">
+                        Nota Fiscal
+                    </option>
+
+                    <option value="RELATORIO">
+                        Relatório
+                    </option>
+
+                    <option value="OS">
+                        OS
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- MANUTENÇÃO -->
+            <div>
+
+                <label class="text-xs font-semibold opacity-60">
+                    Tipo de manutenção
+                </label>
+
+                <select
+                    id="documentoPrestadorManutencao"
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                        outline-none
+                    "
+                >
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="PREVENTIVA">
+                        Preventiva
+                    </option>
+
+                    <option value="CORRETIVA">
+                        Corretiva
+                    </option>
+
+                    <option value="PREVENTIVA_CORRETIVA">
+                        Preventiva / Corretiva
+                    </option>
+
+                    <option value="INSTALACAO">
+                        Instalação
+                    </option>
+
+                    <option value="OUTROS">
+                        Outros
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- SERVIÇO -->
+            <div class="md:col-span-2">
+
+                <label class="text-xs font-semibold opacity-60">
+                    Serviço
+                </label>
+
+                <select
+                    id="documentoPrestadorServico"
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                        outline-none
+                    "
+                >
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- NÚMERO -->
+            <div>
+
+                <label class="text-xs font-semibold opacity-60">
+                    Número
+                </label>
+
+                <input
+                    id="documentoPrestadorNumero"
+                    type="text"
+                    placeholder="Ex.: 9105"
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                        outline-none
+                    "
+                >
+
+            </div>
+
+
+            <!-- DATA -->
+            <div>
+
+                <label class="text-xs font-semibold opacity-60">
+                    Data
+                </label>
+
+                <input
+                    id="documentoPrestadorData"
+                    type="date"
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                        outline-none
+                    "
+                >
+
+            </div>
+
+
+            <!-- COMPETÊNCIA -->
+            <div
+                id="documentoPrestadorCompetenciaBox"
+                class="hidden"
+            >
+
+                <label class="text-xs font-semibold opacity-60">
+                    Competência
+                </label>
+
+                <input
+                    id="documentoPrestadorCompetencia"
+                    type="month"
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                        outline-none
+                    "
+                >
+
+            </div>
+
+
+            <!-- VALOR -->
+            <div
+                id="documentoPrestadorValorBox"
+                class="hidden"
+            >
+
+                <label class="text-xs font-semibold opacity-60">
+                    Valor
+                </label>
+
+                <input
+                    id="documentoPrestadorValor"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="0,00"
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                        outline-none
+                    "
+                >
+
+            </div>
+
+
+            <!-- DESCRIÇÃO -->
+            <div class="md:col-span-2">
+
+                <label class="text-xs font-semibold opacity-60">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="documentoPrestadorDescricao"
+                    rows="3"
+                    placeholder="Descrição resumida do documento ou serviço..."
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                        outline-none
+                        resize-none
+                    "
+                ></textarea>
+
+            </div>
+
+
+            <!-- ARQUIVO -->
+            <div class="md:col-span-2">
+
+                <label class="text-xs font-semibold opacity-60">
+                    Arquivo PDF *
+                </label>
+
+<input
+    id="documentoPrestadorArquivo"
+    type="file"
+    accept="application/pdf,.pdf"
+    multiple
+    class="
+        w-full
+        mt-3
+        text-xs
+    "
+>
+                <p class="text-[9px] opacity-40 mt-2">
+                    Envie nota fiscal, relatório ou ordem de serviço em PDF.
+                </p>
+
+            </div>
+
         </div>
+
+
+        <!-- AÇÕES -->
+        <div
+            class="
+                flex
+                justify-end
+                gap-3
+                mt-8
+                pt-6
+                border-t
+                border-black/10
+                dark:border-white/10
+            "
+        >
+
+            <button
+                type="button"
+                onclick="fecharModalDocumentoPrestador()"
+                class="
+                    px-5
+                    py-3
+                    rounded-2xl
+                    bg-black/5
+                    dark:bg-white/10
+                    text-xs
+                    font-bold
+                "
+            >
+                CANCELAR
+            </button>
+
+
+            <button
+                id="btnSalvarDocumentoPrestador"
+                type="button"
+                onclick="salvarDocumentoPrestador()"
+                class="
+                    px-6
+                    py-3
+                    rounded-2xl
+                    bg-black
+                    text-white
+                    dark:bg-white
+                    dark:text-black
+                    text-xs
+                    font-bold
+                    hover:opacity-80
+                "
+            >
+                SALVAR DOCUMENTO
+            </button>
+
+        </div>
+
     </div>
 
-    <!-- ==========================================
+</div>
+
+<!-- =========================================================
+     MODAL - DETALHES DO DOCUMENTO DO PRESTADOR
+========================================================= -->
+
+<div
+    id="modalDetalhesDocumentoPrestador"
+    class="
+        hidden
+        fixed
+        inset-0
+        z-[160]
+        bg-black/60
+        backdrop-blur-sm
+        flex
+        items-center
+        justify-center
+        p-4
+    "
+>
+
+    <div
+        class="
+            glass
+            w-full
+            max-w-2xl
+            max-h-[90vh]
+            overflow-y-auto
+            rounded-[32px]
+            p-6
+            md:p-8
+            shadow-2xl
+        "
+    >
+
+        <div
+            class="
+                flex
+                items-start
+                justify-between
+                gap-4
+                mb-7
+            "
+        >
+
+            <div>
+
+                <p
+                    class="
+                        text-[10px]
+                        font-bold
+                        uppercase
+                        tracking-[0.3em]
+                        opacity-40
+                    "
+                >
+                    Documento
+                </p>
+
+                <h3
+                    id="detalhesDocumentoTitulo"
+                    class="text-2xl font-semibold mt-2"
+                >
+                    Detalhes
+                </h3>
+
+            </div>
+
+
+            <button
+                type="button"
+                onclick="fecharDetalhesDocumentoPrestador()"
+                class="
+                    w-10
+                    h-10
+                    rounded-full
+                    bg-black/5
+                    dark:bg-white/10
+                    text-lg
+                "
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <input
+            id="detalhesDocumentoId"
+            type="hidden"
+        >
+
+
+        <div
+            class="
+                grid
+                grid-cols-1
+                md:grid-cols-2
+                gap-5
+            "
+        >
+
+<!-- LOJA -->
+<div>
+
+    <label class="text-xs font-semibold opacity-60">
+        Loja
+    </label>
+
+    <select
+        id="detalhesDocumentoLoja"
+        disabled
+        class="
+            w-full
+            mt-2
+            px-4
+            py-3
+            rounded-2xl
+            bg-black/5
+            dark:bg-white/5
+            border
+            border-black/10
+            dark:border-white/10
+            outline-none
+        "
+    >
+    </select>
+
+</div>
+
+            <!-- DOCUMENTO -->
+            <div>
+
+                <label class="text-xs font-semibold opacity-60">
+                    Documento
+                </label>
+
+                <select
+                    id="detalhesDocumentoTipo"
+                    disabled
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                    "
+                >
+
+                    <option value="NOTA_FISCAL">
+                        Nota Fiscal
+                    </option>
+
+                    <option value="RELATORIO">
+                        Relatório
+                    </option>
+
+                    <option value="OS_PMOC">
+                        OS / PMOC
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- MANUTENÇÃO -->
+            <div>
+
+                <label class="text-xs font-semibold opacity-60">
+                    Tipo de manutenção
+                </label>
+
+                <select
+                    id="detalhesDocumentoManutencao"
+                    disabled
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                    "
+                >
+
+                    <option value="">
+                        —
+                    </option>
+
+                    <option value="PREVENTIVA">
+                        Preventiva
+                    </option>
+
+                    <option value="CORRETIVA">
+                        Corretiva
+                    </option>
+
+                    <option value="PREVENTIVA_CORRETIVA">
+                        Preventiva / Corretiva
+                    </option>
+
+                    <option value="INSTALACAO">
+                        Instalação
+                    </option>
+
+                    <option value="OUTROS">
+                        Outros
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- SERVIÇO -->
+            <div>
+
+                <label class="text-xs font-semibold opacity-60">
+                    Serviço
+                </label>
+
+                <input
+                    id="detalhesDocumentoServico"
+                    disabled
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                    "
+                >
+
+            </div>
+
+
+            <!-- NÚMERO -->
+            <div>
+
+                <label class="text-xs font-semibold opacity-60">
+                    Número
+                </label>
+
+                <input
+                    id="detalhesDocumentoNumero"
+                    disabled
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                    "
+                >
+
+            </div>
+
+
+            <!-- DATA -->
+            <div>
+
+                <label class="text-xs font-semibold opacity-60">
+                    Data
+                </label>
+
+                <input
+                    id="detalhesDocumentoData"
+                    type="date"
+                    disabled
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                    "
+                >
+
+            </div>
+
+
+            <!-- COMPETÊNCIA -->
+            <div>
+
+                <label class="text-xs font-semibold opacity-60">
+                    Competência
+                </label>
+
+                <input
+                    id="detalhesDocumentoCompetencia"
+                    type="month"
+                    disabled
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                    "
+                >
+
+            </div>
+
+
+            <!-- VALOR -->
+            <div>
+
+                <label class="text-xs font-semibold opacity-60">
+                    Valor
+                </label>
+
+                <input
+                    id="detalhesDocumentoValor"
+                    type="number"
+                    step="0.01"
+                    disabled
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                    "
+                >
+
+            </div>
+
+
+            <!-- DESCRIÇÃO -->
+            <div class="md:col-span-2">
+
+                <label class="text-xs font-semibold opacity-60">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="detalhesDocumentoDescricao"
+                    rows="5"
+                    disabled
+                    class="
+                        w-full
+                        mt-2
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/5
+                        border
+                        border-black/10
+                        dark:border-white/10
+                        resize-none
+                    "
+                ></textarea>
+
+            </div>
+
+
+            <!-- PDF -->
+            <div class="md:col-span-2">
+
+                <a
+                    id="detalhesDocumentoArquivo"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="
+                        inline-flex
+                        px-4
+                        py-3
+                        rounded-2xl
+                        bg-black/5
+                        dark:bg-white/10
+                        text-xs
+                        font-bold
+                    "
+                >
+                    VER PDF ↗
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="
+                flex
+                justify-end
+                gap-3
+                mt-8
+                pt-6
+                border-t
+                border-black/10
+                dark:border-white/10
+            "
+        >
+            <button
+    type="button"
+    onclick="excluirDocumentoPrestador()"
+    class="
+        px-5
+        py-3
+        rounded-2xl
+        bg-red-500/10
+        text-red-500
+        text-xs
+        font-bold
+        hover:bg-red-500/20
+        transition
+    "
+>
+    EXCLUIR
+</button>
+
+            <button
+                id="btnEditarDocumentoPrestador"
+                type="button"
+                onclick="ativarEdicaoDocumentoPrestador()"
+                class="
+                    px-5
+                    py-3
+                    rounded-2xl
+                    bg-black/5
+                    dark:bg-white/10
+                    text-xs
+                    font-bold
+                "
+            >
+                EDITAR
+            </button>
+
+
+            <button
+                id="btnSalvarEdicaoDocumentoPrestador"
+                type="button"
+                onclick="salvarEdicaoDocumentoPrestador()"
+                class="
+                    hidden
+                    px-6
+                    py-3
+                    rounded-2xl
+                    bg-black
+                    text-white
+                    dark:bg-white
+                    dark:text-black
+                    text-xs
+                    font-bold
+                "
+            >
+                SALVAR ALTERAÇÕES
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- VOLTAR -->
+    <button
+        type="button"
+        onclick="voltarParaPrestadores()"
+        class="
+            text-xs
+            opacity-50
+            hover:opacity-100
+            mb-6
+        "
+    >
+        ← Voltar para Prestadores
+    </button>
+
+
+    <!-- =====================================================
+         CABEÇALHO
+    ====================================================== -->
+
+    <div
+        class="
+            flex
+            flex-col
+            lg:flex-row
+            lg:items-start
+            lg:justify-between
+            gap-6
+            mb-8
+        "
+    >
+
+<div class="flex items-center gap-5">
+
+    <!-- LOGO / FOTO DO PRESTADOR -->
+    <div
+        class="
+            w-20
+            h-24
+            rounded-[22px]
+            bg-black/5
+            dark:bg-white/5
+            border
+            border-black/10
+            dark:border-white/10
+            overflow-hidden
+            flex
+            items-center
+            justify-center
+            flex-shrink-0
+            shadow-sm
+        "
+    >
+
+        <img
+            id="prestadorDetalhesLogo"
+            src=""
+            alt="Logo do prestador"
+            class="
+                hidden
+                w-full
+                h-full
+                object-contain
+                p-2
+            "
+        >
+
+        <span
+            id="prestadorDetalhesLogoFallback"
+            class="
+                text-2xl
+                font-bold
+                opacity-20
+            "
+        >
+            P
+        </span>
+
+    </div>
+
+
+    <!-- NOME -->
+    <div class="min-w-0">
+
+        <p
+            class="
+                text-[10px]
+                font-bold
+                uppercase
+                tracking-[0.3em]
+                opacity-40
+            "
+        >
+            Prestador
+        </p>
+
+        <h1
+            id="prestadorDetalhesNome"
+            class="
+                text-4xl
+                font-semibold
+                mt-2
+                truncate
+            "
+        >
+            Prestador
+        </h1>
+
+        <p
+            id="prestadorDetalhesRazao"
+            class="
+                text-sm
+                opacity-45
+                mt-2
+            "
+        >
+        </p>
+
+    </div>
+</div>
+</div>
+
+<!-- =====================================================
+     DADOS DO PRESTADOR
+====================================================== -->
+
+<div
+    class="
+        grid
+        grid-cols-1
+        md:grid-cols-2
+        xl:grid-cols-4
+        gap-4
+        mb-8
+    "
+>
+
+    <!-- ENDEREÇO -->
+    <div class="glass rounded-2xl p-4 md:col-span-2">
+
+        <p
+            class="
+                text-[9px]
+                uppercase
+                font-bold
+                opacity-40
+            "
+        >
+            Endereço
+        </p>
+
+        <p
+            id="prestadorDetalhesEndereco"
+            class="font-semibold mt-2"
+        >
+            —
+        </p>
+
+    </div>
+
+
+    <!-- MUNICÍPIO -->
+    <div class="glass rounded-2xl p-4">
+
+        <p
+            class="
+                text-[9px]
+                uppercase
+                font-bold
+                opacity-40
+            "
+        >
+            Município
+        </p>
+
+        <p
+            id="prestadorDetalhesMunicipio"
+            class="font-semibold mt-2"
+        >
+            —
+        </p>
+
+    </div>
+
+
+    <!-- CEP -->
+    <div class="glass rounded-2xl p-4">
+
+        <p
+            class="
+                text-[9px]
+                uppercase
+                font-bold
+                opacity-40
+            "
+        >
+            CEP
+        </p>
+
+        <p
+            id="prestadorDetalhesCep"
+            class="font-semibold mt-2"
+        >
+            —
+        </p>
+
+    </div>
+
+
+    <!-- CNPJ -->
+    <div class="glass rounded-2xl p-4">
+
+        <p
+            class="
+                text-[9px]
+                uppercase
+                font-bold
+                opacity-40
+            "
+        >
+            CNPJ
+        </p>
+
+        <p
+            id="prestadorDetalhesCnpj"
+            class="font-semibold mt-2"
+        >
+            —
+        </p>
+
+    </div>
+
+
+    <!-- CÓDIGO -->
+    <div class="glass rounded-2xl p-4">
+
+        <p
+            class="
+                text-[9px]
+                uppercase
+                font-bold
+                opacity-40
+            "
+        >
+            Código
+        </p>
+
+        <p
+            id="prestadorDetalhesCodigo"
+            class="font-semibold mt-2"
+        >
+            —
+        </p>
+
+    </div>
+
+
+    <!-- TELEFONE -->
+    <div class="glass rounded-2xl p-4">
+
+        <p
+            class="
+                text-[9px]
+                uppercase
+                font-bold
+                opacity-40
+            "
+        >
+            Telefone
+        </p>
+
+        <p
+            id="prestadorDetalhesTelefone"
+            class="font-semibold mt-2"
+        >
+            —
+        </p>
+
+    </div>
+
+
+    <!-- E-MAIL -->
+    <div class="glass rounded-2xl p-4">
+
+        <p
+            class="
+                text-[9px]
+                uppercase
+                font-bold
+                opacity-40
+            "
+        >
+            E-mail
+        </p>
+
+        <p
+            id="prestadorDetalhesEmail"
+            class="
+                font-semibold
+                mt-2
+                break-all
+            "
+        >
+            —
+        </p>
+
+    </div>
+
+</div>
+
+    <!-- =====================================================
+         SERVIÇOS ATENDIDOS
+    ====================================================== -->
+
+    <div
+        class="
+            glass
+            rounded-[26px]
+            p-5
+            mb-8
+        "
+    >
+
+        <p
+            class="
+                text-[9px]
+                uppercase
+                font-bold
+                opacity-40
+            "
+        >
+            Serviços atendidos
+        </p>
+
+
+        <div
+            id="prestadorDetalhesServicos"
+            class="
+                flex
+                flex-wrap
+                gap-2
+                mt-3
+            "
+        >
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         HISTÓRICO DE DOCUMENTOS
+    ====================================================== -->
+
+    <div
+        class="
+            glass
+            rounded-[28px]
+            overflow-hidden
+        "
+    >
+
+        <!-- CABEÇALHO DO HISTÓRICO -->
+<div class="
+    p-5
+    border-b
+    border-black/5
+    dark:border-white/5
+    flex
+    flex-col
+    sm:flex-row
+    sm:items-center
+    sm:justify-between
+    gap-4
+">
+
+    <!-- TÍTULO -->
+    <div>
+
+        <h2 class="text-xl font-semibold">
+            Histórico de documentos
+        </h2>
+
+        <p class="text-xs opacity-45 mt-1">
+            Notas fiscais, relatórios e ordens de serviço vinculados ao prestador.
+        </p>
+
+    </div>
+
+
+    <!-- ADICIONAR DOCUMENTO -->
+    <button
+        type="button"
+        onclick="abrirModalDocumentoPrestador()"
+        class="
+            shrink-0
+            px-5
+            py-3
+            rounded-2xl
+            bg-black
+            text-white
+            dark:bg-white
+            dark:text-black
+            text-xs
+            font-bold
+            hover:opacity-80
+            transition
+        "
+    >
+        + ADICIONAR DOCUMENTO
+    </button>
+
+</div>
+
+        <!-- =================================================
+             FILTROS
+        ================================================== -->
+
+        <div
+            class="
+                p-4
+                grid
+                grid-cols-1
+                md:grid-cols-2
+                xl:grid-cols-5
+                gap-3
+                border-b
+                border-black/5
+                dark:border-white/5
+            "
+        >
+
+            <!-- LOJA -->
+            <select
+                id="prestadorDocFiltroLoja"
+                onchange="renderizarDocumentosPrestador()"
+                class="
+                    w-full
+                    px-4
+                    py-3
+                    rounded-2xl
+                    bg-black/5
+                    dark:bg-white/5
+                    border
+                    border-black/10
+                    dark:border-white/10
+                    text-xs
+                    outline-none
+                "
+            >
+
+                <option value="">
+                    Todas as lojas
+                </option>
+
+            </select>
+
+
+            <!-- TIPO DE DOCUMENTO -->
+            <select
+                id="prestadorDocFiltroTipo"
+                onchange="renderizarDocumentosPrestador()"
+                class="
+                    w-full
+                    px-4
+                    py-3
+                    rounded-2xl
+                    bg-black/5
+                    dark:bg-white/5
+                    border
+                    border-black/10
+                    dark:border-white/10
+                    text-xs
+                    outline-none
+                "
+            >
+
+                <option value="">
+                    Todos os documentos
+                </option>
+
+                <option value="NOTA_FISCAL">
+                    Nota Fiscal
+                </option>
+
+                <option value="RELATORIO">
+                    Relatório
+                </option>
+
+                <option value="OS">
+                    OS
+                </option>
+
+            </select>
+
+
+            <!-- TIPO DE MANUTENÇÃO -->
+            <select
+                id="prestadorDocFiltroManutencao"
+                onchange="renderizarDocumentosPrestador()"
+                class="
+                    w-full
+                    px-4
+                    py-3
+                    rounded-2xl
+                    bg-black/5
+                    dark:bg-white/5
+                    border
+                    border-black/10
+                    dark:border-white/10
+                    text-xs
+                    outline-none
+                "
+            >
+
+                <option value="">
+                    Todos os serviços
+                </option>
+
+                <option value="PREVENTIVA">
+                    Preventiva
+                </option>
+
+                <option value="CORRETIVA">
+                    Corretiva
+                </option>
+
+                <option value="PREVENTIVA_CORRETIVA">
+                    Preventiva / Corretiva
+                </option>
+
+                <option value="INSTALACAO">
+                    Instalação
+                </option>
+
+                <option value="OUTROS">
+                    Outros
+                </option>
+
+            </select>
+
+
+            <!-- PERÍODO -->
+            <input
+                id="prestadorDocFiltroPeriodo"
+                type="month"
+                oninput="renderizarDocumentosPrestador()"
+                class="
+                    w-full
+                    px-4
+                    py-3
+                    rounded-2xl
+                    bg-black/5
+                    dark:bg-white/5
+                    border
+                    border-black/10
+                    dark:border-white/10
+                    text-xs
+                    outline-none
+                "
+            >
+
+
+            <!-- BUSCA -->
+            <input
+                id="prestadorDocBusca"
+                type="text"
+                placeholder="Buscar número..."
+                oninput="renderizarDocumentosPrestador()"
+                class="
+                    w-full
+                    px-4
+                    py-3
+                    rounded-2xl
+                    bg-black/5
+                    dark:bg-white/5
+                    border
+                    border-black/10
+                    dark:border-white/10
+                    text-xs
+                    outline-none
+                "
+            >
+
+        </div>
+
+
+        <!-- =================================================
+             TABELA DO HISTÓRICO
+        ================================================== -->
+
+        <div class="overflow-x-auto">
+
+            <table
+                class="
+                    w-full
+                    min-w-[1000px]
+                    text-xs
+                "
+            >
+
+                <thead
+                    class="
+                        bg-black/[0.03]
+                        dark:bg-white/[0.03]
+                        text-left
+                        uppercase
+                        text-[9px]
+                        tracking-wider
+                        opacity-60
+                    "
+                >
+
+                    <tr>
+
+                        <th class="p-3">
+                            Data
+                        </th>
+
+                        <th class="p-3">
+                            Loja
+                        </th>
+
+                        <th class="p-3">
+                            Documento
+                        </th>
+
+                        <th class="p-3">
+                            Tipo de serviço
+                        </th>
+
+                        <th class="p-3">
+                            Número
+                        </th>
+
+                        <th class="p-3">
+                            Valor
+                        </th>
+
+                        <th class="p-3">
+                            Arquivo
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="prestadorDocumentosBody">
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="
+                                p-10
+                                text-center
+                                opacity-40
+                            "
+                        >
+                            Nenhum documento cadastrado.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     FIM - DETALHES DO PRESTADOR
+========================================================= -->
+
+
+
+<!-- =========================================================
+     VIEW CONFIGURAÇÕES
+========================================================= -->
+
+<section
+    id="configView"
+    class="
+        hidden-view
+        max-w-2xl
+        mx-auto
+        px-6
+        mt-24
+        pb-20
+    "
+>
+
+    <!-- =====================================================
+         LOJAS
+    ====================================================== -->
+
+    <div
+        class="
+            glass
+            rounded-3xl
+            p-8
+            mb-6
+        "
+    >
+
+        <h3
+            class="
+                text-xl
+                font-bold
+                mb-6
+            "
+        >
+            Lojas
+        </h3>
+
+
+        <div
+            class="
+                flex
+                gap-2
+                mb-6
+            "
+        >
+
+            <input
+                id="newStore"
+                type="text"
+                class="
+                    flex-1
+                    p-3
+                    input-ios
+                    text-sm
+                    uppercase
+                "
+                placeholder="Nº - LOJA - PA..."
+            >
+
+
+            <button
+                type="button"
+                onclick="addStore()"
+                class="
+                    bg-black
+                    text-white
+                    dark:bg-white
+                    dark:text-black
+                    px-4
+                    rounded-xl
+                    text-sm
+                    font-bold
+                "
+            >
+                ADICIONAR
+            </button>
+
+        </div>
+
+
+        <div
+            id="storeList"
+            class="
+                space-y-2
+                max-h-60
+                overflow-y-auto
+            "
+        >
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FORNECEDORES
+    ====================================================== -->
+
+    <div
+        class="
+            glass
+            rounded-3xl
+            p-8
+        "
+    >
+
+        <h3
+            class="
+                text-xl
+                font-bold
+                mb-6
+            "
+        >
+            Fornecedores
+        </h3>
+
+
+        <div
+            class="
+                flex
+                gap-2
+                mb-6
+            "
+        >
+
+            <input
+                id="newProv"
+                type="text"
+                class="
+                    flex-1
+                    p-3
+                    input-ios
+                    text-sm
+                    uppercase
+                "
+                placeholder="Nome da Empresa"
+            >
+
+
+            <button
+                type="button"
+                onclick="addProv()"
+                class="
+                    bg-black
+                    text-white
+                    dark:bg-white
+                    dark:text-black
+                    px-4
+                    rounded-xl
+                    text-sm
+                    font-bold
+                "
+            >
+                ADICIONAR
+            </button>
+
+        </div>
+
+
+        <div
+            id="provList"
+            class="
+                space-y-2
+                max-h-60
+                overflow-y-auto
+            "
+        >
+        </div>
+
+    </div>
+
+
+    <!-- VOLTAR -->
+    <button
+        type="button"
+        onclick="navigate('home')"
+        class="
+            mt-8
+            w-full
+            py-4
+            bg-black
+            text-white
+            dark:bg-white
+            dark:text-black
+            rounded-2xl
+            font-bold
+        "
+    >
+        Salvar e Voltar para a Home
+    </button>
+
+</section>
+
+
+<!-- =========================================================
+     FIM - VIEW CONFIGURAÇÕES
+========================================================= -->
+
+<!-- ==========================================
      MODAL DE REVISÃO DO RELATÓRIO
 =========================================== -->
     <div id="modalPreviewRelatorio"
@@ -1610,8 +3590,45 @@
         </div>
     </div>
 
+    <!-- =========================================================
+     BIBLIOTECAS / INFRAESTRUTURA
+========================================================= -->
+
+    <!-- =========================================================
+     SUPABASE
+========================================================= -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js" defer></script>
+
+    <script src="js/supabase.js" defer></script>
+
+
+    <!-- =========================================================
+     AREIS PRO - BASE
+========================================================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Infraestrutura -->
+    <script src="js/supabase.js" defer></script>
+    <script src="js/core.js" defer></script>
+
+    <!-- Módulos -->
+    <script src="js/chamados.js" defer></script>
+
+    <script src="js/relatorios.js" defer></script>
+    <script src="js/relatorios-pdf.js" defer></script>
+
+    <script src="js/os.js" defer></script>
+
+    <script src="js/cadastros.js" defer></script>
+
+    <script src="js/faturamento.js" defer></script>
+
+    <script src="js/conversor.js" defer></script>
+
+    <script src="js/navigation.js" defer></script>
+
 
     <!-- MODAL DE LINHA DO TEMPO E DETALHES DO CHAMADO -->
     <div id="modalDetalhesChamado"
@@ -1702,112 +3719,610 @@
     <section id="faturamentoView" class="hidden-view max-w-7xl mx-auto px-4 md:px-6 mt-28 pb-24">
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-8">
             <div>
-                <button onclick="navigate('home')" class="text-xs font-bold opacity-50 hover:opacity-100 mb-3">← Voltar para a Home</button>
+                <button onclick="navigate('home')" class="text-xs font-bold opacity-50 hover:opacity-100 mb-3">← Voltar
+                    para a Home</button>
                 <p class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">AREISPRO · Financeiro</p>
                 <h2 class="text-3xl md:text-5xl font-light tracking-tight mt-2">Faturamento</h2>
             </div>
             <div class="flex flex-wrap gap-2">
-                <button onclick="fatNovoAvulso()" class="px-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 text-xs font-bold">+ Adicionar Serviço</button>
-                <button onclick="fatAbrirNovoLote()" class="px-5 py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold shadow-lg">Faturar</button>
+                <button onclick="fatNovoAvulso()"
+                    class="px-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 text-xs font-bold">+
+                    Adicionar Serviço</button>
+                <button id="btnFaturarSelecionados" onclick="fatAbrirNovoLote()" class="
+        px-5 py-3
+        rounded-2xl
+        bg-black
+        text-white
+        dark:bg-white
+        dark:text-black
+        text-xs
+        font-bold
+        shadow-lg
+    ">
+                    Faturar
+                </button>
             </div>
         </div>
 
-        <div class="glass rounded-[28px] p-4 md:p-5 mb-5 flex flex-col md:flex-row md:items-center gap-3 justify-between">
+        <div
+            class="glass rounded-[28px] p-4 md:p-5 mb-5 flex flex-col md:flex-row md:items-center gap-3 justify-between">
             <div class="flex flex-wrap items-center gap-2">
                 <label class="text-[10px] font-bold uppercase tracking-wider opacity-50">Mês</label>
-                <select id="fatMesFiltro" onchange="fatTrocarMes()" class="px-4 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-sm font-semibold outline-none"></select>
-                <select id="fatTipoFiltro" onchange="fatRender()" class="px-4 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-sm font-semibold outline-none">
-                    <option value="TODOS">MCC + CCL</option><option value="MCC">MCC</option><option value="CCL">CCL</option>
+                <select id="fatMesFiltro" onchange="fatTrocarMes()"
+                    class="px-4 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-sm font-semibold outline-none"></select>
+                <select id="fatTipoFiltro" onchange="fatTrocarTipoFiltro()"
+                    class="px-4 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-sm font-semibold outline-none">
+                    <option value="TODOS">MCC + CCL</option>
+                    <option value="MCC">MCC</option>
+                    <option value="CCL">CCL</option>
                 </select>
             </div>
             <div class="flex flex-wrap gap-2">
-                <button onclick="fatExportarMes()" class="px-4 py-3 rounded-2xl bg-emerald-500/10 text-emerald-600 text-xs font-bold">Exportar Planilha</button>
+                <button onclick="fatExportarMes()"
+                    class="px-4 py-3 rounded-2xl bg-emerald-500/10 text-emerald-600 text-xs font-bold">Exportar
+                    Planilha</button>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
-            <div class="glass rounded-2xl p-4"><p class="text-[9px] font-bold uppercase opacity-40">Disponível</p><p id="fatKpiDisponivel" class="text-xl font-semibold mt-2">R$ 0,00</p></div>
-            <div class="glass rounded-2xl p-4"><p class="text-[9px] font-bold uppercase opacity-40">Faturado MCC</p><p id="fatKpiMcc" class="text-xl font-semibold mt-2">R$ 0,00</p></div>
-            <div class="glass rounded-2xl p-4"><p class="text-[9px] font-bold uppercase opacity-40">Faturado CCL</p><p id="fatKpiCcl" class="text-xl font-semibold mt-2">R$ 0,00</p></div>
-            <div class="glass rounded-2xl p-4"><p class="text-[9px] font-bold uppercase opacity-40">Total no mês</p><p id="fatKpiTotal" class="text-xl font-semibold mt-2">R$ 0,00</p></div>
-            <div class="glass rounded-2xl p-4 col-span-2 lg:col-span-1"><p class="text-[9px] font-bold uppercase opacity-40">Pendências</p><p id="fatKpiPendencias" class="text-xl font-semibold mt-2">0</p></div>
-        </div>
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
 
+    <!-- VALOR TOTAL -->
+    <div class="glass rounded-2xl p-4">
+        <p class="text-[9px] font-bold uppercase opacity-40">
+            Valor Total
+        </p>
+
+        <p
+            id="fatKpiTotalGeral"
+            class="text-xl font-semibold mt-2"
+        >
+            R$ 0,00
+        </p>
+    </div>
+
+
+    <!-- VALOR MCC -->
+    <div class="glass rounded-2xl p-4">
+        <p class="text-[9px] font-bold uppercase opacity-40">
+            Valor MCC
+        </p>
+
+        <p
+            id="fatKpiMcc"
+            class="text-xl font-semibold mt-2"
+        >
+            R$ 0,00
+        </p>
+    </div>
+
+
+    <!-- VALOR CCL -->
+    <div class="glass rounded-2xl p-4">
+        <p class="text-[9px] font-bold uppercase opacity-40">
+            Valor CCL
+        </p>
+
+        <p
+            id="fatKpiCcl"
+            class="text-xl font-semibold mt-2"
+        >
+            R$ 0,00
+        </p>
+    </div>
+
+
+    <!-- MATERIAL MCC -->
+    <div class="glass rounded-2xl p-4">
+        <p class="text-[9px] font-bold uppercase opacity-40">
+            Valor Material MCC
+        </p>
+
+        <p
+            id="fatKpiMaterialMcc"
+            class="text-xl font-semibold mt-2"
+        >
+            R$ 0,00
+        </p>
+    </div>
+
+
+    <!-- MATERIAL CCL -->
+    <div class="glass rounded-2xl p-4">
+        <p class="text-[9px] font-bold uppercase opacity-40">
+            Valor Material CCL
+        </p>
+
+        <p
+            id="fatKpiMaterialCcl"
+            class="text-xl font-semibold mt-2"
+        >
+            R$ 0,00
+        </p>
+    </div>
+
+</div>
+        
         <div class="glass rounded-[28px] overflow-hidden mb-6">
             <div class="p-5 border-b border-black/5 dark:border-white/5 flex items-center justify-between gap-3">
-                <div><h3 class="font-semibold">Carteira do mês</h3><p id="fatResumoMes" class="text-xs opacity-45 mt-1">Carregando...</p></div>
-                <input id="fatBusca" oninput="fatRender()" placeholder="Buscar ID, loja, serviço..." class="w-56 max-w-full px-4 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-xs outline-none">
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full min-w-[1180px] text-xs">
-                    <thead class="bg-black/[0.03] dark:bg-white/[0.03] text-left uppercase tracking-wider text-[9px] opacity-60">
-                        <tr><th class="p-4">ID</th><th class="p-4">Serviço</th><th class="p-4">Loja</th><th class="p-4">Tipo</th><th class="p-4">Parcela</th><th class="p-4">Relatório</th><th class="p-4">Fornecedor</th><th class="p-4 text-right">Valor</th><th class="p-4">Situação</th><th class="p-4"></th></tr>
-                    </thead>
-                    <tbody id="fatTabelaBody"></tbody>
-                </table>
-            </div>
+                <div>
+                    <h3 class="font-semibold">Carteira do mês</h3>
+                    <p id="fatResumoMes" class="text-xs opacity-45 mt-1">Carregando...</p>
+                </div>
+
+                <!-- =========================================================
+     FILTRO DE LOJAS - SELEÇÃO MÚLTIPLA
+========================================================= -->
+
+<div class="relative">
+
+    <button
+        id="fatFiltroLojaBtn"
+        type="button"
+        onclick="fatToggleFiltroLojas()"
+        class="
+            w-56 max-w-full
+            px-4 py-3
+            rounded-2xl
+            bg-black/5 dark:bg-white/5
+            text-xs
+            outline-none
+            flex items-center
+            justify-between
+            gap-3
+        "
+    >
+
+        <span
+            id="fatFiltroLojaTexto"
+            class="truncate"
+        >
+            Todas as lojas
+        </span>
+
+        <span class="text-[10px] opacity-40">
+            ▼
+        </span>
+
+    </button>
+
+
+    <!-- MENU -->
+
+    <div
+        id="fatFiltroLojaMenu"
+        class="
+            hidden
+            absolute
+            top-full
+            right-0
+            mt-2
+            z-50
+            w-72
+            max-w-[90vw]
+            rounded-2xl
+            bg-white dark:bg-zinc-900
+            border border-black/10 dark:border-white/10
+            shadow-2xl
+            overflow-hidden
+        "
+    >
+
+
+        <!-- BUSCA DENTRO DO FILTRO -->
+
+        <div class="
+            p-3
+            border-b
+            border-black/10
+            dark:border-white/10
+        ">
+
+            <input
+                id="fatFiltroLojaBusca"
+                type="text"
+                placeholder="Buscar loja..."
+                oninput="fatRenderFiltroLojas()"
+                class="
+                    w-full
+                    px-3 py-2
+                    rounded-xl
+                    bg-black/5 dark:bg-white/5
+                    text-xs
+                    outline-none
+                "
+            >
+
         </div>
 
-        <div class="glass rounded-[28px] overflow-hidden">
-            <div class="p-5 border-b border-black/5 dark:border-white/5"><h3 class="font-semibold">Lotes faturados</h3><p class="text-xs opacity-45 mt-1">Fechamentos realizados no mês selecionado.</p></div>
-            <div id="fatLotesLista" class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-3"></div>
+
+        <!-- AÇÕES -->
+
+        <div class="
+            flex
+            items-center
+            justify-between
+            gap-2
+            px-3 py-2
+            border-b
+            border-black/10
+            dark:border-white/10
+        ">
+
+            <button
+                type="button"
+                onclick="fatSelecionarTodasLojas()"
+                class="
+                    text-[10px]
+                    font-semibold
+                    hover:opacity-60
+                "
+            >
+                Selecionar todas
+            </button>
+
+
+            <button
+                type="button"
+                onclick="fatLimparFiltroLojas()"
+                class="
+                    text-[10px]
+                    font-semibold
+                    hover:opacity-60
+                "
+            >
+                Limpar
+            </button>
+
         </div>
+
+
+        <!-- CHECKBOXES -->
+
+        <div
+            id="fatFiltroLojaLista"
+            class="
+                max-h-72
+                overflow-y-auto
+                p-2
+            "
+        >
+        </div>
+
+
+        <!-- RODAPÉ -->
+
+        <div class="
+            p-3
+            border-t
+            border-black/10
+            dark:border-white/10
+        ">
+
+            <button
+                type="button"
+                onclick="fatAplicarFiltroLojas()"
+                class="
+                    w-full
+                    px-4 py-3
+                    rounded-xl
+                    bg-black
+                    text-white
+                    dark:bg-white
+                    dark:text-black
+                    text-xs
+                    font-bold
+                "
+            >
+                APLICAR FILTRO
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+            </div>
+            <div class="overflow-x-auto">
+                <div class="overflow-x-auto">
+
+<div
+    class="
+        h-[58vh]
+        min-h-[480px]
+        overflow-auto
+    "
+>
+
+    <table
+        class="
+            w-full
+            min-w-[1900px]
+            text-xs
+        "
+    >
+
+        <thead
+            class="
+                sticky
+                top-0
+                z-20
+                bg-[#f5f5f6]
+                dark:bg-zinc-900
+                text-left
+                uppercase
+                tracking-wider
+                text-[9px]
+                text-black/50
+                dark:text-white/50
+            "
+        >
+
+            <tr>
+
+                <!-- SELECIONAR TODOS -->
+
+                <th class="px-3 py-3 w-10 text-center">
+
+                    <input
+                        id="fatSelecionarTodosCarteira"
+                        type="checkbox"
+                        onchange="
+                            fatSelecionarTodosCarteira(
+                                this.checked
+                            )
+                        "
+                    >
+
+                </th>
+
+
+                <!-- ID -->
+
+                <th class="px-3 py-3 whitespace-nowrap">
+                    ID
+                </th>
+
+
+                <!-- SERVIÇO -->
+
+                <th class="px-3 py-3 min-w-[150px]">
+                    SERVIÇO
+                </th>
+
+
+                <!-- LOJA -->
+
+                <th class="px-3 py-3 whitespace-nowrap">
+                    LOJA
+                </th>
+
+
+                <!-- DESCRIÇÃO -->
+
+                <th class="px-3 py-3 min-w-[300px]">
+                    DESCRIÇÃO
+                </th>
+
+
+                <!-- VALOR -->
+
+                <th class="px-3 py-3 whitespace-nowrap text-right">
+                    VALOR
+                </th>
+
+
+                <!-- VALOR MATERIAL -->
+
+                <th class="px-3 py-3 whitespace-nowrap text-right">
+                    VALOR MATERIAL
+                </th>
+
+
+                <!-- FORNECEDOR -->
+
+                <th class="
+                    px-3 py-3
+                    min-w-[170px]
+                    max-w-[190px]
+                ">
+                    FORNECEDOR
+                </th>
+
+
+                <!-- CNPJ -->
+
+                <th class="px-3 py-3 whitespace-nowrap">
+                    CNPJ
+                </th>
+
+
+                <!-- COD -->
+
+                <th class="px-3 py-3 whitespace-nowrap">
+                    COD
+                </th>
+
+
+                <!-- RELATÓRIO -->
+
+                <th class="px-3 py-3 whitespace-nowrap">
+                    RELATÓRIO
+                </th>
+
+
+                <!-- NF -->
+
+                <th class="px-3 py-3 whitespace-nowrap">
+                    NF
+                </th>
+
+
+                <!-- CONTA CONTÁBIL -->
+
+                <th class="px-3 py-3 whitespace-nowrap">
+                    CONTA CONTÁBIL
+                </th>
+
+
+                <!-- COMPETÊNCIA -->
+
+                <th class="px-3 py-3 whitespace-nowrap">
+                    COMPETÊNCIA
+                </th>
+
+
+                <!-- STATUS -->
+
+                <th class="px-3 py-3 whitespace-nowrap">
+                    STATUS
+                </th>
+
+
+                <!-- AÇÃO -->
+
+                <th class="px-3 py-3 w-20">
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="fatTabelaBody">
+        </tbody>
+
+    </table>
+
+</div>
+
+            <div class="glass rounded-[28px] overflow-hidden">
+                <div class="p-5 border-b border-black/5 dark:border-white/5">
+                    <h3 class="font-semibold">Lotes faturados</h3>
+                    <p class="text-xs opacity-45 mt-1">Fechamentos realizados no mês selecionado.</p>
+                </div>
+                <div id="fatLotesLista" class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-3"></div>
+            </div>
     </section>
 
     <!-- MODAL EDIÇÃO DO SERVIÇO -->
     <div id="fatServicoModal" class="hidden fixed inset-0 z-[500] bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
-      <div class="glass bg-white dark:bg-slate-950 max-w-4xl mx-auto my-8 rounded-[30px] p-6 md:p-8 shadow-2xl">
-        <div class="flex justify-between gap-4 mb-6"><div><p class="text-[10px] uppercase font-bold opacity-40 tracking-wider">Faturamento</p><h3 id="fatServicoTitulo" class="text-2xl font-semibold mt-1">Preparar serviço</h3></div><button onclick="fatFecharServicoModal()" class="text-2xl opacity-40">×</button></div>
-        <input type="hidden" id="fatServicoId">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <label class="text-xs">ID / Chamado<input id="fatCampoChamado" class="fat-input" placeholder="Opcional para avulso"></label>
-          <label class="text-xs">Loja<input id="fatCampoLoja" class="fat-input"></label>
-          <label class="text-xs">Serviço<input id="fatCampoServico" class="fat-input"></label>
-          <label class="text-xs">Tipo<select id="fatCampoTipo" class="fat-input"><option>MCC</option><option>CCL</option></select></label>
-          <label class="text-xs">Fornecedor<input id="fatCampoFornecedor" class="fat-input" placeholder="JService, SRP, EMC..."></label>
-          <label class="text-xs">CNPJ<input id="fatCampoCnpj" class="fat-input"></label>
-          <label class="text-xs">COD<input id="fatCampoCod" class="fat-input"></label>
-          <label class="text-xs">Valor total<input id="fatCampoValor" type="number" min="0" step="0.01" class="fat-input"></label>
-          <label class="text-xs">Valor material<input id="fatCampoMaterial" type="number" min="0" step="0.01" class="fat-input"></label>
-          <label class="text-xs">NF<input id="fatCampoNf" class="fat-input"></label>
-          <label class="text-xs">Conta contábil<input id="fatCampoConta" class="fat-input"></label>
-          <label class="text-xs">Status do faturamento<input id="fatCampoStatus" class="fat-input" placeholder="Manual"></label>
-          <label class="text-xs md:col-span-3">Link do relatório<input id="fatCampoRelatorio" class="fat-input" placeholder="Preenchido automaticamente quando existir"></label>
-          <label class="text-xs md:col-span-3">Descrição técnica<textarea id="fatCampoDescricao" rows="4" class="fat-input resize-y"></textarea></label>
+        <div class="glass bg-white dark:bg-slate-950 max-w-4xl mx-auto my-8 rounded-[30px] p-6 md:p-8 shadow-2xl">
+            <div class="flex justify-between gap-4 mb-6">
+                <div>
+                    <p class="text-[10px] uppercase font-bold opacity-40 tracking-wider">Faturamento</p>
+                    <h3 id="fatServicoTitulo" class="text-2xl font-semibold mt-1">Preparar serviço</h3>
+                </div><button onclick="fatFecharServicoModal()" class="text-2xl opacity-40">×</button>
+            </div>
+            <input type="hidden" id="fatServicoId">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <label class="text-xs">ID / Chamado<input id="fatCampoChamado" class="fat-input"
+                        placeholder="Opcional para avulso"></label>
+                <label class="text-xs">Loja<input id="fatCampoLoja" class="fat-input"></label>
+                <label class="text-xs">
+                    Serviço
+
+                    <select id="fatCampoServico" onchange="fatAtualizarDadosServico()" class="fat-input">
+                        <option value="">
+                            Carregando serviços...
+                        </option>
+                    </select>
+
+                </label>
+                <label class="text-xs">
+                    Conta contábil
+
+                    <select id="fatCampoTipo" class="fat-input opacity-70" disabled>
+                        <option value="">Selecione o serviço</option>
+                        <option value="MCC">MCC</option>
+                        <option value="CCL">CCL</option>
+                    </select>
+
+                </label>
+                <label class="text-xs">Fornecedor<input id="fatCampoFornecedor" class="fat-input"
+                        placeholder="JService, SRP, EMC..."></label>
+                <label class="text-xs">CNPJ<input id="fatCampoCnpj" class="fat-input"></label>
+                <label class="text-xs">COD<input id="fatCampoCod" class="fat-input"></label>
+                <label class="text-xs">Valor total<input id="fatCampoValor" type="number" min="0" step="0.01"
+                        class="fat-input"></label>
+                <label class="text-xs">Valor material<input id="fatCampoMaterial" type="number" min="0" step="0.01"
+                        class="fat-input"></label>
+                <label class="text-xs">NF<input id="fatCampoNf" class="fat-input"></label>
+                <label class="text-xs">Status do faturamento<input id="fatCampoStatus" class="fat-input"
+                        placeholder="Manual"></label>
+                <label class="text-xs md:col-span-3">Link do relatório<input id="fatCampoRelatorio" class="fat-input"
+                        placeholder="Preenchido automaticamente quando existir"></label>
+                <label class="text-xs md:col-span-3">Descrição técnica<textarea id="fatCampoDescricao" rows="4"
+                        class="fat-input resize-y"></textarea></label>
+            </div>
+            <div class="mt-5 p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]">
+                <label class="flex gap-3 items-center text-sm font-semibold"><input id="fatCampoParcelado"
+                        type="checkbox" onchange="fatAlternarParcelamento()"> Parcelar este serviço</label>
+                <div id="fatParcelamentoBox" class="hidden mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="text-xs">Quantidade de parcelas<input id="fatCampoQtdParcelas" type="number" min="2"
+                            max="36" value="2" class="fat-input"></label>
+                    <label class="text-xs">Primeira competência<input id="fatCampoPrimeiraCompetencia" type="month"
+                            class="fat-input"></label>
+                    <p class="md:col-span-2 text-[11px] opacity-50">As próximas parcelas serão criadas mês a mês. Elas
+                        ficam em stand-by e só serão faturadas quando alguém incluí-las em uma verba.</p>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-6"><button onclick="fatFecharServicoModal()"
+                    class="px-5 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-xs font-bold">Cancelar</button><button
+                    onclick="fatSalvarServico()"
+                    class="px-6 py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold">Salvar</button>
+            </div>
         </div>
-        <div class="mt-5 p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]">
-          <label class="flex gap-3 items-center text-sm font-semibold"><input id="fatCampoParcelado" type="checkbox" onchange="fatAlternarParcelamento()"> Parcelar este serviço</label>
-          <div id="fatParcelamentoBox" class="hidden mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label class="text-xs">Quantidade de parcelas<input id="fatCampoQtdParcelas" type="number" min="2" max="36" value="2" class="fat-input"></label>
-            <label class="text-xs">Primeira competência<input id="fatCampoPrimeiraCompetencia" type="month" class="fat-input"></label>
-            <p class="md:col-span-2 text-[11px] opacity-50">As próximas parcelas serão criadas mês a mês. Elas ficam em stand-by e só serão faturadas quando alguém incluí-las em uma verba.</p>
-          </div>
-        </div>
-        <div class="flex justify-end gap-2 mt-6"><button onclick="fatFecharServicoModal()" class="px-5 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-xs font-bold">Cancelar</button><button onclick="fatSalvarServico()" class="px-6 py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold">Salvar</button></div>
-      </div>
     </div>
 
     <!-- MODAL NOVO LOTE -->
     <div id="fatLoteModal" class="hidden fixed inset-0 z-[510] bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
-      <div class="glass bg-white dark:bg-slate-950 max-w-5xl mx-auto my-8 rounded-[30px] p-6 md:p-8 shadow-2xl">
-        <div class="flex justify-between gap-4 mb-6"><div><p class="text-[10px] uppercase font-bold opacity-40 tracking-wider">Passo a passo</p><h3 class="text-2xl font-semibold mt-1">Novo faturamento</h3></div><button onclick="fatFecharLoteModal()" class="text-2xl opacity-40">×</button></div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-          <label class="text-xs">1. Faturar como<select id="fatLoteTipo" onchange="fatRenderSelecionaveis()" class="fat-input"><option value="MCC">MCC</option><option value="CCL">CCL</option></select></label>
-          <label class="text-xs">2. Valor da verba<input id="fatLoteVerba" oninput="fatAtualizarResumoLote()" type="number" min="0" step="0.01" class="fat-input" placeholder="0,00"></label>
-          <label class="text-xs">Competência<input id="fatLoteCompetencia" type="month" onchange="fatRenderSelecionaveis()" class="fat-input"></label>
+        <div class="glass bg-white dark:bg-slate-950 max-w-5xl mx-auto my-8 rounded-[30px] p-6 md:p-8 shadow-2xl">
+            <div class="flex justify-between gap-4 mb-6">
+                <div>
+                    <p class="text-[10px] uppercase font-bold opacity-40 tracking-wider">Passo a passo</p>
+                    <h3 class="text-2xl font-semibold mt-1">Novo faturamento</h3>
+                </div><button onclick="fatFecharLoteModal()" class="text-2xl opacity-40">×</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+                <label class="text-xs">1. Faturar como<select id="fatLoteTipo" onchange="fatRenderSelecionaveis()"
+                        class="fat-input">
+                        <option value="MCC">MCC</option>
+                        <option value="CCL">CCL</option>
+                    </select></label>
+                <label class="text-xs">2. Valor da verba<input id="fatLoteVerba" oninput="fatAtualizarResumoLote()"
+                        type="number" min="0" step="0.01" class="fat-input" placeholder="0,00"></label>
+                <label class="text-xs">Competência<input id="fatLoteCompetencia" type="month"
+                        onchange="fatRenderSelecionaveis()" class="fat-input"></label>
+            </div>
+            <div class="rounded-2xl border border-black/10 dark:border-white/10 overflow-hidden">
+                <div class="p-4 bg-black/[0.03] dark:bg-white/[0.03] flex justify-between"><strong class="text-xs">3.
+                        Escolha os serviços</strong><span id="fatLoteContador" class="text-xs opacity-50">0
+                        selecionados</span></div>
+                <div id="fatSelecionaveis"
+                    class="max-h-[46vh] overflow-y-auto divide-y divide-black/5 dark:divide-white/5"></div>
+            </div>
+            <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]">
+                    <p class="text-[9px] uppercase font-bold opacity-40">Verba</p>
+                    <p id="fatResumoVerba" class="text-xl font-semibold mt-1">R$ 0,00</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]">
+                    <p class="text-[9px] uppercase font-bold opacity-40">Selecionado</p>
+                    <p id="fatResumoSelecionado" class="text-xl font-semibold mt-1">R$ 0,00</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]">
+                    <p class="text-[9px] uppercase font-bold opacity-40">Diferença</p>
+                    <p id="fatResumoDiferenca" class="text-xl font-semibold mt-1">R$ 0,00</p>
+                </div>
+            </div>
+            <p id="fatLoteAviso" class="mt-3 text-xs font-semibold opacity-70"></p>
+            <div class="flex justify-end gap-2 mt-6"><button onclick="fatFecharLoteModal()"
+                    class="px-5 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-xs font-bold">Cancelar</button><button
+                    onclick="fatConfirmarLote()"
+                    class="px-6 py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold">Confirmar
+                    faturamento</button></div>
         </div>
-        <div class="rounded-2xl border border-black/10 dark:border-white/10 overflow-hidden">
-          <div class="p-4 bg-black/[0.03] dark:bg-white/[0.03] flex justify-between"><strong class="text-xs">3. Escolha os serviços</strong><span id="fatLoteContador" class="text-xs opacity-50">0 selecionados</span></div>
-          <div id="fatSelecionaveis" class="max-h-[46vh] overflow-y-auto divide-y divide-black/5 dark:divide-white/5"></div>
-        </div>
-        <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div class="p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]"><p class="text-[9px] uppercase font-bold opacity-40">Verba</p><p id="fatResumoVerba" class="text-xl font-semibold mt-1">R$ 0,00</p></div>
-          <div class="p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]"><p class="text-[9px] uppercase font-bold opacity-40">Selecionado</p><p id="fatResumoSelecionado" class="text-xl font-semibold mt-1">R$ 0,00</p></div>
-          <div class="p-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04]"><p class="text-[9px] uppercase font-bold opacity-40">Diferença</p><p id="fatResumoDiferenca" class="text-xl font-semibold mt-1">R$ 0,00</p></div>
-        </div>
-        <p id="fatLoteAviso" class="mt-3 text-xs font-semibold opacity-70"></p>
-        <div class="flex justify-end gap-2 mt-6"><button onclick="fatFecharLoteModal()" class="px-5 py-3 rounded-2xl bg-black/5 dark:bg-white/5 text-xs font-bold">Cancelar</button><button onclick="fatConfirmarLote()" class="px-6 py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold">Confirmar faturamento</button></div>
-      </div>
     </div>
 
     <!-- =========================================================
@@ -1965,6 +4480,719 @@
 
     </section>
 
+
+    </div>
+
+    <!-- =========================================================
+     MODAL - CADASTRO DE PRESTADOR
+========================================================= -->
+
+    <div id="modalPrestador" class="
+        hidden
+        fixed inset-0 z-[100]
+        bg-black/60 backdrop-blur-sm
+        flex items-center justify-center
+        p-3 md:p-4
+    ">
+
+        <!-- =====================================================
+         JANELA DO MODAL
+    ====================================================== -->
+
+        <div class="
+            glass
+            w-full max-w-2xl
+            max-h-[92vh]
+            rounded-[32px]
+            shadow-2xl
+            overflow-hidden
+            flex flex-col
+        ">
+
+            <!-- =================================================
+             CABEÇALHO FIXO
+        ================================================== -->
+
+            <div class="
+                flex items-start justify-between gap-4
+                px-6 pt-6 pb-5
+                md:px-8 md:pt-8
+                border-b
+                border-black/5 dark:border-white/5
+                shrink-0
+            ">
+
+                <div>
+
+                    <p class="
+                        text-[10px]
+                        font-bold
+                        uppercase
+                        tracking-[0.3em]
+                        opacity-40
+                    ">
+                        Prestadores
+                    </p>
+
+                    <h3 id="tituloModalPrestador" class="text-2xl font-semibold mt-2">
+                        Novo Prestador
+                    </h3>
+
+                </div>
+
+
+                <button type="button" onclick="fecharModalPrestador()" class="
+                    w-10 h-10
+                    rounded-full
+                    bg-black/5 dark:bg-white/10
+                    text-lg
+                    hover:opacity-60
+                    shrink-0
+                ">
+                    ×
+                </button>
+
+            </div>
+
+
+            <input id="prestadorIdEdicao" type="hidden">
+
+
+            <!-- =================================================
+             CONTEÚDO ROLÁVEL
+        ================================================== -->
+
+            <div class="
+                flex-1
+                overflow-y-auto
+                px-6 py-6
+                md:px-8
+            ">
+
+                <div class="
+                    grid
+                    grid-cols-1
+                    md:grid-cols-2
+                    gap-5
+                ">
+
+                    <!-- NOME -->
+
+                    <div class="md:col-span-2">
+
+                        <label class="text-xs font-semibold opacity-60">
+                            Nome do Prestador *
+                        </label>
+
+                        <input id="prestadorNome" type="text" placeholder="Ex.: EMC Serviços" class="
+                            w-full mt-2
+                            px-4 py-3
+                            rounded-2xl
+                            bg-black/5 dark:bg-white/5
+                            border border-black/10 dark:border-white/10
+                            outline-none
+                        ">
+
+                    </div>
+
+
+                    <!-- RAZÃO SOCIAL -->
+
+                    <div class="md:col-span-2">
+
+                        <label class="text-xs font-semibold opacity-60">
+                            Razão Social
+                        </label>
+
+                        <input id="prestadorRazaoSocial" type="text" class="
+                            w-full mt-2
+                            px-4 py-3
+                            rounded-2xl
+                            bg-black/5 dark:bg-white/5
+                            border border-black/10 dark:border-white/10
+                            outline-none
+                        ">
+
+                    </div>
+
+
+                    <!-- CNPJ -->
+
+                    <div>
+
+                        <label class="text-xs font-semibold opacity-60">
+                            CNPJ
+                        </label>
+
+                        <input id="prestadorCnpj" type="text" placeholder="00.000.000/0000-00" class="
+                            w-full mt-2
+                            px-4 py-3
+                            rounded-2xl
+                            bg-black/5 dark:bg-white/5
+                            border border-black/10 dark:border-white/10
+                            outline-none
+                        ">
+
+                    </div>
+
+
+                    <!-- CÓDIGO -->
+
+                    <div>
+
+                        <label class="text-xs font-semibold opacity-60">
+                            Código
+                        </label>
+
+                        <input id="prestadorCodigo" type="text" class="
+                            w-full mt-2
+                            px-4 py-3
+                            rounded-2xl
+                            bg-black/5 dark:bg-white/5
+                            border border-black/10 dark:border-white/10
+                            outline-none
+                        ">
+
+                    </div>
+
+
+                    <!-- TELEFONE -->
+
+                    <div>
+
+                        <label class="text-xs font-semibold opacity-60">
+                            Telefone
+                        </label>
+
+                        <input id="prestadorTelefone" type="text" class="
+                            w-full mt-2
+                            px-4 py-3
+                            rounded-2xl
+                            bg-black/5 dark:bg-white/5
+                            border border-black/10 dark:border-white/10
+                            outline-none
+                        ">
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div>
+
+                        <label class="text-xs font-semibold opacity-60">
+                            E-mail
+                        </label>
+
+                        <input id="prestadorEmail" type="email" class="
+                            w-full mt-2
+                            px-4 py-3
+                            rounded-2xl
+                            bg-black/5 dark:bg-white/5
+                            border border-black/10 dark:border-white/10
+                            outline-none
+                        ">
+
+                    </div>
+
+
+                    <!-- =====================================================
+                     SERVIÇOS ATENDIDOS
+                ====================================================== -->
+
+                    <div class="md:col-span-2">
+
+                        <div class="
+                            flex
+                            items-center
+                            justify-between
+                            gap-3
+                        ">
+
+                            <label class="text-xs font-semibold opacity-60">
+                                Serviços atendidos
+                            </label>
+
+                            <span id="contadorServicosPrestador" class="text-[9px] opacity-40">
+                                0 selecionado(s)
+                            </span>
+
+                        </div>
+
+
+                        <div id="prestadorServicosLista" class="
+                            mt-3
+                            rounded-2xl
+                            border
+                            border-black/10 dark:border-white/10
+                            p-3
+                            grid
+                            grid-cols-1 md:grid-cols-2
+                            gap-2
+                        ">
+
+                            <p class="text-xs opacity-40 p-3">
+                                Carregando serviços...
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LOGO -->
+
+                    <div class="md:col-span-2">
+
+                        <label class="text-xs font-semibold opacity-60">
+                            Logo
+                        </label>
+
+                        <input id="prestadorLogo" type="file" accept="image/*" class="w-full mt-2 text-xs">
+
+                        <div id="prestadorLogoAtual" class="hidden mt-4"></div>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="md:col-span-2">
+
+                        <label class="
+                            flex items-center gap-3
+                            p-4
+                            rounded-2xl
+                            bg-black/5 dark:bg-white/5
+                            cursor-pointer
+                        ">
+
+                            <input id="prestadorAtivo" type="checkbox" checked>
+
+                            <span class="text-xs font-semibold">
+                                Prestador ativo
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+     RODAPÉ FIXO
+================================================== -->
+
+            <div class="
+        shrink-0
+        flex
+        justify-end
+        gap-3
+        px-6 py-5
+        md:px-8
+        border-t
+        border-black/10 dark:border-white/10
+        bg-black/[0.02] dark:bg-white/[0.03]
+        backdrop-blur-xl
+    ">
+
+                <button type="button" onclick="fecharModalPrestador()" class="
+            px-5 py-3
+            rounded-2xl
+            bg-black/5
+            dark:bg-white/10
+            border
+            border-black/10
+            dark:border-white/10
+            text-xs
+            font-bold
+            hover:bg-black/10
+            dark:hover:bg-white/15
+            transition-all
+        ">
+                    CANCELAR
+                </button>
+
+
+                <button id="btnSalvarPrestador" type="button" onclick="salvarPrestador()" class="
+            px-6 py-3
+            rounded-2xl
+            bg-black
+            text-white
+            dark:bg-white
+            dark:text-black
+            text-xs
+            font-bold
+            hover:opacity-80
+            transition-all
+        ">
+                    SALVAR
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- =========================================================
+     MODAL - CADASTRO DE LOJA
+========================================================= -->
+
+    <div id="modalLoja" class="
+        hidden
+        fixed inset-0 z-[100]
+        bg-black/60 backdrop-blur-sm
+        flex items-center justify-center
+        p-4
+    ">
+
+        <div class="
+        glass
+        w-full max-w-2xl
+        max-h-[90vh]
+        overflow-y-auto
+        rounded-[32px]
+        p-6 md:p-8
+        shadow-2xl
+    ">
+
+            <div class="flex items-start justify-between gap-4 mb-7">
+
+                <div>
+
+                    <p class="
+                    text-[10px]
+                    font-bold
+                    uppercase
+                    tracking-[0.3em]
+                    opacity-40
+                ">
+                        Lojas
+                    </p>
+
+                    <h3 id="tituloModalLoja" class="text-2xl font-semibold mt-2">
+                        Nova Loja
+                    </h3>
+
+                </div>
+
+
+                <button type="button" onclick="fecharModalLoja()" class="
+                    w-10 h-10
+                    rounded-full
+                    bg-black/5 dark:bg-white/10
+                    text-lg
+                ">
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- Guarda o número ORIGINAL quando estiver editando -->
+            <input id="lojaNumeroOriginal" type="hidden">
+
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <!-- NÚMERO -->
+                <div>
+
+                    <label class="text-xs font-semibold opacity-60">
+                        Número da Loja *
+                    </label>
+
+                    <input id="cadLojaNumero" type="text" placeholder="Ex.: 1068" class="
+                        w-full mt-2
+                        px-4 py-3
+                        rounded-2xl
+                        bg-black/5 dark:bg-white/5
+                        border border-black/10 dark:border-white/10
+                        outline-none
+                    ">
+
+                </div>
+
+
+                <!-- UF -->
+                <div>
+
+                    <label class="text-xs font-semibold opacity-60">
+                        UF
+                    </label>
+
+                    <input id="cadLojaUf" type="text" maxlength="2" placeholder="PA" class="
+                        w-full mt-2
+                        px-4 py-3
+                        rounded-2xl
+                        bg-black/5 dark:bg-white/5
+                        border border-black/10 dark:border-white/10
+                        outline-none
+                        uppercase
+                    ">
+
+                </div>
+
+
+                <!-- NOME -->
+                <div class="md:col-span-2">
+
+                    <label class="text-xs font-semibold opacity-60">
+                        Nome da Loja
+                    </label>
+
+                    <input id="cadLojaNome" type="text" placeholder="Ex.: PORTEL" class="
+                        w-full mt-2
+                        px-4 py-3
+                        rounded-2xl
+                        bg-black/5 dark:bg-white/5
+                        border border-black/10 dark:border-white/10
+                        outline-none
+                    ">
+
+                </div>
+
+
+                <!-- ENDEREÇO -->
+                <div class="md:col-span-2">
+
+                    <label class="text-xs font-semibold opacity-60">
+                        Endereço
+                    </label>
+
+                    <input id="cadLojaEndereco" type="text" class="
+                        w-full mt-2
+                        px-4 py-3
+                        rounded-2xl
+                        bg-black/5 dark:bg-white/5
+                        border border-black/10 dark:border-white/10
+                        outline-none
+                    ">
+
+                </div>
+
+
+                <!-- CIDADE -->
+                <div>
+
+                    <label class="text-xs font-semibold opacity-60">
+                        Cidade
+                    </label>
+
+                    <input id="cadLojaCidade" type="text" class="
+                        w-full mt-2
+                        px-4 py-3
+                        rounded-2xl
+                        bg-black/5 dark:bg-white/5
+                        border border-black/10 dark:border-white/10
+                        outline-none
+                    ">
+
+                </div>
+
+
+                <!-- CEP -->
+                <div>
+
+                    <label class="text-xs font-semibold opacity-60">
+                        CEP
+                    </label>
+
+                    <input id="cadLojaCep" type="text" placeholder="00000-000" class="
+                        w-full mt-2
+                        px-4 py-3
+                        rounded-2xl
+                        bg-black/5 dark:bg-white/5
+                        border border-black/10 dark:border-white/10
+                        outline-none
+                    ">
+
+                </div>
+
+            </div>
+
+
+            <div class="flex justify-end gap-3 mt-8">
+
+                <button type="button" onclick="fecharModalLoja()" class="
+                    px-5 py-3
+                    rounded-2xl
+                    bg-black/5 dark:bg-white/10
+                    text-xs font-bold
+                ">
+                    CANCELAR
+                </button>
+
+
+                <button id="btnSalvarLoja" type="button" onclick="salvarLojaCadastro()" class="
+                    px-6 py-3
+                    rounded-2xl
+                    bg-blue-600
+                    text-white
+                    text-xs font-bold
+                    hover:bg-blue-700
+                ">
+                    SALVAR
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =========================================================
+     MODAL - TIPO DE SERVIÇO
+========================================================= -->
+
+    <div id="modalTipoServico" class="
+        hidden
+        fixed inset-0 z-[100]
+        bg-black/60 backdrop-blur-sm
+        flex items-center justify-center
+        p-4
+    ">
+
+        <div class="
+        glass
+        w-full max-w-xl
+        rounded-[32px]
+        p-6 md:p-8
+        shadow-2xl
+    ">
+
+            <div class="flex justify-between items-start gap-4 mb-7">
+
+                <div>
+
+                    <p class="
+                    text-[10px]
+                    font-bold
+                    uppercase
+                    tracking-[0.3em]
+                    opacity-40
+                ">
+                        Tipos de Serviço
+                    </p>
+
+                    <h3 id="tituloModalTipoServico" class="text-2xl font-semibold mt-2">
+                        Novo Serviço
+                    </h3>
+
+                </div>
+
+                <button onclick="fecharModalTipoServico()" class="
+                    w-10 h-10
+                    rounded-full
+                    bg-black/5 dark:bg-white/10
+                    text-lg
+                ">
+                    ×
+                </button>
+
+            </div>
+
+
+            <input id="tipoServicoIdEdicao" type="hidden">
+
+
+            <div class="space-y-5">
+
+                <div>
+
+                    <label class="text-xs font-semibold opacity-60">
+                        Nome do Serviço *
+                    </label>
+
+                    <input id="tipoServicoNome" type="text" placeholder="Ex.: AR CONDICIONADO" class="
+                        w-full mt-2
+                        px-4 py-3
+                        rounded-2xl
+                        bg-black/5 dark:bg-white/5
+                        border border-black/10 dark:border-white/10
+                        outline-none
+                    ">
+
+                </div>
+
+
+                <div>
+
+                    <label class="text-xs font-semibold opacity-60">
+                        Conta Contábil
+                    </label>
+
+                    <select id="tipoServicoConta" class="
+                        w-full mt-2
+                        px-4 py-3
+                        rounded-2xl
+                        bg-black/5 dark:bg-white/5
+                        border border-black/10 dark:border-white/10
+                        outline-none
+                    ">
+
+                        <option value="">
+                            Não definido
+                        </option>
+
+                        <option value="MCC">
+                            MCC
+                        </option>
+
+                        <option value="CCL">
+                            CCL
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <label class="
+                flex items-center gap-3
+                p-4 rounded-2xl
+                bg-black/5 dark:bg-white/5
+            ">
+
+                    <input id="tipoServicoAtivo" type="checkbox" checked>
+
+                    <span class="text-xs font-semibold">
+                        Serviço ativo
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <div class="flex justify-end gap-3 mt-8">
+
+                <button onclick="fecharModalTipoServico()" class="
+                    px-5 py-3
+                    rounded-2xl
+                    bg-black/5 dark:bg-white/10
+                    text-xs font-bold
+                ">
+                    CANCELAR
+                </button>
+
+
+                <button id="btnSalvarTipoServico" onclick="salvarTipoServico()" class="
+                    px-6 py-3
+                    rounded-2xl
+                    bg-blue-600
+                    text-white
+                    text-xs font-bold
+                ">
+                    SALVAR
+                </button>
+
+            </div>
+
+        </div>
 
     </div>
 
