@@ -15,7 +15,12 @@ let anexos = [
 
 let logos = {
     prestador: null,
-    americanas: "https://ujwfggunvzsonnsjuvpl.supabase.co/storage/v1/object/public/logos-prestadores/americanas.png"
+
+    americanas:
+        "https://ujwfggunvzsonnsjuvpl.supabase.co/storage/v1/object/public/logos-prestadores/americanas.png",
+
+    americanasSA:
+        "https://ujwfggunvzsonnsjuvpl.supabase.co/storage/v1/object/public/logos-prestadores/AMERICANAS%20SA.png"
 };
 
 let fotosObrigatorias = {
