@@ -953,6 +953,7 @@ async function carregarPrestadoresDoBanco() {
         console.error("Erro no Supabase:", error.message);
     }
 }
+
 function atualizarLogoAutomatica() {
     const select = document.getElementById('prestador');
     const opcao = select.options[select.selectedIndex];
