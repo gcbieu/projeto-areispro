@@ -23,12 +23,12 @@ async function gerarRelatorio(modo = "final") {
     const doc = new jsPDF({ unit: 'cm', format: 'a4', compress: true });
     const pNome = document.getElementById('prestador').value;
     const lojaSelect =
-    document.getElementById("lojaSelect");
-    const lNome = lojaSelect ?.options[lojaSelect.selectedIndex
-        ]
+        document.getElementById("lojaSelect");
+    const lNome = lojaSelect?.options[lojaSelect.selectedIndex
+    ]
         ?.textContent
         ?.trim()
-        || "";    
+        || "";
     const cNum = document.getElementById('chamado').value || "N/A";
     const dVal = document.getElementById('dataServico').value;
     const dFinal = dVal ? dVal.split('-').reverse().join('/') : new Date().toLocaleDateString('pt-BR');
@@ -63,152 +63,152 @@ async function gerarRelatorio(modo = "final") {
     };
 
     // ============================================================
-// 1. CAPA - PÁGINA 1
-// ============================================================
+    // 1. CAPA - PÁGINA 1
+    // ============================================================
 
-// Verifica se é o Relatório de Vistoria
-const isVistoria =
-    pNome &&
-    pNome.toUpperCase().includes("VISTORIA");
-
-
-if (isVistoria) {
-
-    // ========================================================
-    // CAPA - RELATÓRIO DE VISTORIA
-    // ========================================================
-
-    header();
-
-    // Imagem cadastrada no logo_url
-    // Largura: 11,66 cm
-    // Altura: 3,12 cm
-    if (logos.prestador) {
-
-        const larguraImagem = 11.66;
-        const alturaImagem = 3.12;
-
-        // Centraliza na folha A4 de 21 cm
-        const xImagem = (21 - larguraImagem) / 2;
-
-        doc.addImage(
-            logos.prestador,
-            "PNG",
-            xImagem,
-            8.0,
-            larguraImagem,
-            alturaImagem,
-            undefined,
-            "FAST"
-        );
-    }
+    // Verifica se é o Relatório de Vistoria
+    const isVistoria =
+        pNome &&
+        pNome.toUpperCase().includes("VISTORIA");
 
 
-    // Texto da capa
-    doc.setFont("times", "normal");
-    doc.setFontSize(20);
+    if (isVistoria) {
 
-    doc.text(
-        "RELATÓRIO DE VISTORIA:",
-        10.5,
-        13.0,
-        { align: "center" }
-    );
+        // ========================================================
+        // CAPA - RELATÓRIO DE VISTORIA
+        // ========================================================
 
-    doc.text(
-        `LOJA ${lNome}`,
-        10.5,
-        14.5,
-        { align: "center" }
-    );
+        header();
 
+        // Imagem cadastrada no logo_url
+        // Largura: 11,66 cm
+        // Altura: 3,12 cm
+        if (logos.prestador) {
 
-} else {
+            const larguraImagem = 11.66;
+            const alturaImagem = 3.12;
 
-    // ========================================================
-    // CAPA NORMAL DOS PRESTADORES
-    // ========================================================
+            // Centraliza na folha A4 de 21 cm
+            const xImagem = (21 - larguraImagem) / 2;
 
-    header();
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
-
-    // Título da Capa
-    doc.text(
-        "RELATÓRIO FOTOGRÁFICO",
-        10.5,
-        5.0,
-        { align: "center" }
-    );
-
-    doc.text(
-        pNome,
-        10.5,
-        6.2,
-        { align: "center" }
-    );
-
-    let yAtualCapa = 7.5;
+            doc.addImage(
+                logos.prestador,
+                "PNG",
+                xImagem,
+                8.0,
+                larguraImagem,
+                alturaImagem,
+                undefined,
+                "FAST"
+            );
+        }
 
 
-    // Logo 1 - Prestador
-    if (logos.prestador) {
+        // Texto da capa
+        doc.setFont("times", "normal");
+        doc.setFontSize(20);
 
-        doc.addImage(
-            logos.prestador,
-            "PNG",
-            6.5,
-            yAtualCapa,
-            8,
-            8
+        doc.text(
+            "RELATÓRIO DE VISTORIA:",
+            10.5,
+            13.0,
+            { align: "center" }
         );
 
-        yAtualCapa += 9;
-    }
-
-
-    // Logo 2 - Americanas
-    if (logos.americanas) {
-
-        doc.addImage(
-            logos.americanas,
-            "PNG",
-            5.5,
-            yAtualCapa,
-            10,
-            2.8
+        doc.text(
+            `LOJA ${lNome}`,
+            10.5,
+            14.5,
+            { align: "center" }
         );
 
-        yAtualCapa += 4;
+
+    } else {
+
+        // ========================================================
+        // CAPA NORMAL DOS PRESTADORES
+        // ========================================================
+
+        header();
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+
+        // Título da Capa
+        doc.text(
+            "RELATÓRIO FOTOGRÁFICO",
+            10.5,
+            5.0,
+            { align: "center" }
+        );
+
+        doc.text(
+            pNome,
+            10.5,
+            6.2,
+            { align: "center" }
+        );
+
+        let yAtualCapa = 7.5;
+
+
+        // Logo 1 - Prestador
+        if (logos.prestador) {
+
+            doc.addImage(
+                logos.prestador,
+                "PNG",
+                6.5,
+                yAtualCapa,
+                8,
+                8
+            );
+
+            yAtualCapa += 9;
+        }
+
+
+        // Logo 2 - Americanas
+        if (logos.americanas) {
+
+            doc.addImage(
+                logos.americanas,
+                "PNG",
+                5.5,
+                yAtualCapa,
+                10,
+                2.8
+            );
+
+            yAtualCapa += 4;
+        }
+
+
+        // Informações da loja
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+
+        doc.text(
+            `LOJA -  ${lNome}`,
+            10.5,
+            21.0,
+            { align: "center" }
+        );
+
+        doc.text(
+            `N° CHAMADO: ${cNum}`,
+            10.5,
+            22.2,
+            { align: "center" }
+        );
+
+        doc.text(
+            `DATA: ${dFinal}`,
+            10.5,
+            23.4,
+            { align: "center" }
+        );
     }
-
-
-    // Informações da loja
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
-
-    doc.text(
-        `LOJA -  ${lNome}`,
-        10.5,
-        21.0,
-        { align: "center" }
-    );
-
-    doc.text(
-        `N° CHAMADO: ${cNum}`,
-        10.5,
-        22.2,
-        { align: "center" }
-    );
-
-    doc.text(
-        `DATA: ${dFinal}`,
-        10.5,
-        23.4,
-        { align: "center" }
-    );
-}
 
     // Segunda página
     if (fotosObrigatorias.fachada || fotosObrigatorias.marquise) {
@@ -282,99 +282,536 @@ if (isVistoria) {
         });
     }
 
+    // ============================================================
     // 4. PROCESSAR ANEXOS (GALERIA)
+    // ============================================================
+
     let fCount = 3;
+
     for (const anexo of anexos) {
+
         const descricaoGeralAnexo = anexo.obs || " ";
-        if (anexo.fotosAntes.length === 0 && anexo.fotosDepois.length === 0) continue;
+
+        if (
+            anexo.fotosAntes.length === 0 &&
+            anexo.fotosDepois.length === 0
+        ) {
+            continue;
+        }
+
+
+        // ========================================================
+        // RELATÓRIO DE VISTORIA
+        //
+        // PADRÃO EXCLUSIVO:
+        // - 6 fotos por página
+        // - 2 colunas
+        // - 3 linhas
+        // - cada imagem: 9 cm x 5 cm
+        // - descrição abaixo da imagem
+        // - topo mostra SOMENTE o nome do anexo
+        // - não mostra "RELATÓRIO FOTOGRÁFICO - ANTES/DEPOIS"
+        // ========================================================
+
+        if (isVistoria) {
+
+            // Junta as fotos de antes e depois.
+            // Na vistoria não existe separação visual
+            // "ANTES" e "DEPOIS".
+            const todasFotos = [
+                ...(anexo.fotosAntes || []),
+                ...(anexo.fotosDepois || [])
+            ];
+
+            if (todasFotos.length === 0) {
+                continue;
+            }
+
+
+            // ----------------------------------------------------
+            // Configuração fixa da página
+            // ----------------------------------------------------
+
+            const fotosPorPagina = 6;
+
+            const larguraImg = 9.0;
+            const alturaImg = 5.0;
+
+            // Duas colunas centralizadas na página
+            const xColuna1 = 1.35;
+            const xColuna2 = 10.65;
+
+            // Três linhas
+            const yLinha1 = 6.0;
+            const yLinha2 = 12.9;
+            const yLinha3 = 19.8;
+
+            const posicoesY = [
+                yLinha1,
+                yLinha2,
+                yLinha3
+            ];
+
+
+            // ----------------------------------------------------
+            // Divide as fotos em grupos de 6
+            // ----------------------------------------------------
+
+            for (
+                let inicio = 0;
+                inicio < todasFotos.length;
+                inicio += fotosPorPagina
+            ) {
+
+                const fotosPagina =
+                    todasFotos.slice(
+                        inicio,
+                        inicio + fotosPorPagina
+                    );
+
+
+                // Nova página para cada grupo de 6
+                doc.addPage();
+
+                header();
+
+
+                // =================================================
+                // DESCRIÇÃO GERAL DO ANEXO
+                // =================================================
+
+                if (
+                    descricaoGeralAnexo &&
+                    descricaoGeralAnexo.trim()
+                ) {
+
+                    doc.setFont(
+                        "helvetica",
+                        "normal"
+                    );
+
+                    doc.setFontSize(8);
+
+                    const descricaoAnexoFormatada =
+                        doc.splitTextToSize(
+                            descricaoGeralAnexo,
+                            18
+                        );
+
+                    doc.text(
+                        descricaoAnexoFormatada,
+                        1.5,
+                        5.35
+                    );
+                }
+
+
+                // =================================================
+                // FOTOS
+                // =================================================
+
+                fotosPagina.forEach(
+                    (foto, index) => {
+
+                        // -----------------------------------------
+                        // Descobre coluna
+                        // -----------------------------------------
+
+                        const coluna =
+                            index % 2;
+
+
+                        // -----------------------------------------
+                        // Descobre linha
+                        // 0 e 1 = primeira linha
+                        // 2 e 3 = segunda linha
+                        // 4 e 5 = terceira linha
+                        // -----------------------------------------
+
+                        const linha =
+                            Math.floor(
+                                index / 2
+                            );
+
+
+                        const x =
+                            coluna === 0
+                                ? xColuna1
+                                : xColuna2;
+
+
+                        const y =
+                            posicoesY[linha];
+
+
+                        // =========================================
+                        // IMAGEM
+                        // 9 cm x 5 cm
+                        // =========================================
+
+                        // ============================================================
+                        // QUADRO DA FOTO + DESCRIÇÃO
+                        // ============================================================
+
+                        // Altura reservada para a descrição abaixo da imagem
+                        const alturaDescricao = 1.2;
+
+                        // Borda externa da célula
+                        doc.setDrawColor(0);
+                        doc.setLineWidth(0.017);
+
+                        doc.rect(
+                            x,
+                            y,
+                            larguraImg,
+                            alturaImg + alturaDescricao
+                        );
+
+
+                        // Linha que separa a foto da descrição
+                        doc.line(
+                            x,
+                            y + alturaImg,
+                            x + larguraImg,
+                            y + alturaImg
+                        );
+
+
+                        // Imagem
+                        if (foto.src) {
+
+                            doc.addImage(
+                                foto.src,
+                                "JPEG",
+                                x,
+                                y,
+                                larguraImg,
+                                alturaImg,
+                                undefined,
+                                "FAST"
+                            );
+                        }
+
+
+                        // =========================================
+                        // DESCRIÇÃO DA FOTO
+                        // =========================================
+
+                        doc.setFont(
+                            "helvetica",
+                            "normal"
+                        );
+
+                        doc.setFontSize(8);
+
+
+                        const descricaoFoto =
+                            foto.desc
+                                ? foto.desc
+                                : " ";
+
+
+                        const textoLegenda =
+                            `Figura ${fCount++} - ${descricaoFoto}`;
+
+
+                        const legendaFormatada =
+                            doc.splitTextToSize(
+                                textoLegenda,
+                                8.5
+                            );
+
+
+                        doc.text(
+                            legendaFormatada,
+                            x + 0.1,
+                            y + alturaImg + 0.45
+                        );
+
+                    }
+                );
+
+            }
+
+
+            // Terminou este anexo.
+            // Não executa o relatório fotográfico normal.
+            continue;
+        }
+
+
+
+        // ========================================================
+        // RELATÓRIO NORMAL
+        //
+        // NÃO ALTERAR.
+        // Mantém o comportamento atual dos outros prestadores.
+        // ========================================================
 
         const renderGal = (photos, sub) => {
-            if (photos.length === 0) return;
+
+            if (photos.length === 0) {
+                return;
+            }
+
 
             doc.addPage();
+
             header();
 
+
             // Título da primeira página do anexo
-            doc.setFont("helvetica", "bold");
+            doc.setFont(
+                "helvetica",
+                "bold"
+            );
+
             doc.setFontSize(11);
-            doc.text(sub, 10.5, 5.2, { align: 'center' }); // Título centralizado
+
+            doc.text(
+                sub,
+                10.5,
+                5.2,
+                {
+                    align: "center"
+                }
+            );
+
 
             doc.setFontSize(8);
-            doc.setFont("helvetica", "normal");
-            doc.text(descricaoGeralAnexo, 1.5, 5.8, { align: 'left' }); // Descrição esquerda
+
+            doc.setFont(
+                "helvetica",
+                "normal"
+            );
+
+            doc.text(
+                descricaoGeralAnexo,
+                1.5,
+                5.8,
+                {
+                    align: "left"
+                }
+            );
+
 
             let y = 6.3;
+
             let col = 0;
+
             let alturaUltimaFileira = 0;
 
-            photos.forEach((f, index) => {
-                const x = col === 0 ? 1.5 : 10.6;
-                const larguraImg = 8.9;
-                //altura da imagem a baixo
-                const alturaImg = 3.9;
 
-                // 1. CALCULA A LEGENDA PRIMEIRO
-                doc.setFontSize(10);
-                const legendaTexto = `Figura ${fCount++} - ${f.desc || ' '}`;
-                const legendaFormatada = doc.splitTextToSize(legendaTexto, 8.2);
+            photos.forEach(
+                (f, index) => {
 
-                // Calcula a altura do texto (quantidade de linhas * entrelinha de ~0.45cm)
-                const alturaTextoReal = legendaFormatada.length * 0.45;
+                    const x =
+                        col === 0
+                            ? 1.5
+                            : 10.6;
 
-                // 2. DEFINE A ALTURA DA TABELA (Imagem + Margem + Texto + Respiro inferior)
-                const alturaTotalTabela = alturaImg + 0.6 + alturaTextoReal + 0.2;
 
-                // 3. QUEBRA DE PÁGINA INTELIGENTE
-                if (y + alturaTotalTabela > 27.5) {
-                    doc.addPage();
-                    header();
+                    const larguraImg = 8.9;
 
-                    // 1. Título (Antes/Depois)
-                    doc.setFont("helvetica", "bold");
-                    doc.setFontSize(11);
-                    doc.text(sub, 10.5, 5.2, { align: 'center' });
+                    const alturaImg = 3.9;
 
-                    // 2. Descrição Geral
-                    doc.setFontSize(9);
-                    doc.setFont("helvetica", "normal");
-                    doc.text(descricaoGeralAnexo, 1.5, 5.8, { align: 'left' });
 
-                    y = 6.5;
-                    col = 0;
-                    alturaUltimaFileira = 0;
-                }
-                // 4. DESENHA A TABELA
-                doc.setDrawColor(0);
-                doc.setLineWidth(0.017);
-                doc.rect(x, y, larguraImg, alturaTotalTabela);
+                    // =============================================
+                    // LEGENDA
+                    // =============================================
 
-                // 5. CONTEÚDO
-                if (f.src) {
-                    doc.addImage(f.src, 'JPEG', x, y, larguraImg, alturaImg, undefined, 'FAST');
-                }
-                doc.text(legendaFormatada, x + 0.3, y + alturaImg + 0.5);
+                    doc.setFontSize(10);
 
-                // 6. LOGICA DE COLUNAS
-                if (alturaTotalTabela > alturaUltimaFileira) {
-                    alturaUltimaFileira = alturaTotalTabela;
-                }
 
-                if (col === 1) {
+                    const legendaTexto =
+                        `Figura ${fCount++} - ${f.desc || " "}`;
 
-                    y += alturaUltimaFileira + 0.1;
-                    col = 0;
-                    alturaUltimaFileira = 0; // Reseta para a próxima linha
-                } else {
-                    // Se for a primeira foto e for a ÚLTIMA do array (não tem par)
-                    if (index === photos.length - 1) {
-                        y += alturaTotalTabela + 0.1;
+
+                    const legendaFormatada =
+                        doc.splitTextToSize(
+                            legendaTexto,
+                            8.2
+                        );
+
+
+                    const alturaTextoReal =
+                        legendaFormatada.length * 0.45;
+
+
+                    const alturaTotalTabela =
+                        alturaImg +
+                        0.6 +
+                        alturaTextoReal +
+                        0.2;
+
+
+                    // =============================================
+                    // QUEBRA DE PÁGINA
+                    // =============================================
+
+                    if (
+                        y + alturaTotalTabela >
+                        27.5
+                    ) {
+
+                        doc.addPage();
+
+                        header();
+
+
+                        doc.setFont(
+                            "helvetica",
+                            "bold"
+                        );
+
+                        doc.setFontSize(11);
+
+                        doc.text(
+                            sub,
+                            10.5,
+                            5.2,
+                            {
+                                align: "center"
+                            }
+                        );
+
+
+                        doc.setFontSize(9);
+
+                        doc.setFont(
+                            "helvetica",
+                            "normal"
+                        );
+
+                        doc.text(
+                            descricaoGeralAnexo,
+                            1.5,
+                            5.8,
+                            {
+                                align: "left"
+                            }
+                        );
+
+
+                        y = 6.5;
+
+                        col = 0;
+
+                        alturaUltimaFileira = 0;
                     }
-                    col = 1;
+
+
+                    // =============================================
+                    // TABELA
+                    // =============================================
+
+                    doc.setDrawColor(0);
+
+                    doc.setLineWidth(0.017);
+
+                    doc.rect(
+                        x,
+                        y,
+                        larguraImg,
+                        alturaTotalTabela
+                    );
+
+
+                    // =============================================
+                    // IMAGEM
+                    // =============================================
+
+                    if (f.src) {
+
+                        doc.addImage(
+                            f.src,
+                            "JPEG",
+                            x,
+                            y,
+                            larguraImg,
+                            alturaImg,
+                            undefined,
+                            "FAST"
+                        );
+
+                    }
+
+
+                    // =============================================
+                    // LEGENDA
+                    // =============================================
+
+                    doc.text(
+                        legendaFormatada,
+                        x + 0.3,
+                        y + alturaImg + 0.5
+                    );
+
+
+                    // =============================================
+                    // COLUNAS
+                    // =============================================
+
+                    if (
+                        alturaTotalTabela >
+                        alturaUltimaFileira
+                    ) {
+
+                        alturaUltimaFileira =
+                            alturaTotalTabela;
+
+                    }
+
+
+                    if (col === 1) {
+
+                        y +=
+                            alturaUltimaFileira +
+                            0.1;
+
+
+                        col = 0;
+
+                        alturaUltimaFileira = 0;
+
+                    } else {
+
+                        if (
+                            index ===
+                            photos.length - 1
+                        ) {
+
+                            y +=
+                                alturaTotalTabela +
+                                0.1;
+
+                        }
+
+
+                        col = 1;
+
+                    }
+
                 }
-            });
+            );
+
         };
-        renderGal(anexo.fotosAntes, "RELATÓRIO FOTOGRÁFICO - ANTES");
-        renderGal(anexo.fotosDepois, "RELATÓRIO FOTOGRÁFICO - DEPOIS");
+
+
+        // ========================================================
+        // NORMAL: ANTES / DEPOIS
+        // ========================================================
+
+        renderGal(
+            anexo.fotosAntes,
+            "RELATÓRIO FOTOGRÁFICO - ANTES"
+        );
+
+        renderGal(
+            anexo.fotosDepois,
+            "RELATÓRIO FOTOGRÁFICO - DEPOIS"
+        );
+
     }
 
     // ==========================================
@@ -476,18 +913,18 @@ if (isVistoria) {
     // PREVIEW OU DOWNLOAD
     // ==========================================
 
-if (modo === "preview") {
-    return doc.output("blob");
-}
+    if (modo === "preview") {
+        return doc.output("blob");
+    }
 
-// GERA O ARQUIVO EM MEMÓRIA
-const pdfBlob = doc.output("blob");
+    // GERA O ARQUIVO EM MEMÓRIA
+    const pdfBlob = doc.output("blob");
 
-// BAIXA NORMALMENTE NO COMPUTADOR
-doc.save(
-    `AREISPRO_${lNome.split(' ')[0] || 'RELATORIO'}.pdf`
-);
+    // BAIXA NORMALMENTE NO COMPUTADOR
+    doc.save(
+        `AREISPRO_${lNome.split(' ')[0] || 'RELATORIO'}.pdf`
+    );
 
-// DEVOLVE O PDF PARA O AREISPRO
-return pdfBlob;
+    // DEVOLVE O PDF PARA O AREISPRO
+    return pdfBlob;
 }

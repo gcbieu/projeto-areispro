@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="shortcut icon" href="IMAGENS/areispro.png" type="image/x-icon">
+    <title>AREISPRO - Sistema Interno</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+
+    <!-- TELA DE BEM VINDO -->
+    <section id="welcomeView" class="flex flex-col items-center justify-center min-h-screen">
+        <div class="relative mb-32 flex flex-col items-center">
+            <h1 class="text-xs font-bold uppercase tracking-[0.5em] opacity-40">AREISPRO</h1>
+            <div class="welcome-dot"></div>
+            <div class="mt-20 text-2xl font-light text-center transition-opacity duration-500" id="changingText">
+                CARREGANDO...</div>
+        </div>
+
+        <div class="glass rounded-[32px] p-8 shadow-2xl w-[320px] flex flex-col items-center">
+            <button onclick="entrarNoSistema()"
+                class="bg-black text-white dark:bg-white dark:text-black w-full py-4 rounded-[20px] font-semibold text-base shadow-lg">
+                Começar
+            </button>
+        </div>
+    </section>
+
+    <!-- APP PRINCIPAL -->
+    <div id="appContainer" class="hidden-view">
+        <nav class="fixed top-0 w-full z-50 glass border-b">
+            <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
+                <h1 class="text-xl font-bold tracking-tighter cursor-pointer" onclick="navigate('home')">AREIS<span
+                        class="font-light opacity-40">PRO</span></h1>
+
+                <div class="flex items-center gap-3">
+                    <!-- BOTÃO DARK MODE QUADRADO -->
+                    <button onclick="toggleDarkMode()" class="dark-toggle-btn">
+                        <svg id="sunIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707.707M12 8a4 4 0 100 8 4 4 0 000-8z">
+                            </path>
+                        </svg>
+                        <svg id="moonIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <button onclick="toggleMenu()"
+                        class="w-9 h-9 rounded-full bg-gray-200 border border-gray-300 overflow-hidden shadow-sm">
+                        <img id="avatarPreview" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                            class="w-full h-full object-cover">
+                    </button>
+
+                    <div id="userMenu" class="hidden absolute right-4 top-16 w-52 glass rounded-2xl py-2 shadow-2xl">
+                        <button onclick="navigate('config')"
+                            class="w-full text-left px-4 py-3 text-sm hover:bg-black/5">Configurações</button>
+                        <button onclick="location.reload()"
+                            class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-500/10">Sair</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section id="homeView" class="max-w-6xl mx-auto px-6 mt-28 pb-20">
+
+            <div class="mb-10">
+                <p class="text-[10px] font-bold uppercase tracking-[0.35em] opacity-40 mb-3">
+                    AREISPRO
+                </p>
+
+                <h2 class="text-3xl md:text-5xl font-light tracking-tight">
+                    Central de Operações
+                </h2>
+
+                <p class="mt-4 text-sm md:text-base opacity-50 max-w-2xl">
+                    Em desenvolvimento...
+                </p>
+            </div>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- CHAMADOS -->
+                <button onclick="navigate('chamados')" class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
+
+                    <div class="module-icon">C</div>
+
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mt-8">
+                        Operações
+                    </p>
+
+                    <h3 class="text-2xl font-semibold mt-3">
+                        Central de Chamados
+                    </h3>
+
+                    <p class="text-sm opacity-50 mt-3 leading-relaxed">
+                        Importação, pesquisa por loja, duplicidades, acompanhamento e exportação.
+                    </p>
+
+                    <span class="module-link">Acessar →</span>
+                </button>
+
+                <!-- ORDENS DE SERVIÇO -->
+                <button onclick="navigate('os')" class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
+
+                    <div class="module-icon">OS</div>
+
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mt-8">
+                        Operações
+                    </p>
+
+                    <h3 class="text-2xl font-semibold mt-3">
+                        Ordens de Serviço
+                    </h3>
+
+                    <p class="text-sm opacity-50 mt-3 leading-relaxed">
+                        Consulte chamados, gere ordens de serviço e acompanhe a execução de manutenções prediais.
+                    </p>
+
+                    <span class="module-link">Acessar →</span>
+                </button>
+
+                <!-- RELATÓRIOS -->
+                <button onclick="navigate('main')" class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
+
+                    <div class="module-icon">R</div>
+
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mt-8">
+                        Documentação
+                    </p>
+
+                    <h3 class="text-2xl font-semibold mt-3">
+                        Relatórios Técnicos
+                    </h3>
+
+                    <p class="text-sm opacity-50 mt-3 leading-relaxed">
+                        Crie relatórios fotográficos, organize anexos e gere arquivos em PDF.
+                    </p>
+
+                    <span class="module-link">Acessar →</span>
+                </button>
+
+                <!-- LOJAS E PRESTADORES -->
+                <button onclick="navigate('cadastros')"
+                    class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
+
+                    <div class="module-icon">LP</div>
+
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mt-8">
+                        Cadastros
+                    </p>
+
+                    <h3 class="text-2xl font-semibold mt-3">
+                        Lojas e Prestadores
+                    </h3>
+
+                    <p class="text-sm opacity-50 mt-3 leading-relaxed">
+                        Consulte lojas, endereços e prestadores cadastrados.
+                    </p>
+
+                    <span class="module-link">
+                        Acessar →
+                    </span>
+
+                </button>
+                <!-- CONVERSOR -->
+                <button onclick="navigate('converter')"
+                    class="module-card glass text-left rounded-[32px] p-8 shadow-sm">
+                    <div class="module-icon">CV</div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mt-8">
+                        Ferramentas
+                    </p>
+                    <h3 class="text-2xl font-semibold mt-3">
+                        Conversor de Arquivos
+                    </h3>
+                    <p class="text-sm opacity-50 mt-3 leading-relaxed">
+                        Converta arquivos PDF, Word e em breve outros formatos.
+                    </p>
+                    <span class="module-link">
+                        Acessar →
+                    </span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- =========================================================================================================
+==============================================================================================================
+==============================================================================================================
+                                        MÓDULO ORDENS DE SERVIÇO
+                                         AREIS PRO - OS PREDIAL
+
+    ESTE BLOCO CONTÉM TODA A INTERFACE INICIAL DO NOVO MÓDULO DE ORDENS DE SERVIÇO.
+
+    FLUXO:
+
+    BUSCAR LOJA / NÚMERO DO CHAMADO
+                     ↓
+               CHAMADO ENCONTRADO
+                     ↓
+                CRIAR / ABRIR OS
+                     ↓
+             NÚMERO OS = CHAMADO
+                     ↓
+        DADOS DA LOJA + DADOS DO CHAMADO
+                     ↓
+             ESCOLHER TIPO DE OS
+                     ↓
+               ESCOLHER O MODO
+                 /          \
+                /            \
+       EXECUTAR NO AREIS      GERAR PARA ENVIO
+              ↓                     ↓
+       ETAPAS DA OS             PDF EM BRANCO
+              ↓               PARCIALMENTE
+       IDENTIFICAÇÃO           PREENCHIDO
+       INSPEÇÃO
+       EXECUÇÃO
+       MATERIAIS
+       EVIDÊNCIAS
+       ENCERRAMENTO
+
+    IMPORTANTE:
+    - O NÚMERO DA OS É SEMPRE O MESMO NÚMERO DO CHAMADO.
+    - A LOJA É PUXADA DO CHAMADO.
+    - OS DADOS COMPLEMENTARES DA LOJA SÃO BUSCADOS EM db.lojas.
+    - O ENDEREÇO SERÁ INCORPORADO QUANDO A PLANILHA DE ENDEREÇOS FOR IMPORTADA PARA O SUPABASE.
+    - A DESCRIÇÃO DA OS MOSTRA SOMENTE A PARTE DE DESCRIÇÃO DO CHAMADO.
+    - NESTA PRIMEIRA VERSÃO A OS FUNCIONA NO FRONT-END.
+    - FUTURAMENTE OS DADOS SERÃO SALVOS EM TABELAS PRÓPRIAS DO SUPABASE.
+
+==============================================================================================================
+==============================================================================================================
+=========================================================================================================== -->
+
+        <section id="osView" class="hidden-view max-w-6xl mx-auto px-6 mt-28 pb-20">
+
+            <!-- CABEÇALHO -->
+            <div class="mb-8">
+
+                <button onclick="navigate('home')"
+                    class="text-xs font-bold opacity-50 hover:opacity-100 transition-opacity mb-2">
+                    ← Voltar para a Home
+                </button>
+
+                <h2 class="text-3xl font-light tracking-tight">
+                    Ordens de Serviço
+                </h2>
+
+                <p class="text-xs opacity-50 mt-1">
+                    Manutenção Predial
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+         BUSCA DA OS
+    ========================== -->
+
+            <div id="osBuscaArea" class="glass rounded-[32px] p-6 md:p-8 mb-6">
+
+                <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40 mb-5">
+                    Localizar chamado
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                    <!-- BUSCA LOJA -->
+                    <div>
+
+                        <label class="text-xs font-semibold opacity-70">
+                            Loja
+                        </label>
+
+                        <input id="osBuscaLoja" type="text" oninput="osPesquisar()"
+                            placeholder="Digite o número ou nome da loja..."
+                            class="w-full mt-2 px-4 py-4 rounded-2xl bg-white/40 dark:bg-white/5 border border-black/10 dark:border-white/10 outline-none">
+
+                    </div>
+
+
+                    <!-- BUSCA CHAMADO -->
+                    <div>
+
+                        <label class="text-xs font-semibold opacity-70">
+                            Número do chamado
+                        </label>
+
+                        <input id="osBuscaChamado" type="text" oninput="osPesquisar()" placeholder="Ex.: 4587"
+                            class="w-full mt-2 px-4 py-4 rounded-2xl bg-white/40 dark:bg-white/5 border border-black/10 dark:border-white/10 outline-none">
+
+                    </div>
+
+                </div>
+
+
+                <!-- RESULTADOS -->
+                <div id="osResultadosBusca" class="mt-6 space-y-3">
+
+                    <p class="text-xs opacity-40">
+                        Pesquise por loja ou número do chamado.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+         CHAMADO SELECIONADO
+    ========================== -->
+
+            <div id="osChamadoSelecionado" class="hidden glass rounded-[32px] p-6 md:p-8">
+
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+
+                    <div>
+
+                        <p class="text-[10px] uppercase font-bold tracking-[0.25em] opacity-40">
+                            Ordem de Serviço
+                        </p>
+
+                        <h2 id="osNumeroTitulo" class="text-3xl font-semibold mt-2">
+                            OS #--
+                        </h2>
+
+                    </div>
+
+                    <div>
+
+                        <span id="osStatus"
+                            class="px-4 py-2 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-500">
+                            RASCUNHO
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DADOS AUTOMÁTICOS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+
+                    <div class="p-4 rounded-2xl bg-black/5 dark:bg-white/5">
+
+                        <p class="text-[9px] uppercase font-bold opacity-40">
+                            Número do chamado
+                        </p>
+
+                        <p id="osNumeroChamado" class="text-sm font-semibold mt-1">
+                            --
+                        </p>
+
+                    </div>
+
+
+                    <div class="p-4 rounded-2xl bg-black/5 dark:bg-white/5">
+
+                        <p class="text-[9px] uppercase font-bold opacity-40">
+                            Loja
+                        </p>
+
+                        <p id="osLoja" class="text-sm font-semibold mt-1">
+                            --
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIÇÃO -->
+                <div class="mb-6">
+
+                    <label class="text-xs font-semibold opacity-60">
+                        Descrição informada pelo solicitante
+                    </label>
+
+                    <div id="osDescricao"
+                        class="mt-2 p-5 rounded-2xl bg-black/5 dark:bg-white/5 text-sm leading-relaxed min-h-[100px]">
+                    </div>
+
+                </div>
+
+
+                <!-- CLASSIFICAÇÃO -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+
+                    <div>
+
+                        <label class="text-xs font-semibold opacity-60">
+                            Tipo de manutenção
+                        </label>
+
+                        <select id="osTipo"
+                            class="w-full mt-2 px-4 py-4 rounded-2xl bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10">
+
+                            <option value="">Selecione</option>
+                            <option value="Preventiva">Preventiva</option>
+                            <option value="Corretiva">Corretiva</option>
+                            <option value="Emergencial">Emergencial</option>
+                            <option value="Inspeção">Inspeção</option>
+                            <option value="Melhoria">Melhoria</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div>
+
+                        <label class="text-xs font-semibold opacity-60">
+                            Serviço
+                        </label>
+
+                        <select id="osServico" onchange="osFiltrarPrestadoresPorServico()"
+                            class="w-full mt-2 px-4 py-4 rounded-2xl bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10">
+
+                            <option value="">Selecione o serviço</option>
+
+                            <option value="AR CONDICIONADO">Ar Condicionado</option>
+                            <option value="CONSTRUÇÃO CIVIL">Construção Civil</option>
+                            <option value="INSTALAÇÃO PREDIAL">Instalação Predial</option>
+                            <option value="INSTALAÇÃO ELÉTRICA">Instalação Elétrica</option>
+                            <option value="CONTROLE DE PRAGAS">Controle de Pragas</option>
+                            <option value="LIMPEZA HIGIENIZAÇÃO DE RESERVATÓRIOS">
+                                Limpeza / Higienização de Reservatórios
+                            </option>
+                            <option value="ANALISE QUALIDADE DA ÁGUA">
+                                Análise da Qualidade da Água
+                            </option>
+                            <option value="ANALISE E QUALIDADE DO AR INTERIOR">
+                                Qualidade do Ar Interior
+                            </option>
+                            <option value="ELEVADOR">Elevador</option>
+                            <option value="ESCADA ROLANTE">Escada Rolante</option>
+                            <option value="NO BREAK">No Break</option>
+                            <option value="BEBEDOURO">Bebedouro</option>
+                            <option value="EQUIPAMENTOS DE REFRIGERACAO">
+                                Equipamentos de Refrigeração
+                            </option>
+                            <option value="MATERIAIS ELÉTRICOS">
+                                Materiais Elétricos
+                            </option>
+                            <option value="MATERIAIS HIDRÁULICOS">
+                                Materiais Hidráulicos
+                            </option>
+                            <option value="SOM">Som</option>
+                            <option value="PREDIAL">Predial</option>
+                            <option value="SUBESTAÇÃO">Subestação</option>
+                            <option value="GERADOR">Gerador</option>
+
+                        </select>
+                    </div>
+
+
+                    <div>
+
+                        <label class="text-xs font-semibold opacity-60">
+                            Prioridade
+                        </label>
+
+                        <select id="osPrioridade"
+                            class="w-full mt-2 px-4 py-4 rounded-2xl bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10">
+
+                            <option value="">Selecione</option>
+                            <option>Baixa</option>
+                            <option>Média</option>
+                            <option>Alta</option>
+                            <option>Crítica</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ESCOLHA DE FLUXO -->
+
+                <p class="text-[10px] uppercase font-bold tracking-[0.25em] opacity-40 mb-4">
+                    Como deseja utilizar esta OS?
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <button onclick="osIniciarExecucaoInterna()"
+                        class="p-6 rounded-[24px] text-left border border-black/10 dark:border-white/10 hover:border-blue-500 transition-all">
+
+                        <p class="text-lg font-semibold">
+                            Executar OS
+                        </p>
+
+                        <p class="text-xs opacity-50 mt-2">
+                            Realizar inspeção, execução, materiais, evidências
+                            e encerramento pelo próprio sistema.
+                        </p>
+
+                    </button>
+
+
+                    <button onclick="osGerarParaEnvio()"
+                        class="p-6 rounded-[24px] text-left border border-black/10 dark:border-white/10 hover:border-blue-500 transition-all">
+
+                        <p class="text-lg font-semibold">
+                            Gerar OS para envio
+                        </p>
+
+                        <p class="text-xs opacity-50 mt-2">
+                            Gerar um PDF parcialmente preenchido para envio
+                            a um prestador ou responsável externo.
+                        </p>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =====================================================================================
+                                  EXECUÇÃO DA OS NO AREIS
+    ====================================================================================== -->
+
+            <div id="osExecucaoArea" class="hidden mt-6 glass rounded-[32px] p-6 md:p-8">
+
+
+                <!-- INDICADOR DE ETAPAS -->
+
+                <div class="overflow-x-auto mb-8">
+
+                    <div class="flex min-w-[700px] gap-2">
+
+                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-blue-600 text-white text-xs"
+                            data-step="1">
+                            1. Identificação
+                        </button>
+
+                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
+                            data-step="2">
+                            2. Inspeção
+                        </button>
+
+                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
+                            data-step="3">
+                            3. Execução
+                        </button>
+
+                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
+                            data-step="4">
+                            4. Materiais
+                        </button>
+
+                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
+                            data-step="5">
+                            5. Evidências
+                        </button>
+
+                        <button class="os-step-indicator flex-1 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs"
+                            data-step="6">
+                            6. Encerramento
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ETAPA 1 -->
+
+                <div class="os-etapa" data-etapa="1">
+
+                    <h3 class="text-xl font-semibold mb-5">
+                        Identificação e diagnóstico
+                    </h3>
+
+                    <label class="text-xs opacity-60">
+                        Diagnóstico inicial
+                    </label>
+
+                    <textarea id="osDiagnostico"
+                        class="w-full mt-2 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[140px]"
+                        placeholder="Informe a condição encontrada no local..."></textarea>
+
+                </div>
+
+
+
+                <!-- ETAPA 2 -->
+
+                <div class="os-etapa hidden" data-etapa="2">
+
+                    <h3 class="text-xl font-semibold mb-5">
+                        Checklist de inspeção
+                    </h3>
+
+                    <div id="osChecklist" class="space-y-3">
+                    </div>
+
+                </div>
+
+
+
+                <!-- ETAPA 3 -->
+
+                <div class="os-etapa hidden" data-etapa="3">
+
+                    <h3 class="text-xl font-semibold mb-5">
+                        Execução
+                    </h3>
+
+                    <label class="text-xs opacity-60">
+                        Serviço a executar
+                    </label>
+
+                    <textarea id="osServicoExecutar"
+                        class="w-full mt-2 mb-5 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[100px]"></textarea>
+
+
+                    <label class="text-xs opacity-60">
+                        Serviço executado
+                    </label>
+
+                    <textarea id="osServicoExecutado"
+                        class="w-full mt-2 mb-5 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[120px]"></textarea>
+
+
+                    <label class="text-xs opacity-60">
+                        Pendências
+                    </label>
+
+                    <textarea id="osPendencias"
+                        class="w-full mt-2 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[100px]"></textarea>
+
+                </div>
+
+
+
+                <!-- ETAPA 4 -->
+
+                <div class="os-etapa hidden" data-etapa="4">
+
+                    <div class="flex justify-between items-center mb-5">
+
+                        <h3 class="text-xl font-semibold">
+                            Materiais utilizados
+                        </h3>
+
+                        <button onclick="osAdicionarMaterial()"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold">
+                            + Adicionar
+                        </button>
+
+                    </div>
+
+                    <div id="osListaMateriais" class="space-y-3">
+                    </div>
+
+                </div>
+
+
+
+                <!-- ETAPA 5 -->
+
+                <div class="os-etapa hidden" data-etapa="5">
+
+                    <h3 class="text-xl font-semibold mb-5">
+                        Evidências fotográficas
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <div class="p-5 rounded-2xl bg-black/5 dark:bg-white/5">
+
+                            <p class="text-xs font-bold mb-4">
+                                ANTES
+                            </p>
+
+                            <input type="file" multiple accept="image/*" onchange="osAdicionarFotos(this,'antes')">
+
+                            <div id="osFotosAntes" class="grid grid-cols-2 gap-3 mt-4">
+                            </div>
+
+                        </div>
+
+
+                        <div class="p-5 rounded-2xl bg-black/5 dark:bg-white/5">
+
+                            <p class="text-xs font-bold mb-4">
+                                DEPOIS
+                            </p>
+
+                            <input type="file" multiple accept="image/*" onchange="osAdicionarFotos(this,'depois')">
+
+                            <div id="osFotosDepois" class="grid grid-cols-2 gap-3 mt-4">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ETAPA 6 -->
+
+                <div class="os-etapa hidden" data-etapa="6">
+
+                    <h3 class="text-xl font-semibold mb-5">
+                        Encerramento
+                    </h3>
+
+
+                    <label class="text-xs opacity-60">
+                        Resultado
+                    </label>
+
+                    <select id="osResultado" class="w-full mt-2 mb-5 p-4 rounded-2xl bg-white dark:bg-zinc-900">
+
+                        <option>Serviço concluído</option>
+                        <option>Parcialmente concluído</option>
+                        <option>Pendente</option>
+                        <option>Não executado</option>
+
+                    </select>
+
+
+                    <label class="text-xs opacity-60">
+                        Condição final
+                    </label>
+
+                    <select id="osCondicaoFinal" class="w-full mt-2 mb-5 p-4 rounded-2xl bg-white dark:bg-zinc-900">
+
+                        <option>Liberado para uso</option>
+                        <option>Liberado com ressalvas</option>
+                        <option>Interditado</option>
+
+                    </select>
+
+
+                    <label class="text-xs opacity-60">
+                        Observações finais
+                    </label>
+
+                    <textarea id="osObservacoesFinais"
+                        class="w-full mt-2 p-4 rounded-2xl bg-black/5 dark:bg-white/5 min-h-[120px]"></textarea>
+
+                </div>
+
+
+
+                <!-- NAVEGAÇÃO -->
+
+                <div class="flex justify-between mt-8 pt-6 border-t border-black/10 dark:border-white/10">
+
+                    <button id="osBtnAnterior" onclick="osEtapaAnterior()"
+                        class="px-5 py-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs font-semibold">
+                        ← Anterior
+                    </button>
+
+                    <button id="osBtnProximo" onclick="osProximaEtapa()"
+                        class="px-5 py-3 rounded-xl bg-blue-600 text-white text-xs font-semibold">
+                        Salvar e continuar →
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- MÓDULO CENTRAL DE CHAMADOS -->
+        <section id="chamadosView" class="hidden-view max-w-6xl mx-auto px-6 mt-28 pb-20">
+            <!-- Cabeçalho -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <button onclick="navigate('home')"
+                        class="text-xs font-bold opacity-50 hover:opacity-100 transition-opacity mb-2 block">
+                        ← Voltar para a Home
+                    </button>
+                    <h2 class="text-3xl font-light tracking-tight">Central de Chamados</h2>
+                    <p class="text-xs opacity-50 mt-1">Gestão e acompanhamento de chamados</p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="exportarPlanilhaAmericanas()"
+                        class="flex items-center gap-2 px-5 py-3 bg-emerald-600 text-white rounded-2xl text-xs font-semibold shadow-md hover:bg-emerald-700 transition-all cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        Exportar Planilha
+                    </button>
+                    <label
+                        class="flex items-center gap-2 px-5 py-3 bg-black text-white dark:bg-white dark:text-black rounded-2xl text-xs font-semibold shadow-md hover:opacity-90 transition-all cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                        </svg>
+                        Importar Planilha
+                        <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" class="hidden"
+                            onchange="processarExcelImportacao(event)">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Indicadores Topo -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="glass rounded-3xl p-5 border border-black/5 dark:border-white/5">
+                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-40">Total</span>
+                    <p class="text-3xl font-semibold mt-2" id="dashTotal">0</p>
+                </div>
+                <div class="glass rounded-3xl p-5 border border-black/5 dark:border-white/5">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-amber-500">Pendentes</span>
+                    <p class="text-3xl font-semibold mt-2 text-amber-500" id="dashPendentes">0</p>
+                </div>
+                <div class="glass rounded-3xl p-5 border border-black/5 dark:border-white/5">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-red-500">Duplicados</span>
+                    <p class="text-3xl font-semibold mt-2 text-red-500" id="dashDuplicados">0</p>
+                </div>
+                <div class="glass rounded-3xl p-5 border border-black/5 dark:border-white/5">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-500">Encerrados</span>
+                    <p class="text-3xl font-semibold mt-2 text-emerald-500" id="dashFechados">0</p>
+                </div>
+            </div>
+
+            <!-- Mapa das Lojas -->
+            <div class="glass rounded-3xl p-6 mb-8 border border-black/5 dark:border-white/5 relative">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest opacity-40">Visão Geográfica</span>
+                        <h3 class="text-xl font-semibold mt-1">Mapa por Loja</h3>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-4">
+                        <div class="flex items-center gap-1 bg-black/5 dark:bg-white/10 p-1 rounded-xl">
+                            <button onclick="aplicarZoomMapa(0.2)"
+                                class="w-7 h-7 rounded-lg glass font-bold text-sm hover:bg-black/10 flex items-center justify-center">+</button>
+                            <button onclick="aplicarZoomMapa(-0.2)"
+                                class="w-7 h-7 rounded-lg glass font-bold text-sm hover:bg-black/10 flex items-center justify-center">-</button>
+                            <button onclick="resetarZoomMapa()"
+                                class="px-2 h-7 rounded-lg glass font-bold text-[10px] hover:bg-black/10 flex items-center justify-center">Reset</button>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-3 text-[10px] font-bold">
+                            <span class="flex items-center gap-1.5"><i
+                                    class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></i> 0</span>
+                            <span class="flex items-center gap-1.5"><i
+                                    class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></i> 1-5</span>
+                            <span class="flex items-center gap-1.5"><i
+                                    class="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block"></i> 6-10</span>
+                            <span class="flex items-center gap-1.5"><i
+                                    class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></i> >10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative w-full h-[420px] rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 overflow-hidden cursor-grab active:cursor-grabbing"
+                    id="mapaViewport">
+                    <div id="mapaLojasContainer"
+                        class="relative w-full h-full transition-transform duration-150 ease-out origin-center"></div>
+                </div>
+            </div>
+
+            <!-- Filtros e Busca -->
+            <div class="glass rounded-3xl p-6 mb-8 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="relative md:col-span-4">
+                        <input type="text" id="inputLojaAuto" oninput="filtrarAutoCompleteLojas(this.value)"
+                            placeholder="Pesquisar loja (Ex: 1402)..." class="w-full p-4 input-ios text-xs">
+                        <div id="autocompleteList"
+                            class="hidden absolute left-0 right-0 top-full mt-2 glass rounded-2xl shadow-2xl z-50 overflow-hidden max-h-48 overflow-y-auto border border-black/10 dark:border-white/10">
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-8">
+                        <input type="text" id="inputPesquisaGeral" oninput="aplicarFiltrosChamados()"
+                            placeholder="Pesquisar por número do chamado ou descrição..."
+                            class="w-full p-4 input-ios text-xs">
+                    </div>
+                </div>
+
+                <div
+                    class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-black/5 dark:border-white/5">
+                    <div class="flex flex-wrap items-center gap-2" id="filterStatusChips">
+                        <button onclick="setFiltroStatus('todos')" class="btn-chip active"
+                            data-status="todos">Todos</button>
+                        <button onclick="setFiltroStatus('pendente')" class="btn-chip"
+                            data-status="pendente">Pendentes</button>
+                        <button onclick="setFiltroStatus('duplicado')" class="btn-chip"
+                            data-status="duplicado">Duplicados</button>
+                        <button onclick="setFiltroStatus('fechado')" class="btn-chip"
+                            data-status="fechado">Fechados</button>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2" id="filterPeriodoChips">
+                        <button onclick="setFiltroPeriodo('todos')" class="btn-chip active" data-periodo="todos">Todo o
+                            período</button>
+                        <button onclick="setFiltroPeriodo('hoje')" class="btn-chip" data-periodo="hoje">Hoje</button>
+                        <button onclick="setFiltroPeriodo('7dias')" class="btn-chip" data-periodo="7dias">Últimos 7
+                            dias</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Chamados -->
+            <div id="listaChamadosContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+            <!-- Empty State -->
+            <div id="emptyStateChamados" class="hidden text-center py-16 glass rounded-3xl">
+                <svg class="w-12 h-12 mx-auto text-gray-400 mb-4 opacity-40" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                    </path>
+                </svg>
+                <p class="text-sm font-semibold opacity-70">Nenhum chamado encontrado</p>
+                <p class="text-xs opacity-40 mt-1">Tente ajustar os filtros ou os termos de pesquisa.</p>
+            </div>
+</section>
+
+            <!-- =========================================================
+     LOJAS E PRESTADORES
+========================================================= -->
+
+<section id="cadastrosView"
+    class="hidden-view max-w-7xl mx-auto px-4 md:px-6 mt-28 pb-20">
+
+    <!-- CABEÇALHO -->
+    <div class="mb-8">
+
+        <button onclick="navigate('home')"
+            class="text-xs font-bold opacity-50 hover:opacity-100 mb-3">
+            ← Voltar para a Home
+        </button>
+
+        <h2 class="text-3xl font-light tracking-tight">
+            Lojas e Prestadores
+        </h2>
+
+        <p class="text-xs opacity-50 mt-1">
+            Cadastros operacionais do AREISPRO
+        </p>
+
+    </div>
+
+
+    <!-- ABAS -->
+    <div class="flex gap-2 mb-6">
+
+        <button id="btnAbaLojas"
+            onclick="abrirAbaCadastros('lojas')"
+            class="px-5 py-3 rounded-2xl bg-black text-white
+                   dark:bg-white dark:text-black
+                   text-xs font-bold">
+            LOJAS
+        </button>
+
+        <button id="btnAbaPrestadores"
+            onclick="abrirAbaCadastros('prestadores')"
+            class="px-5 py-3 rounded-2xl bg-black/5 dark:bg-white/5
+                   text-xs font-bold opacity-60">
+            PRESTADORES
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         ABA LOJAS
+    ====================================================== -->
+
+    <div id="cadastrosAbaLojas">
+
+        <!-- BARRA DE AÇÕES -->
+        <div class="flex flex-col md:flex-row md:items-center
+                    justify-between gap-4 mb-4">
+
+            <div>
+
+                <p class="text-sm font-semibold">
+                    Cadastro de Lojas
+                </p>
+
+                <p id="contadorLojasSelecionadas"
+                    class="text-[10px] opacity-50 mt-1">
+                    Nenhuma loja selecionada
+                </p>
+
+            </div>
+
+
+            <button onclick="copiarLojasSelecionadas()"
+                class="
+                    px-5 py-3
+                    bg-black
+                    hover:bg-zinc-800
+                    text-white
+                    dark:bg-white
+                    dark:hover:bg-zinc-200
+                    dark:text-black
+                    rounded-2xl
+                    text-xs
+                    font-bold
+                    transition-all
+                ">
+                COPIAR SELEÇÃO
+            </button>
+
+        </div>
+
+
+        <!-- TABELA -->
+        <div class="
+            overflow-x-auto
+            border
+            border-black/20
+            dark:border-white/20
+            bg-white
+            dark:bg-zinc-950
+        ">
+
+            <table class="w-full min-w-[1000px] border-collapse text-xs">
+
+                <thead>
+
+                    <tr style="background:#a6a6a6; color:#000;">
+
+                        <!-- LOJA COM FILTRO -->
+                        <th class="relative border border-black/30 px-3 py-4 text-left min-w-[100px]">
+
+                            <div class="flex items-center justify-between gap-2">
+
+                                <span class="font-bold">
+                                    LOJA
+                                </span>
+
+                                <button
+                                    type="button"
+                                    onclick="toggleFiltroLojas(event)"
+                                    class="
+                                        w-6 h-6
+                                        bg-white
+                                        border
+                                        border-gray-500
+                                        rounded-sm
+                                        flex
+                                        items-center
+                                        justify-center
+                                        text-[10px]
+                                    ">
+                                    ▼
+                                </button>
+
+                            </div>
+
+
+                            <!-- FILTRO ESTILO EXCEL -->
+                            <div id="filtroLojasDropdown"
+                                class="
+                                    hidden
+                                    absolute
+                                    top-full
+                                    left-0
+                                    z-[300]
+                                    w-72
+                                    bg-white
+                                    text-black
+                                    border
+                                    border-gray-400
+                                    shadow-2xl
+                                    text-left
+                                ">
+
+                                <div class="p-3 border-b border-gray-300">
+
+                                    <input
+                                        id="filtroLojaPesquisa"
+                                        type="text"
+                                        placeholder="Pesquisar loja..."
+                                        oninput="renderizarOpcoesFiltroLojas()"
+                                        class="
+                                            w-full
+                                            px-3
+                                            py-2
+                                            border
+                                            border-gray-300
+                                            text-xs
+                                            outline-none
+                                        "
+                                    >
+
+                                </div>
+
+
+                                <div class="p-3 border-b border-gray-300">
+
+                                    <label class="flex items-center gap-2 cursor-pointer">
+
+                                        <input
+                                            id="filtroSelecionarTodas"
+                                            type="checkbox"
+                                            onchange="marcarTodasLojasFiltro(this.checked)"
+                                        >
+
+                                        <span class="text-xs font-semibold">
+                                            Selecionar tudo
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+
+                                <div id="filtroLojasOpcoes"
+                                    class="max-h-64 overflow-y-auto p-2">
+
+                                </div>
+
+
+                                <div class="flex justify-end gap-2 p-3 border-t border-gray-300">
+
+                                    <button
+                                        type="button"
+                                        onclick="limparFiltroLojas()"
+                                        class="px-3 py-2 text-xs border border-gray-300">
+                                        Limpar
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onclick="aplicarFiltroLojas()"
+                                        class="px-4 py-2 text-xs bg-black text-white">
+                                        OK
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </th>
+
+
+                        <th class="border border-black/30 px-3 py-4 text-center min-w-[210px]">
+                            NOME
+                        </th>
+
+                        <th class="border border-black/30 px-3 py-4 text-center min-w-[70px]">
+                            UF
+                        </th>
+
+                        <th class="border border-black/30 px-3 py-4 text-center min-w-[380px]">
+                            ENDEREÇO
+                        </th>
+
+                        <th class="border border-black/30 px-3 py-4 text-center min-w-[180px]">
+                            CIDADE
+                        </th>
+
+                        <th class="border border-black/30 px-3 py-4 text-center min-w-[130px]">
+                            CEP
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="tabelaLojasBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ABA PRESTADORES
+    ====================================================== -->
+
+    <div id="cadastrosAbaPrestadores"
+        class="hidden">
+
+        <div class="
+            glass
+            rounded-[32px]
+            p-10
+            md:p-16
+            text-center
+        ">
+
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">
+                Prestadores
+            </p>
+
+            <h3 class="text-2xl font-semibold mt-3">
+                Em desenvolvimento...            </h3>
+
+        </div>
+
+    </div>
+
+</section>
+        </section>
+
+        <!-- MAIN VIEW (RELATÓRIOS TÉCNICOS) -->
+        <main id="mainView" class="hidden-view max-w-6xl mx-auto px-6 mt-24 pb-20">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <button onclick="navigate('home')" class="text-xs font-bold opacity-50 hover:opacity-100 mb-3">←
+                        Voltar para a Home</button>
+                    <h2 class="text-2xl font-semibold">Relatórios Técnicos</h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-4 space-y-6">
+                    <section class="glass rounded-3xl p-6 shadow-sm">
+                        <h3 class="text-[10px] font-bold opacity-40 uppercase tracking-widest mb-6">Informações</h3>
+                        <div class="space-y-4">
+
+                            <select id="prestador" class="w-full p-4 input-ios text-sm font-medium">
+                            </select>
+
+                            <!-- BUSCA DO CHAMADO -->
+                            <div class="relative">
+
+                                <input id="chamado" type="text" placeholder="Digite o número do chamado..."
+                                    autocomplete="off" oninput="buscarChamadoRelatorio()"
+                                    onfocus="buscarChamadoRelatorio()" class="w-full p-4 input-ios text-sm">
+
+                                <!-- RESULTADOS -->
+                                <div id="resultadosChamadoRelatorio" class="hidden absolute left-0 right-0 top-full mt-2 z-50
+               glass rounded-2xl shadow-2xl border border-black/10
+               dark:border-white/10 overflow-hidden max-h-72 overflow-y-auto">
+                                </div>
+
+                            </div>
+
+                            <!-- LOJA PREENCHIDA AUTOMATICAMENTE -->
+                            <div>
+                                <p class="text-[9px] font-bold uppercase opacity-40 mb-1 ml-1">
+                                    Loja do chamado
+                                </p>
+
+                                <select id="lojaSelect" class="w-full p-4 input-ios text-sm font-medium">
+                                </select>
+                            </div>
+
+                            <input id="dataServico" type="date" class="w-full p-4 input-ios text-sm">
+                        </div>
+                    </section>
+                    <button onclick="document.getElementById('modalLogos').classList.remove('hidden')"
+                        class="w-full py-4 bg-gray-500/10 rounded-2xl text-[10px] font-bold">CONFIGURAR LOGOS
+                        CAPA</button>
+
+                    <button onclick="abrirPreviewRelatorio()" class="w-full py-4 bg-black hover:bg-zinc-800 text-white dark:bg-white dark:hover:bg-zinc-200 dark:text-black rounded-2xl text-[10px] font-bold transition-all duration-200
+                    ">GERAR RELATÓRIO </button>
+                </div>
+
+                <div class="lg:col-span-8 space-y-8">
+                    <div class="glass rounded-3xl p-6">
+                        <h3 class="text-[10px] font-bold opacity-40 uppercase mb-4">Fotos Obrigatórias</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div id="prev-fachada"
+                                class="bg-gray-500/10 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
+                                <input type="file" onchange="handleSingleUpload(this, 'fachada')"
+                                    class="absolute inset-0 opacity-0 cursor-pointer">
+                                <span class="text-[10px] opacity-40 font-bold uppercase">Figura 1 – Fachada</span>
+                            </div>
+                            <div id="prev-marquise"
+                                class="bg-gray-500/10 border-2 border-dashed rounded-2xl p-4 text-center relative h-40 flex items-center justify-center">
+                                <input type="file" onchange="handleSingleUpload(this, 'marquise')"
+                                    class="absolute inset-0 opacity-0 cursor-pointer">
+                                <span class="text-[10px] opacity-40 font-bold uppercase">Figura 2 – Marquise</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="anexosContainer"></div>
+                    <button onclick="addNovoAnexo()"
+                        class="w-full py-5 border-2 border-dashed border-gray-400/30 rounded-3xl text-[11px] font-bold opacity-40 flex items-center justify-center gap-2">
+                        <span class="text-lg">+</span> ADICIONAR NOVO ANEXO (FOTOS)
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- VIEW CONFIGURAÇÕES -->
+        <section id="configView" class="hidden-view max-w-2xl mx-auto px-6 mt-24 pb-20">
+            <div class="glass rounded-3xl p-8 mb-6">
+                <h3 class="text-xl font-bold mb-6">Lojas</h3>
+                <div class="flex gap-2 mb-6"><input id="newStore" type="text"
+                        class="flex-1 p-3 input-ios text-sm uppercase" placeholder="Nº - lOJA - PA..."><button
+                        onclick="addStore()"
+                        class="bg-black text-white px-4 rounded-xl text-sm font-bold">ADICIONAR</button></div>
+                <div id="storeList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+            </div>
+            <div class="glass rounded-3xl p-8">
+                <h3 class="text-xl font-bold mb-6">Fornecedores</h3>
+                <div class="flex gap-2 mb-6"><input id="newProv" type="text"
+                        class="flex-1 p-3 input-ios text-sm uppercase" placeholder="Nome da Empresa"><button
+                        onclick="addProv()"
+                        class="bg-black text-white px-4 rounded-xl text-sm font-bold">ADICIONAR</button></div>
+                <div id="provList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+            </div>
+            <button onclick="navigate('home')"
+                class="mt-8 w-full py-4 bg-black text-white dark:bg-white dark:text-black rounded-2xl font-bold">Salvar
+                e Voltar para a Home</button>
+        </section>
+    </div>
+
+    <!-- MODAL DE HISTÓRICO DA LOJA -->
+    <div id="modalHistoricoLoja"
+        class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4">
+        <div
+            class="glass p-6 md:p-8 rounded-[32px] max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-black/10 dark:border-white/10">
+            <div class="flex justify-between items-start pb-4 border-b border-black/5 dark:border-white/5">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-40">Histórico de
+                        Operação</span>
+                    <h3 class="text-2xl font-semibold mt-1" id="modalLojaTitulo">Loja --</h3>
+                </div>
+                <button onclick="fecharModalHistorico()"
+                    class="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center font-bold text-sm hover:opacity-80">×</button>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 my-4">
+                <div class="p-3 glass rounded-2xl text-center">
+                    <span class="text-[9px] font-bold uppercase opacity-40">Total</span>
+                    <p class="text-lg font-bold" id="modalLojaTotal">0</p>
+                </div>
+                <div class="p-3 glass rounded-2xl text-center">
+                    <span class="text-[9px] font-bold uppercase text-amber-500">Pendentes</span>
+                    <p class="text-lg font-bold text-amber-500" id="modalLojaPendentes">0</p>
+                </div>
+                <div class="p-3 glass rounded-2xl text-center">
+                    <span class="text-[9px] font-bold uppercase text-emerald-500">Fechados</span>
+                    <p class="text-lg font-bold text-emerald-500" id="modalLojaFechados">0</p>
+                </div>
+            </div>
+
+            <div id="modalLojaListaChamados" class="overflow-y-auto space-y-3 pr-2 flex-1 my-2"></div>
+
+            <button onclick="fecharModalHistorico()"
+                class="mt-4 w-full py-3.5 bg-black text-white dark:bg-white dark:text-black rounded-2xl font-bold text-xs">
+                Fechar Histórico
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL LOGOS -->
+    <div id="modalLogos"
+        class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100]">
+        <div class="glass p-8 rounded-[32px] max-w-sm w-full mx-4 shadow-2xl">
+            <h2 class="text-lg font-bold mb-6">Configuração de Logos</h2>
+            <div class="space-y-6">
+                <div><label class="text-[9px] font-black opacity-40 block mb-2 uppercase">Logo Prestador</label><input
+                        type="file" onchange="saveLogo(this, 'prestador')" class="text-xs"></div>
+                <div><label class="text-[9px] font-black opacity-40 block mb-2 uppercase">Logo Cliente</label><input
+                        type="file" onchange="saveLogo(this, 'americanas')" class="text-xs"></div>
+            </div>
+            <button onclick="document.getElementById('modalLogos').classList.add('hidden')"
+                class="mt-10 w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-sm">Salvar
+                Alterações</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+     MODAL DE REVISÃO DO RELATÓRIO
+=========================================== -->
+    <div id="modalPreviewRelatorio"
+        class="hidden fixed inset-0 z-[200] bg-black/70 backdrop-blur-md p-3 md:p-6 overflow-y-auto">
+
+        <div class="max-w-6xl mx-auto bg-white dark:bg-[#1c1c1e] rounded-[28px] shadow-2xl overflow-hidden">
+
+            <!-- CABEÇALHO -->
+            <div class="sticky top-0 z-10 flex items-center justify-between px-5 md:px-7 py-4
+                    bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-xl
+                    border-b border-black/10 dark:border-white/10">
+
+                <div>
+                    <p class="text-[9px] font-bold uppercase tracking-[0.25em] opacity-40">
+                        AREISPRO
+                    </p>
+
+                    <h2 class="text-lg md:text-xl font-semibold">
+                        Revisão do Relatório
+                    </h2>
+                </div>
+
+                <button type="button" onclick="fecharPreviewRelatorio()" class="w-9 h-9 rounded-full bg-black/5 dark:bg-white/10
+                       flex items-center justify-center font-bold">
+                    ×
+                </button>
+            </div>
+
+            <div class="p-4 md:p-7">
+
+                <!-- AVISO -->
+                <div class="mb-5 p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+                    <p class="text-xs font-semibold text-blue-600">
+                        Confira todas as páginas antes de finalizar o relatório.
+                    </p>
+
+                </div>
+
+                <!-- PREVIEW DO PDF -->
+                <div class="rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-gray-100">
+                    <div id="previewRelatorioContainer" class="w-full bg-gray-200 p-2 md:p-4 overflow-y-auto"
+                        style="max-height: 65vh;">
+
+                        <div id="previewRelatorioPaginas" class="flex flex-col items-center gap-4">
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ASSINATURA -->
+                <div class="mt-7 glass rounded-3xl p-5 md:p-7">
+
+                    <div class="flex justify-between items-start gap-4 mb-4">
+                        <div>
+                            <h3 class="text-sm font-semibold">
+                                Assinatura do Gerente
+                            </h3>
+
+                            <p class="text-[10px] opacity-50 mt-1">
+                                Assinatura do gerente somente após revisão do relatório.
+                            </p>
+                        </div>
+
+                        <span class="text-[9px] font-bold uppercase px-3 py-1 rounded-full bg-gray-500/10 opacity-60">
+                            Obrigatório
+                        </span>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-300 overflow-hidden">
+                        <canvas id="assinaturaCanvas" width="900" height="260"
+                            class="block w-full h-[180px] bg-white touch-none cursor-crosshair">
+                        </canvas>
+                    </div>
+
+                    <div class="flex justify-end mt-3">
+                        <button type="button" onclick="limparAssinatura()"
+                            class="px-4 py-2.5 bg-gray-500/10 rounded-xl text-[10px] font-bold">
+                            LIMPAR ASSINATURA
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BOTÕES -->
+                <div class="flex flex-col md:flex-row md:justify-between gap-3 mt-7">
+
+                    <button type="button" onclick="fecharPreviewRelatorio()"
+                        class="px-6 py-4 rounded-2xl bg-gray-500/10 text-xs font-bold">
+                        VOLTAR E EDITAR
+                    </button>
+
+                    <button id="btnGerarPdfFinal" type="button" onclick="gerarPDFFinal()" class="px-8 py-4 rounded-2xl bg-black text-white
+                           dark:bg-white dark:text-black text-xs font-bold shadow-lg">
+                        GERAR PDF FINAL
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- =====================================================================================================
+         MODAL DE REVISÃO / ASSINATURA DA ORDEM DE SERVIÇO
+         ===================================================================================================== -->
+    <div id="modalPreviewOS"
+        class="hidden fixed inset-0 z-[220] bg-black/70 backdrop-blur-md p-3 md:p-6 overflow-y-auto">
+
+        <div class="max-w-6xl mx-auto bg-white dark:bg-[#1c1c1e] rounded-[28px] shadow-2xl overflow-hidden">
+
+            <div class="sticky top-0 z-10 flex items-center justify-between px-5 md:px-7 py-4
+                        bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-xl
+                        border-b border-black/10 dark:border-white/10">
+
+                <div>
+                    <p class="text-[9px] font-bold uppercase tracking-[0.25em] opacity-40">AREISPRO</p>
+                    <h2 class="text-lg md:text-xl font-semibold">Revisão da Ordem de Serviço</h2>
+                    <p id="osPreviewNumero" class="text-[10px] opacity-50 mt-1">OS #--</p>
+                </div>
+
+                <button type="button" onclick="osFecharPreview()" class="w-9 h-9 rounded-full bg-black/5 dark:bg-white/10
+                           flex items-center justify-center font-bold">
+                    ×
+                </button>
+            </div>
+
+            <div class="p-4 md:p-7">
+
+                <div class="mb-5 p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+                    <p class="text-xs font-semibold text-blue-600">
+                        Confira todas as páginas da OS. Depois, o responsável da loja deve assinar para liberar o PDF
+                        final.
+                    </p>
+                </div>
+
+                <!-- PREVIEW -->
+                <div class="rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-gray-100">
+                    <div id="previewOSContainer" class="w-full bg-gray-200 p-2 md:p-4 overflow-y-auto"
+                        style="max-height: 58vh;">
+
+                        <div id="previewOSPaginas" class="flex flex-col items-center gap-4">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ASSINATURA RESPONSÁVEL DA LOJA -->
+                <div class="mt-7 glass rounded-3xl p-5 md:p-7">
+
+                    <div class="flex justify-between items-start gap-4 mb-4">
+                        <div>
+                            <h3 class="text-sm font-semibold">
+                                Assinatura do Responsável da Loja
+                            </h3>
+                            <p class="text-[10px] opacity-50 mt-1">
+                                O responsável deve revisar a OS e assinar antes do download do documento final.
+                            </p>
+                        </div>
+
+                        <span class="text-[9px] font-bold uppercase px-3 py-1 rounded-full
+                                     bg-red-500/10 text-red-500">
+                            Obrigatório
+                        </span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-[10px] font-bold uppercase opacity-50 block mb-2">
+                            Nome do responsável
+                        </label>
+                        <input id="osNomeResponsavelLoja" type="text" placeholder="Nome completo"
+                            class="w-full p-4 input-ios text-sm">
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-300 overflow-hidden">
+                        <canvas id="osAssinaturaCanvas" width="900" height="260"
+                            class="block w-full h-[180px] bg-white touch-none cursor-crosshair">
+                        </canvas>
+                    </div>
+
+                    <div class="flex justify-end mt-3">
+                        <button type="button" onclick="osLimparAssinatura()"
+                            class="px-4 py-2.5 bg-gray-500/10 rounded-xl text-[10px] font-bold">
+                            LIMPAR ASSINATURA
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row md:justify-between gap-3 mt-7">
+
+                    <button type="button" onclick="osFecharPreview()"
+                        class="px-6 py-4 rounded-2xl bg-gray-500/10 text-xs font-bold">
+                        VOLTAR E EDITAR
+                    </button>
+
+                    <button id="btnBaixarOSFinal" type="button" onclick="osBaixarPdfFinal()" class="px-8 py-4 rounded-2xl bg-black text-white
+                               dark:bg-white dark:text-black text-xs font-bold shadow-lg">
+                        BAIXAR PDF FINAL
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js" defer></script>
+
+    <!-- MODAL DE LINHA DO TEMPO E DETALHES DO CHAMADO -->
+    <div id="modalDetalhesChamado"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div
+            class="glass bg-slate-900 border border-white/10 text-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+
+            <!-- Header -->
+            <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/20">
+                <div>
+                    <span id="modalChamadoLoja"
+                        class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">Loja
+                        --</span>
+                    <h3 class="text-lg font-bold mt-1">Chamado #<span id="modalChamadoId">--</span></h3>
+                </div>
+                <button onclick="fecharModalDetalhesChamado()"
+                    class="text-white/40 hover:text-white text-xl font-bold">×</button>
+            </div>
+
+            <!-- Body -->
+            <div class="p-6 overflow-y-auto space-y-5 flex-1">
+                <div class="bg-black/20 p-4 rounded-2xl border border-white/5">
+                    <span class="text-[9px] font-bold opacity-40 uppercase tracking-wider block mb-1">Descrição do
+                        Problema</span>
+                    <p id="modalChamadoDesc" class="text-xs leading-relaxed opacity-80">--</p>
+                </div>
+
+                <!-- Seção de Observações / Notas Internas -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider opacity-60 mb-3">Observação Interna</h4>
+                    <div id="modalComentariosLista" class="space-y-2 max-h-40 overflow-y-auto p-1">
+                        <!-- Comentários via JS -->
+                    </div>
+                    <div class="flex gap-2 mt-3">
+                        <input id="inputNovoComentario" type="text" placeholder="Escrever observação interna..."
+                            class="flex-1 bg-black/20 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500">
+                        <button onclick="adicionarComentarioModal()"
+                            class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">Enviar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER DO MODAL COM REVERSÃO (index.html) -->
+            <div class="p-4 bg-black/30 border-t border-white/10 flex justify-between items-center">
+                <!-- Indicador de Status Atual -->
+                <span id="modalStatusBadge" class="text-[10px] font-bold px-3 py-1 rounded-full border">
+                    --
+                </span>
+
+                <div class="flex gap-2 flex-wrap justify-end">
+                    <!-- Abre uma Ordem de Serviço usando o chamado visualizado -->
+                    <button onclick="abrirRelatorioDoChamadoAtivo()" class="bg-violet-600 hover:bg-violet-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition
+                     "> Criar Relatório →
+                    </button>
+                    <button onclick="abrirOSDoChamadoAtivo()"
+                        class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                        Gerar OS →
+                    </button>
+
+                    <!-- Botão para Reverter (Aparece se já estiver "Fechar Chamado") -->
+                    <button id="btnReverterChamado" onclick="reverterStatusChamado()"
+                        class="hidden bg-amber-600/20 text-amber-400 border border-amber-500/30 hover:bg-amber-600 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                        ↩ Reverter para Pendente
+                    </button>
+
+                    <!-- Botão para Fechar (Aparece se não estiver fechado) -->
+                    <button id="btnFecharChamado" onclick="encerrarChamadoAtivo()"
+                        class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                        ✓ Fechar Chamado
+                    </button>
+
+                    <button onclick="fecharModalDetalhesChamado()"
+                        class="px-4 py-2 text-xs font-bold opacity-60 hover:opacity-100">
+                        Cancelar
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- =========================================================
+         MÓDULO CONVERSOR DE ARQUIVOS
+    ========================================================== -->
+
+    <section id="converterView" class="hidden-view max-w-6xl mx-auto px-6 mt-28 pb-20">
+
+        <!-- CABEÇALHO -->
+        <div class="mb-8">
+
+            <button onclick="navigate('home')" class="text-xs font-bold opacity-50 hover:opacity-100 mb-3">
+                ← Voltar para a Home
+            </button>
+
+            <h2 class="text-3xl font-light tracking-tight">
+                Conversor de Arquivos
+            </h2>
+
+            <p class="text-xs opacity-50 mt-1">
+                Ferramentas de conversão de arquivos.
+            </p>
+
+        </div>
+
+        <!-- CONVERSORES -->
+        <div class="
+            glass
+            rounded-[32px]
+            p-6
+            md:p-8
+            grid
+            grid-cols-1
+            sm:grid-cols-2
+            lg:grid-cols-4
+            gap-4
+        ">
+
+            <!-- PDF PARA WORD -->
+            <div onclick="triggerConverter('pdfToWordInput')" class="
+                    p-6
+                    rounded-2xl
+                    cursor-pointer
+                    border
+                    border-black/10
+                    dark:border-white/10
+                    hover:border-blue-500
+                    hover:bg-blue-500/5
+                    transition-all
+                ">
+
+                <p class="text-sm font-bold">
+                    PDF → Word
+                </p>
+
+                <p class="text-[10px] opacity-50 mt-2">
+                    Converta documentos PDF para Word.
+                </p>
+
+                <input id="pdfToWordInput" type="file" accept=".pdf" class="hidden"
+                    onchange="handleConversion(this, 'pdfToWord')">
+
+                <p class="text-[10px] font-bold text-blue-500 mt-6">
+                    SELECIONAR ARQUIVO →
+                </p>
+
+            </div>
+
+
+            <!-- WORD PARA PDF -->
+            <div class="
+                p-6
+                rounded-2xl
+                border
+                border-black/10
+                dark:border-white/10
+                opacity-50
+            ">
+
+                <p class="text-sm font-bold">
+                    Word → PDF
+                </p>
+
+                <p class="text-[10px] opacity-50 mt-2">
+                    Converter documentos Word para PDF.
+                </p>
+
+                <p class="text-[10px] font-bold mt-6">
+                    EM BREVE
+                </p>
+
+            </div>
+
+
+            <!-- EXCEL PARA PDF -->
+            <div class="
+                p-6
+                rounded-2xl
+                border
+                border-black/10
+                dark:border-white/10
+                opacity-50
+            ">
+
+                <p class="text-sm font-bold">
+                    Excel → PDF
+                </p>
+
+                <p class="text-[10px] opacity-50 mt-2">
+                    Converter planilhas para PDF.
+                </p>
+
+                <p class="text-[10px] font-bold mt-6">
+                    EM BREVE
+                </p>
+
+            </div>
+
+
+            <!-- PDF PARA EXCEL -->
+            <div class="
+                p-6
+                rounded-2xl
+                border
+                border-black/10
+                dark:border-white/10
+                opacity-50
+            ">
+
+                <p class="text-sm font-bold">
+                    PDF → Excel
+                </p>
+
+                <p class="text-[10px] opacity-50 mt-2">
+                    Extrair dados de PDFs para planilhas.
+                </p>
+
+                <p class="text-[10px] font-bold mt-6">
+                    EM BREVE
+                </p>
+
+            </div>
+
+
+            <!-- PROGRESSO -->
+            <div id="convProgress"
+                class="hidden col-span-full w-full bg-gray-200 h-1 mt-4 rounded-full overflow-hidden">
+
+                <div class="bg-blue-600 h-full animate-progress" style="width:50%">
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    </div>
+
+</body>
+
+</html>
+</section>
