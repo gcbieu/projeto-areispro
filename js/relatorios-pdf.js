@@ -62,37 +62,153 @@ async function gerarRelatorio(modo = "final") {
         doc.text(`PREPARADO POR: `, 14.8, 3.2);
     };
 
-    // --- 1. CAPA (Página 1) ---
+    // ============================================================
+// 1. CAPA - PÁGINA 1
+// ============================================================
+
+// Verifica se é o Relatório de Vistoria
+const isVistoria =
+    pNome &&
+    pNome.toUpperCase().includes("VISTORIA");
+
+
+if (isVistoria) {
+
+    // ========================================================
+    // CAPA - RELATÓRIO DE VISTORIA
+    // ========================================================
+
+    header();
+
+    // Imagem cadastrada no logo_url
+    // Largura: 11,66 cm
+    // Altura: 3,12 cm
+    if (logos.prestador) {
+
+        const larguraImagem = 11.66;
+        const alturaImagem = 3.12;
+
+        // Centraliza na folha A4 de 21 cm
+        const xImagem = (21 - larguraImagem) / 2;
+
+        doc.addImage(
+            logos.prestador,
+            "PNG",
+            xImagem,
+            8.0,
+            larguraImagem,
+            alturaImagem,
+            undefined,
+            "FAST"
+        );
+    }
+
+
+    // Texto da capa
+    doc.setFont("times", "normal");
+    doc.setFontSize(20);
+
+    doc.text(
+        "RELATÓRIO DE VISTORIA:",
+        10.5,
+        13.0,
+        { align: "center" }
+    );
+
+    doc.text(
+        `LOJA ${lNome}`,
+        10.5,
+        14.5,
+        { align: "center" }
+    );
+
+
+} else {
+
+    // ========================================================
+    // CAPA NORMAL DOS PRESTADORES
+    // ========================================================
+
     header();
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
 
-    // Título da Capa:
-    doc.text("RELATÓRIO FOTOGRÁFICO", 10.5, 5.0, { align: 'center' });
-    doc.text(pNome, 10.5, 6.2, { align: 'center' });
+    // Título da Capa
+    doc.text(
+        "RELATÓRIO FOTOGRÁFICO",
+        10.5,
+        5.0,
+        { align: "center" }
+    );
+
+    doc.text(
+        pNome,
+        10.5,
+        6.2,
+        { align: "center" }
+    );
 
     let yAtualCapa = 7.5;
 
-    // Logo 1 (Prestador)
+
+    // Logo 1 - Prestador
     if (logos.prestador) {
-        // Tamanho grande para a capa
-        doc.addImage(logos.prestador, 'PNG', 6.5, yAtualCapa, 8, 8);
+
+        doc.addImage(
+            logos.prestador,
+            "PNG",
+            6.5,
+            yAtualCapa,
+            8,
+            8
+        );
+
         yAtualCapa += 9;
     }
 
-    // Logo 2 (Cliente)
+
+    // Logo 2 - Americanas
     if (logos.americanas) {
-        doc.addImage(logos.americanas, 'PNG', 5.5, yAtualCapa, 10, 2.8);
+
+        doc.addImage(
+            logos.americanas,
+            "PNG",
+            5.5,
+            yAtualCapa,
+            10,
+            2.8
+        );
+
         yAtualCapa += 4;
     }
 
-    // Rodapé da Capa (Informações da Loja)
+
+    // Informações da loja
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
-    doc.text(`LOJA -  ${lNome}`, 10.5, 21.0, { align: 'center' });
-    doc.text(`N° CHAMADO: ${cNum}`, 10.5, 22.2, { align: 'center' });
-    doc.text(`DATA: ${dFinal}`, 10.5, 23.4, { align: 'center' });
+
+    doc.text(
+        `LOJA -  ${lNome}`,
+        10.5,
+        21.0,
+        { align: "center" }
+    );
+
+    doc.text(
+        `N° CHAMADO: ${cNum}`,
+        10.5,
+        22.2,
+        { align: "center" }
+    );
+
+    doc.text(
+        `DATA: ${dFinal}`,
+        10.5,
+        23.4,
+        { align: "center" }
+    );
+}
 
     // Segunda página
     if (fotosObrigatorias.fachada || fotosObrigatorias.marquise) {
