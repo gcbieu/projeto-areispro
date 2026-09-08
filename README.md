@@ -23,24 +23,6 @@ Este painel é o coração da produtividade do AREISPRO. O propósito de sua cri
 •	Por que usar: Em vez de gastar horas copiando fotos, digitando legendas e ajustando a paginação no Word, aqui o usuário apenas insere os dados e as imagens em um fluxo guiado.
 •	O Resultado: Isso reduz o tempo de elaboração do relatório técnico pela metade, garantindo padronização e profissionalismo no documento final em PDF, gerado instantaneamente.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 2.	Painel Principal
 Botão Home: Garante a navegabilidade do usuário, permitindo o retorno imediato à tela principal de preenchimento de qualquer seção do aplicativo.
 
@@ -53,24 +35,14 @@ Gestão de Imagens: Opção de excluir fotos enviadas incorretamente, adicionar 
 Configurar Logos: O botão abaixo das informações permite trocar as logomarcas que aparecerão na capa do PDF (Cliente vs. Prestador).		
 Botão Dark Mode (Power/Theme): Alterna instantaneamente entre os modos Claro e Escuro, adaptando a interface para o conforto visual em diferentes ambientes de trabalho.
 Botão Gerar PDF: Gatilho principal que compila todos os dados, fotos e anexos em um documento profissional com paginação automática e capa personalizada.
+
 3.	Painel Principal
 Botão Conversor: Atalho para o hub de transformação de arquivos (ex: PDF para Word), atualmente em fase de manutenção para futuras implementações.
-								
-
-
-
-
-
-
-
+							
 Menu de Configurações: Acesso rápido ao gerenciamento de Lojas e Fornecedores.
 •	Botão Sair: Retorna o usuário à tela de boas-vindas ("Começar").
 •	Segurança (Futuro): Estrutura pensada para a implementação futura de login e senha, garantindo acesso restrito e personalizado.
 
-
-
-
- 
 4.	Painel de Configurações: Autonomia e Cadastro
 
 A tela de Configurações é pensada para dar total autonomia ao usuário, permitindo personalizar os dados que alimentam a tela principal sem a necessidade de alterar o código do aplicativo.

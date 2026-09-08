@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Relatórios Técnicos - AREISPRO</title>
+
+    <!-- TAILWIND -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FONTE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- CSS DO AREIS -->
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         BARRA SUPERIOR
+    ====================================================== -->
+
+    <nav class="fixed top-0 w-full z-50 glass border-b">
+
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center">
+
+            <!-- VOLTA PARA CENTRAL DE OPERAÇÕES -->
+            <a href="../Central de Operações.html">
+
+                <h1 class="text-xl font-bold tracking-tighter">
+                    AREIS<span class="font-light opacity-40">PRO</span>
+                </h1>
+
+            </a>
+
+        </div>
+
+    </nav>
+
+    <!-- =====================================================
+         CONTEÚDO
+    ====================================================== -->
+
+    <main class="max-w-6xl mx-auto px-6 mt-28 pb-20">
+
+
+        <!-- CABEÇALHO -->
+
+        <div class="mb-10">
+
+            <a href="../Central de Operações.html" class="text-xs font-bold opacity-50 hover:opacity-100 mb-3 block">
+                ← Voltar para Central de Operações
+            </a>
+
+            <p class="text-[10px] font-bold uppercase tracking-[0.35em] opacity-40 mb-3">
+                DOCUMENTAÇÃO
+            </p>
+
+            <h2 class="text-3xl md:text-5xl font-light tracking-tight">
+                Relatórios Técnicos
+            </h2>
+
+            <p class="mt-4 text-sm opacity-50">
+                Crie, consulte e gerencie os relatórios técnicos.
+            </p>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             NOVO RELATÓRIO
+        ====================================================== -->
+
+        <div class="glass rounded-[32px] p-6 md:p-8 shadow-sm mb-8">
+
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40">
+                Novo relatório
+            </p>
+
+            <h3 class="text-xl font-semibold mt-2">
+                Selecione o modelo
+            </h3>
+
+            <p class="text-xs opacity-50 mt-2 mb-6">
+                Escolha o tipo de relatório que deseja gerar.
+            </p>
+
+
+            <!-- SELECT -->
+
+            <div>
+
+                <label for="tipoRelatorio" class="text-xs font-semibold opacity-60">
+
+                    Tipo de relatório
+
+                </label>
+
+
+                <select id="tipoRelatorio" class="w-full mt-2 p-4 input-ios text-sm font-medium">
+
+                    <option value="">
+                        Selecione um modelo...
+                    </option>
+
+                    <option value="fornecedor">
+                        Relatório de Fornecedor
+                    </option>
+
+                    <option value="vistoria">
+                        Relatório de Vistoria
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BOTÃO -->
+
+            <button id="btnCriarRelatorio" class="mt-5 px-6 py-4 bg-black text-white
+    dark:bg-white dark:text-black
+    rounded-2xl text-xs font-bold">
+
+                CRIAR RELATÓRIO →
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             HISTÓRICO
+        ====================================================== -->
+
+        <div class="glass rounded-[32px] p-6 md:p-8 shadow-sm">
+
+
+            <!-- TÍTULO -->
+
+            <div class="mb-6">
+
+                <p class="text-[10px] font-bold uppercase tracking-[0.25em] opacity-40">
+                    Arquivo
+                </p>
+
+                <h3 class="text-xl font-semibold mt-2">
+                    Histórico de Relatórios
+                </h3>
+
+                <p class="text-xs opacity-50 mt-2">
+                    Consulte os relatórios já gerados.
+                </p>
+
+            </div>
+
+
+
+            <!-- =====================================================
+                 FILTROS
+            ====================================================== -->
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+
+                <!-- PESQUISA -->
+
+                <input id="pesquisaRelatorio" type="text" placeholder="Pesquisar relatório..."
+                    class="w-full p-4 input-ios text-sm">
+
+
+                <!-- TIPO -->
+
+                <select id="filtroTipo" class="w-full p-4 input-ios text-sm">
+
+                    <option value="">
+                        Todos os tipos
+                    </option>
+
+                    <option value="fornecedor">
+                        Relatório de Fornecedor
+                    </option>
+
+                    <option value="vistoria">
+                        Relatório de Vistoria
+                    </option>
+
+                </select>
+
+
+                <!-- DATA -->
+
+                <input id="filtroData" type="date" class="w-full p-4 input-ios text-sm">
+
+
+            </div>
+
+
+
+            <!-- =====================================================
+                 LISTA DOS RELATÓRIOS
+            ====================================================== -->
+
+            <div id="listaRelatorios" class="border-t border-black/10 dark:border-white/10 pt-6">
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../supabase.js"></script>
+<script src="js/home.js"></script>
+
+</body>
+
+</html>

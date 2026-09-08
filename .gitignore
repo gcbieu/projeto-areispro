@@ -1,12 +1,25 @@
-# Node modules (pastas pesadas - CERTO ignorar)
-node_modules/
-
-# Variáveis de ambiente (senhas - CERTO ignorar)
+# Segredos
 .env
+.env.*
 
-# Arquivos do sistema
+# Dependências
+/node_modules/
+
+# VS Code
+/.vscode/
+
+# Supabase local
+/supabase/
+
+# JS do AREIS principal - não faz parte do MVP
+/js/
+
+# Página em desenvolvimento
+standby.html
+
+# Arquivos que não quero publicar no MVP
+README_FATURAMENTO.md
+
+# Sistema
 .DS_Store
-npm-debug.log*
-
-# Configurações LOCAIS do Supabase (NÃO ignore a pasta 'supabase/' inteira)
-.supabase/
+Thumbs.db
