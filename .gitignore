@@ -23,3 +23,5 @@ README_FATURAMENTO.md
 # Sistema
 .DS_Store
 Thumbs.db
+package-lock.json
+package.json
